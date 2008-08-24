@@ -1,9 +1,0 @@
-Mittwoch, 18:30
-"Logarea: 0 - 2097152"
-"Log: 0 - 784304"
-
-Mittwoch, 20:30
-"Logarea: 0 - 2097152" 
-"Log: 0 - 797840" 
-
-
