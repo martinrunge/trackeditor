@@ -17,7 +17,12 @@
 #include <QStandardItemModel>
 #include <QModelIndex>
 
-class TrackCollection : public QList<Track*>, public QStandardItemModel, public CommonAttributes{
+#include <vector>
+
+class TrackCollection : public QStandardItemModel, public QList<Track*>, public CommonAttributes{
+
+	Q_OBJECT
+
 public:
 	TrackCollection();
 	virtual ~TrackCollection();
@@ -33,8 +38,10 @@ public:
 	QRectF getCompleteDimension();
 	bool validBounds();
 
-	void setIndexList(QModelIndexList index_list);
-	QModelIndexList getIndexList(void);
+	void setModelIndexList(QModelIndexList index_list);
+	QModelIndexList getModelIndexList(void);
+
+	std::vector<int> getIndexList(void);
 
 	QString getCreator();
 
@@ -80,12 +87,16 @@ public:
 	QString getKeywords();
 	bool validKeywords();
 
+public slots:
+    void editFinished(const QModelIndex & topLeft, const QModelIndex & bottomRight);
+
 private:
 	Track* m_waypoints;
 
 	QStandardItem *m_parentItem;
 
-	QModelIndexList m_index_list;
+	QModelIndexList m_model_index_list;
+	std::vector<int> m_index_list;
 
 	// creator of output file. Read only.
 	QString m_creator_description;

@@ -5,18 +5,33 @@
  *      Author: martin
  */
 
+
+#include <assert.h>
+
+#include <QDebug>
 #include "TrackCollection.h"
 
 TrackCollection::TrackCollection() {
 	m_waypoints = new Track();
 	m_parentItem = invisibleRootItem();
-	setHorizontalHeaderLabels(QStringList() << "Nr " << "Start Time" << "End Time" << "Nr Points");
+	setHorizontalHeaderLabels(QStringList() << "Nr " << "Start Time" << "End Time" << "Name" << "Nr Points");
 	initMetaData();
+    connect(this, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)),
+    		this, SLOT(editFinished(const QModelIndex&, const QModelIndex&)));
+
 
 }
 
 TrackCollection::~TrackCollection() {
 	delete m_waypoints;
+}
+
+
+void TrackCollection::editFinished(const QModelIndex & topLeft, const QModelIndex & bottomRight) {
+	qDebug() << QString("editFinished: (%1,%2) - (%3,%4)").arg(topLeft.column()).arg(topLeft.row()).arg(bottomRight.column()).arg(bottomRight.row());
+	assert(topLeft == bottomRight);
+
+	at(topLeft.row())->dataChanged(topLeft.column());
 }
 
 
@@ -46,7 +61,7 @@ QRectF TrackCollection::getCompleteDimension() {
 }
 
 QRectF TrackCollection::getDimension() {
-	return getDimension(m_index_list);
+	return getDimension(m_model_index_list);
 }
 
 QRectF TrackCollection::getDimension(QModelIndexList indices) {
@@ -73,11 +88,33 @@ bool TrackCollection::validBounds() {
 }
 
 
-void TrackCollection::setIndexList(QModelIndexList index_list) {
-	m_index_list = index_list;
+void TrackCollection::setModelIndexList(QModelIndexList index_list) {
+	m_model_index_list = index_list;
 }
 
-QModelIndexList TrackCollection::getIndexList(void) {
+QModelIndexList TrackCollection::getModelIndexList(void) {
+	return m_model_index_list;
+}
+
+// void TrackCollection::setIndexList(QModelIndexList index_list) {
+//	m_index_list = index_list;
+// }
+
+std::vector<int> TrackCollection::getIndexList(void) {
+	m_index_list.clear();
+
+    for(int mi_idx = 0; mi_idx < m_model_index_list.size(); mi_idx++ ) {
+    	int tr_idx = m_model_index_list.at(mi_idx).row();
+    	std::vector<int>::iterator it;
+    	for(it = m_index_list.begin() ; it != m_index_list.end(); it++ ) {
+    	   	if(*it == tr_idx) {
+    	   		break;
+    	   	}
+    	}
+    	if(it == m_index_list.end()) {
+    		m_index_list.push_back(tr_idx);
+    	}
+    }
 	return m_index_list;
 }
 

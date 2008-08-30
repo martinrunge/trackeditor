@@ -73,9 +73,9 @@ void TrackView::paintEvent( QPaintEvent * event ) {
     painter.setPen(QColor(0,0,0));
 
     Track* tr_ptr;
-    QModelIndexList mi = m_track_collection->getIndexList();
+    std::vector<int> mi = m_track_collection->getIndexList();
     for(int mi_idx = 0; mi_idx < mi.size(); mi_idx++ ) {
-    	int tr_idx = mi.at(mi_idx).row();
+    	int tr_idx = mi.at(mi_idx);
 
         if(m_track_collection->at(tr_idx)->size() == 0) {
         	return;

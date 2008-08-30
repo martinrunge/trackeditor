@@ -46,6 +46,7 @@ class TrackView;
 class QStandardItemModel;
 class QStandardItem;
 class QItemSelectionModel;
+class QFile;
 
 class LogReader : public QMainWindow
 {
@@ -69,6 +70,8 @@ public slots:
 
     void treeViewClicked(QModelIndex index);
     void selectionChanged(QItemSelection,QItemSelection);
+
+    void addData(QByteArray data);
 
 private:
     Ui::TrackEditor2Class ui;
@@ -104,6 +107,8 @@ private:
     int m_command_response_step;
 
     int m_device_fd;
+    QFile* m_device_file;
+
     struct termios m_oldtio;
     QSocketNotifier* m_socket_notifier;
 

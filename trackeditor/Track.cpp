@@ -10,6 +10,12 @@
 Track::Track() {
 	initMetaData();
 
+	m_index_item = 0;
+	m_start_time_item = 0;
+	m_end_time_item = 0;
+	m_name_item = 0;
+	m_num_points_item = 0;
+
 //	m_itemlist = new QList<QStandardItem*>;
 }
 
@@ -43,27 +49,39 @@ void Track::commit() {
 		if(m_max_time < at(i)->getTime()) m_max_time = at(i)->getTime();
 	}
 
-	QStandardItem* item;
-
 	QString tracknr;
 	tracknr.setNum(m_track_index);
-	item = new QStandardItem(tracknr);
-	m_itemlist.append(item);
+	m_index_item = new QStandardItem(tracknr);
+	m_index_item->setEditable(false);
+	m_itemlist.append(m_index_item);
 
 	QString starttime = m_min_time.toString("yy-MM-dd  hh:mm:ss");
-	item = new QStandardItem(starttime);
-	m_itemlist.append(item);
+	m_start_time_item = new QStandardItem(starttime);
+	m_start_time_item->setEditable(false);
+	m_itemlist.append(m_start_time_item);
 
 	QString endtime = m_max_time.toString("yy-MM-dd  hh:mm:ss");
-	item = new QStandardItem(endtime);
-	m_itemlist.append(item);
+	m_end_time_item = new QStandardItem(endtime);
+	m_end_time_item->setEditable(false);
+	m_itemlist.append(m_end_time_item);
+
+	m_name_item = new QStandardItem(getName());
+	m_itemlist.append(m_name_item);
 
 	QString nrpoints;
 	nrpoints.setNum(size());
-	item = new QStandardItem(nrpoints);
-	m_itemlist.append(item);
+	m_num_points_item = new QStandardItem(nrpoints);
+	m_num_points_item->setEditable(false);
+	m_itemlist.append(m_num_points_item);
 
 }
+
+void Track::dataChanged(int column) {
+	if(column == 3) { // name changed
+		setName(m_name_item->text());
+	}
+}
+
 
 void Track::initMetaData() {
 	m_min_lat = 0;

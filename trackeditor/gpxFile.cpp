@@ -156,7 +156,7 @@ void gpxFile::write_metadata() {
 
 	if(m_track_collection->validBounds()) {
 
-		QRectF dim = m_track_collection->getDimension(m_track_collection->getIndexList());
+		QRectF dim = m_track_collection->getDimension(m_track_collection->getModelIndexList());
 		double minlat = dim.bottom();
 		double minlon = dim.left();
 		double maxlat = dim.top();
@@ -196,9 +196,9 @@ void gpxFile::write_routes() {
 
 void gpxFile::write_tracks() {
 
-    QModelIndexList mi = m_track_collection->getIndexList();
+    std::vector<int> mi = m_track_collection->getIndexList();
     for(int mi_idx = 0; mi_idx < mi.size(); mi_idx++ ) {
-    	int tr_idx = mi.at(mi_idx).row();
+    	int tr_idx = mi[mi_idx];
 
 //  for complete GPX file
 //	for(int i=0; i < m_track_collection->size(); i++) {

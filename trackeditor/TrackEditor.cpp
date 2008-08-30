@@ -64,6 +64,8 @@ LogReader::LogReader(QWidget *parent) :
 
 	m_track_collection = new TrackCollection();
 
+	m_device_file = new QFile();
+
 	m_dev_data = 0;
 	m_expect_binary_data = 0;
 
@@ -80,6 +82,10 @@ LogReader::LogReader(QWidget *parent) :
 
     connect(ui.treeView, SIGNAL(clicked(QModelIndex)), this, SLOT(treeViewClicked(QModelIndex)));
 
+    ui.treeView->setEditTriggers( QAbstractItemView::DoubleClicked
+								| QAbstractItemView::SelectedClicked
+								| QAbstractItemView::EditKeyPressed );
+
 
 }
 
@@ -94,6 +100,10 @@ LogReader::~LogReader() {
 
 	delete m_track_collection;
 
+	if(m_device_file != 0) {
+		m_device_file->close();
+		delete m_device_file;
+	}
 	tcsetattr(m_device_fd, TCSANOW, &m_oldtio);
 	::close(m_device_fd);
 }
@@ -111,7 +121,7 @@ void LogReader::treeViewClicked(QModelIndex index) {
 void LogReader::selectionChanged(QItemSelection selected,QItemSelection deselected) {
 	qDebug() << QString("selction changed");
 	QModelIndexList selected_indices = m_selection_model->selectedIndexes();
-    m_track_collection->setIndexList(selected_indices);
+    m_track_collection->setModelIndexList(selected_indices);
     m_track_view->update();
 }
 
@@ -119,7 +129,8 @@ void LogReader::selectionChanged(QItemSelection selected,QItemSelection deselect
 
 void LogReader::openTty(const char* name, int speed) {
 	m_device_fd = open(name, O_RDWR | O_NOCTTY | O_NDELAY | O_SYNC);
-	if (m_device_fd == -1) {
+	bool openres = m_device_file->open(m_device_fd, QIODevice::ReadWrite);
+	if (m_device_fd == -1 || openres == false) {
 		qDebug("failed to open device %s with speed %d.", name, speed);
 	} else {
 
@@ -153,11 +164,15 @@ void LogReader::readDevice(int dev_fd) {
 	static char buffer[4096 + 1];
 	int bytes_read;
 	if (dev_fd == m_device_fd) {
+		bytes_read = read(m_device_fd, buffer, 4096);
+		QByteArray data(buffer, bytes_read);
+		addData(data);
+	}
+}
+
+void LogReader::addData(QByteArray data) {
 		if(m_expect_binary_data == 0) {
-			bytes_read = read(m_device_fd, buffer, 1024);
-			buffer[bytes_read] = 0;
-			// qDebug("buffer: %s !endbuf!",buffer);
-			m_nema_string.append(buffer);
+			m_nema_string.append(data);
 			do {
 				m_line = readLine();
 				if (m_line.size() != 0) {
@@ -170,20 +185,12 @@ void LogReader::readDevice(int dev_fd) {
 			} while(m_line.size() != 0);
 		}
 		else {  // m_expect_binary_data > 0 -> read m_expect_binary_data bytes of binary data
-			bytes_read = read(m_device_fd, buffer + m_binary_data_already_read, m_expect_binary_data);
-			m_binary_data_already_read += bytes_read;
-			m_expect_binary_data -= bytes_read;
-			if(m_expect_binary_data == 0){
-				// all expected binary data was read into buffer.
-				// store data in m_tmp_buffer which is used to calc checksum and
-				// will be appended to m_log_buf if checksum was correct.
-				m_tmp_buf = QByteArray(buffer, m_binary_data_already_read);
-			}
+			m_expect_binary_data -= data.size();
+			// store data in m_tmp_buffer which is used to calc checksum and
+			// will be appended to m_log_buf if checksum was correct.
+			m_tmp_buf.append(data);
 		}
 		// qDebug("%s",buffer);
-	} else {
-		qDebug("QSocketNotifier signalled with incorrect fd.");
-	}
 }
 
 QString LogReader::readLine() {
@@ -432,6 +439,7 @@ void LogReader::parseAL(QString line) {
 
         if(m_lastsection == 1 || m_tmp_buf.size() == 0) {
         	createTrackpoints();
+        	leaveCommandMode();
             return;
         }
         m_read_start += m_tmp_buf.size();

@@ -33,6 +33,7 @@ public:
 	int getIndex();
 	bool validIndex(void);
 
+	void dataChanged(int column);
 	QList<QStandardItem*> getItemList();
 
 	void commit();
@@ -45,6 +46,14 @@ private:
 	QDateTime m_min_time, m_max_time;
 
 	QList<QStandardItem*> m_itemlist;
+
+	QStandardItem* m_index_item;
+	QStandardItem* m_start_time_item;
+	QStandardItem* m_end_time_item;
+	QStandardItem* m_name_item;
+	QStandardItem* m_num_points_item;
+
+
 
 	// <number> xsd:nonNegativeInteger </number> [0..1] ?
 	int m_track_index;

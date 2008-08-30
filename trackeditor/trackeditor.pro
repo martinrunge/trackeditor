@@ -2,7 +2,9 @@ TEMPLATE = app
 TARGET = trackeditor
 QT += core \
     gui
-HEADERS += CommonTrackAttributes.h \
+HEADERS += CWintec.h \
+    IDeviceIO.h \
+    CommonTrackAttributes.h \
     CommonAttributes.h \
     trackFile.h \
     tk1File.h \
@@ -13,7 +15,9 @@ HEADERS += CommonTrackAttributes.h \
     TrackPoint.h \
     DeviceData.h \
     TrackEditor.h
-SOURCES += CommonTrackAttributes.cpp \
+SOURCES += CWintec.cpp \
+    IDeviceIO.cpp \
+    CommonTrackAttributes.cpp \
     CommonAttributes.cpp \
     trackFile.cpp \
     tk1File.cpp \
