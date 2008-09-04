@@ -8,6 +8,9 @@
 #ifndef CWINTEC_H_
 #define CWINTEC_H_
 
+
+#include <QTimer>
+
 #include "IDeviceIO.h"
 
 class DeviceData;
@@ -24,6 +27,8 @@ public:
 
 public slots:
 	void addData(QByteArray);
+    
+    void timeout();
 
 private:
     void enterCommandMode(int step = 0);
@@ -60,12 +65,20 @@ private:
     QString m_nema_string;
     QString m_line;
 
+    // Three variables to keep track of device commands and its responses
+    // m_timer to have a timeout to each request
+    QTimer* m_timer;
+    // m_retry_count to count number of retris after timeout or unexpected responses
+    int m_retry_count;
+    const int m_num_retries;
+    // m_step_complete will be set to true when the expcted response was received
+    // and toggled to false again after next request was sent to device
+    bool m_step_complete;
 
     QByteArray m_log_buf;
     QByteArray m_tmp_buf;
 
     int m_read_start;
-    int m_retry_count;
     int m_expect_binary_data;
     int m_binary_data_already_read;
     bool m_lastsection;

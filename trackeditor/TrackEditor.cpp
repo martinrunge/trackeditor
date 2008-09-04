@@ -46,16 +46,26 @@
 #include "TrackView.h"
 #include "tk1File.h"
 #include "gpxFile.h"
+#include "CWintec.h"
+
+#include "ui_DeviceDialog.h"
 
 LogReader::LogReader(QWidget *parent) :
 	QMainWindow(parent) {
 	ui.setupUi(this);
 	connect(ui.actionExit, SIGNAL(triggered()), this, SLOT(close()));
-	connect(ui.actionOpen, SIGNAL(triggered()), this, SLOT(actionTriggered()));
-	connect(ui.action_Read_Log, SIGNAL(triggered()), this, SLOT(readLog()));
+
+	connect(ui.action_Connect, SIGNAL(triggered()), this, SLOT(connectDevice()));
+	connect(ui.action_Disconnect, SIGNAL(triggered()), this, SLOT(disconnectDevice()));
+
 	connect(ui.action_Load_Track, SIGNAL(triggered()), this, SLOT(loadTrack()));
 	connect(ui.action_Save_Track, SIGNAL(triggered()), this, SLOT(saveTrack()));
 	connect(ui.action_Save_Track_As, SIGNAL(triggered()), this, SLOT(saveTrackAs()));
+
+	connect(ui.action_Read_Log, SIGNAL(triggered()), this, SLOT(readLog()));
+	connect(ui.action_Start_Recording, SIGNAL(triggered()), this, SLOT(startRecording()));
+	connect(ui.action_Stop_Recording, SIGNAL(triggered()), this, SLOT(stopRecording()));
+
 
 	connect(this, SIGNAL(setText(QString)), ui.nemaText, SLOT(appendPlainText(QString)));
 
@@ -64,8 +74,7 @@ LogReader::LogReader(QWidget *parent) :
 
 	m_track_collection = new TrackCollection();
 
-	m_device_file = new QFile();
-
+    m_device_io = 0;
 	m_dev_data = 0;
 	m_expect_binary_data = 0;
 
@@ -90,6 +99,12 @@ LogReader::LogReader(QWidget *parent) :
 }
 
 LogReader::~LogReader() {
+
+	if(m_device_io != 0)
+	{
+		delete m_device_io;
+	}
+
 	if(m_dev_data != 0)
 	{
 		leaveCommandMode();
@@ -100,35 +115,30 @@ LogReader::~LogReader() {
 
 	delete m_track_collection;
 
-	if(m_device_file != 0) {
-		m_device_file->close();
-		delete m_device_file;
+	closeTTY();
+}
+
+void LogReader::connectDevice() {
+	QDialog *devdlg = new QDialog(this);
+	Ui::DeviceDialog dlg;
+	dlg.setupUi(devdlg);
+	devdlg->setModal(true);
+	int retval = devdlg->exec();
+
+	if(retval == QDialog::Accepted) {
+		qDebug("OK pressed.");
+		openTTY("/dev/rfcomm0", 115200);
+		m_device_io = new CWintec("WBT201");
+		connect(this, SIGNAL(emitData(QByteArray)), m_device_io, SLOT(addData(QByteArray)));
+		connect(m_device_io, SIGNAL(nemaString(QString)), ui.nemaText, SLOT(appendPlainText(QString)));
 	}
-	tcsetattr(m_device_fd, TCSANOW, &m_oldtio);
-	::close(m_device_fd);
 }
 
-void LogReader::actionTriggered() {
-	openTty("/dev/rfcomm0", 115200);emit
-	setText(QString("Hallo"));
-	qDebug("action triggered");
-}
-
-void LogReader::treeViewClicked(QModelIndex index) {
-	//qDebug() << QString("treeViewClicked (%1,%2)").arg(index.row()).arg(index.column());
-}
-
-void LogReader::selectionChanged(QItemSelection selected,QItemSelection deselected) {
-	qDebug() << QString("selction changed");
-	QModelIndexList selected_indices = m_selection_model->selectedIndexes();
-    m_track_collection->setModelIndexList(selected_indices);
-    m_track_view->update();
-}
-
-
-
-void LogReader::openTty(const char* name, int speed) {
+void LogReader::openTTY(const char* name, int speed) {
+    
 	m_device_fd = open(name, O_RDWR | O_NOCTTY | O_NDELAY | O_SYNC);
+    m_device_file = new QFile();
+
 	bool openres = m_device_file->open(m_device_fd, QIODevice::ReadWrite);
 	if (m_device_fd == -1 || openres == false) {
 		qDebug("failed to open device %s with speed %d.", name, speed);
@@ -160,15 +170,93 @@ void LogReader::openTty(const char* name, int speed) {
 	}
 }
 
+void LogReader::closeTTY() {
+
+	if(m_device_file != 0) {
+		m_device_file->close();
+		delete m_device_file;
+		m_device_file = 0;
+	}
+
+	disconnect(this, SLOT(readDevice(int)) );
+	delete m_socket_notifier;
+	m_socket_notifier = 0;
+
+	if(m_device_fd != -1) {
+		tcsetattr(m_device_fd, TCSANOW, &m_oldtio);
+		::close(m_device_fd);
+		m_device_fd = -1;
+	}
+
+}
+
 void LogReader::readDevice(int dev_fd) {
 	static char buffer[4096 + 1];
 	int bytes_read;
 	if (dev_fd == m_device_fd) {
 		bytes_read = read(m_device_fd, buffer, 4096);
 		QByteArray data(buffer, bytes_read);
-		addData(data);
+		emit emitData(data);
 	}
 }
+
+
+void LogReader::disconnectDevice() {
+	if(m_device_io != 0) {
+		disconnect(m_device_io, SLOT(addData(QByteArray)));
+		disconnect(m_device_io, SIGNAL(nemaString(QString)), ui.nemaText, SLOT(appendPlainText(QString)));
+		delete m_device_io;
+		m_device_io = 0;
+
+		closeTTY();
+
+	}
+}
+
+void LogReader::readLog() {
+    
+    m_device_io->readLog();
+    
+	//if (m_command_mode_step != 0) {
+	//	qDebug("already in command mode.");
+	//	return;
+	//}
+	//m_command_mode_step++;
+
+	//m_dev_data = new DeviceData();
+
+	//enterCommandMode(m_command_mode_step);
+}
+
+void LogReader::startRecording() {
+
+}
+
+void LogReader::stopRecording() {
+
+}
+
+
+
+void LogReader::actionTriggered() {
+	openTTY("/dev/rfcomm0", 115200);
+	emit setText(QString("Hallo"));
+	qDebug("action triggered");
+}
+
+void LogReader::treeViewClicked(QModelIndex index) {
+	//qDebug() << QString("treeViewClicked (%1,%2)").arg(index.row()).arg(index.column());
+}
+
+void LogReader::selectionChanged(QItemSelection selected,QItemSelection deselected) {
+	qDebug() << QString("selction changed");
+	QModelIndexList selected_indices = m_selection_model->selectedIndexes();
+    m_track_collection->setModelIndexList(selected_indices);
+    m_track_view->update();
+}
+
+
+
 
 void LogReader::addData(QByteArray data) {
 		if(m_expect_binary_data == 0) {
@@ -218,17 +306,6 @@ QString LogReader::readLine() {
 	return tmp_string;
 }
 
-void LogReader::readLog() {
-	if (m_command_mode_step != 0) {
-		qDebug("already in command mode.");
-		return;
-	}
-	m_command_mode_step++;
-
-	m_dev_data = new DeviceData();
-
-	enterCommandMode(m_command_mode_step);
-}
 
 void LogReader::enterCommandMode(int step) {
 	switch (step) {

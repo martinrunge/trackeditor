@@ -47,6 +47,7 @@ class QStandardItemModel;
 class QStandardItem;
 class QItemSelectionModel;
 class QFile;
+class IDeviceIO;
 
 class LogReader : public QMainWindow
 {
@@ -58,12 +59,19 @@ public:
 
 signals:
     void setText(QString);
+    void emitData(QByteArray);
 
 public slots:
     void actionTriggered();
     void readDevice(int dev_fd);
 
+    void connectDevice();
+    void disconnectDevice();
+
     void readLog();
+    void startRecording();
+    void stopRecording();
+
     void loadTrack();
     void saveTrack();
     void saveTrackAs();
@@ -78,7 +86,8 @@ private:
     TrackView *m_track_view;
 
 
-    void openTty(const char* name, int speed);
+    void openTTY(const char* name, int speed);
+    void closeTTY();
     void enterCommandMode(int step = 0);
     void readLogMode();
     void leaveCommandMode();
@@ -94,6 +103,8 @@ private:
 
     void save();
     void load(QString filename);
+
+    IDeviceIO *m_device_io;
 
     DeviceData* m_dev_data;
 

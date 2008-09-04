@@ -29,6 +29,7 @@ signals:
 	void newWayPoint(TrackPoint*);
 	void newLogPoint(TrackPoint*);
 	void sendData(QByteArray);
+    void readLogFailed(QString);
 
 public slots:
 	virtual void addData(QByteArray) = 0;

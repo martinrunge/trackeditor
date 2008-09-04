@@ -29,5 +29,6 @@ SOURCES += CWintec.cpp \
     DeviceData.cpp \
     main.cpp \
     TrackEditor.cpp
-FORMS += TrackEditor.ui
+FORMS += DeviceDialog.ui \
+    TrackEditor.ui
 RESOURCES += 

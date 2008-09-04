@@ -20,6 +20,7 @@ tk1File::~tk1File() {
 
 TrackCollection* tk1File::read(QString filename) {
 	qDebug() << QString("tk1File::read( %1 )").arg(filename);
+	return 0;
 }
 
 void tk1File::write(TrackCollection* tc,  QString filename) {

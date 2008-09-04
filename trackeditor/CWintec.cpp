@@ -9,12 +9,27 @@
 #include "CWintec.h"
 #include "DeviceData.h"
 
-CWintec::CWintec(QString name) : IDeviceIO(name) {
-	// TODO Auto-generated constructor stub
+CWintec::CWintec(QString name) : IDeviceIO(name) , m_num_retries(5){
+	qDebug() << QString("CWintec::WCintec name: %1").arg(name);
+
+	m_dev_data = 0;
+	m_expect_binary_data = 0;
+
+	m_command_mode_step = 0;
+	m_command_response_step = 0;
+
+    m_step_complete = true;
+    m_retry_count = m_num_retries;
+    m_timer = new QTimer();
+    connect(m_timer, SIGNAL(timeout()), this, SLOT(timeout()));
+    
 }
 
 CWintec::~CWintec() {
-	// TODO Auto-generated destructor stub
+    if(m_timer->isActive()) {
+        m_timer->stop();
+    }
+    delete m_timer;
 }
 
 
@@ -34,7 +49,7 @@ void CWintec::addData(QByteArray data) {
 		do {
 			m_line = readLine();
 			if (m_line.size() != 0) {
-				// qDebug() << QString("setLine: %1 !end!").arg(m_line);
+				qDebug() << QString("setLine: %1 !end!").arg(m_line);
 				emit nemaString(m_line);
 				parseLine(m_line);
 
@@ -74,11 +89,11 @@ bool CWintec::readLog() {
 		qDebug("already in command mode.");
 		return false;
 	}
-	m_command_mode_step++;
+	m_command_mode_step = 1;
 
 	m_dev_data = new DeviceData();
 
-	enterCommandMode(m_command_mode_step);
+    enterCommandMode(m_command_mode_step);
 	return true;
 }
 
@@ -119,14 +134,25 @@ QString CWintec::readLine() {
 }
 
 
+void CWintec::timeout() {
+    if(m_retry_count == 0) {
+        // fatal error
+        emit readLogFailed("Timeout reading from device!");
+        leaveCommandMode();   
+    }
+    m_retry_count--;
+    enterCommandMode(m_command_mode_step);
+}
+
+
 void CWintec::enterCommandMode(int step) {
 	switch (step) {
 	case 1:
 		qDebug("enterCommandMode step %d.", step);
 		qDebug("send @AL,02,01\n");
-		write(m_device_fd, "@AL,02,01\n", strlen("@AL,02,01\n"));
-		sleep(1);
-		m_command_mode_step++;
+		emit sendData(QString("@AL,02,01\n").toUtf8());
+		// sleep(1);
+		// m_command_mode_step++;
 		// wait for readLine to finish ...
 		break;
 
@@ -136,12 +162,12 @@ void CWintec::enterCommandMode(int step) {
         //qDebug("@AL,2,3\n");
         //qDebug("@AL,2,3\n");
 
-		write(m_device_fd, "@AL\n", strlen("@AL\n"));
+        emit sendData(QString("@AL\n").toUtf8());
         //write(m_device_fd, "@AL\n", strlen("@AL\n"));
 		//write(m_device_fd, "@AL,2,3\n", strlen("@AL,2,3\n"));
 		//write(m_device_fd, "@AL,2,3\n", strlen("@AL,2,3\n"));
 
-        m_command_mode_step++;
+        // m_command_mode_step++;
 		break;
 
 	case 3:
@@ -151,44 +177,44 @@ void CWintec::enterCommandMode(int step) {
 			//break;
 		}
         qDebug("enterCommandMode step %d.", step);
-        write(m_device_fd, "@AL,07,01\n", strlen("@AL,07,01\n"));
+        emit sendData(QString("@AL,07,01\n").toUtf8());
         m_command_mode_step++;
 		break;
 
     case 4:
     	qDebug("enterCommandMode step %d.", step);
-    	write(m_device_fd, "@AL,07,02\n", strlen("@AL,07,02\n"));
+        emit sendData(QString("@AL,07,02\n").toUtf8());
     	m_command_mode_step++;
     	break;
 
     case 5:
         qDebug("enterCommandMode step %d.", step);
-        write(m_device_fd, "@AL,07,03\n", strlen("@AL,07,03\n"));
+        emit sendData(QString("@AL,07,03\n").toUtf8());
         m_command_mode_step++;
         break;
 
     case 6:
         qDebug("enterCommandMode step %d. => @AL,05,01", step);
-        write(m_device_fd, "@AL,05,01\n", strlen("@AL,05,01\n"));
-        write(m_device_fd, "@AL,05,01\n", strlen("@AL,05,01\n"));
+        emit sendData(QString("@AL,05,01\n").toUtf8());
+        // write(m_device_fd, "@AL,05,01\n", strlen("@AL,05,01\n"));
         // m_command_mode_step++;
         break;
 
     case 7:
         qDebug("enterCommandMode step %d. => @AL,05,02", step);
-        write(m_device_fd, "@AL,05,02\n", strlen("@AL,05,02\n"));
+        emit sendData(QString("@AL,05,02\n").toUtf8());
         // m_command_mode_step++;
         break;
 
     case 8:
         qDebug("enterCommandMode step %d. => @AL,05,09", step);
-        write(m_device_fd, "@AL,05,09\n", strlen("@AL,05,09\n"));
+        emit sendData(QString("@AL,05,09\n").toUtf8());
         // m_command_mode_step++;
         break;
 
     case 9:
         qDebug("enterCommandMode step %d. => @AL,05,10", step);
-        write(m_device_fd, "@AL,05,10\n", strlen("@AL,05,10\n"));
+        emit sendData(QString("@AL,05,10\n").toUtf8());
         // m_command_mode_step++;
         break;
 
