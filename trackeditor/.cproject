@@ -149,6 +149,7 @@
 <pathentry base-path="/usr/include/qt4" include="Qt3Support" kind="inc" path="" system="true"/>
 <pathentry base-path="/usr/include/qt4" include="QtDBus" kind="inc" path="" system="true"/>
 <pathentry base-path="/usr/include/qt4" include="QtSvg" kind="inc" path="" system="true"/>
+<pathentry base-path="/usr/include/qt4" include="QtOpenGL" kind="inc" path="" system="true"/>
 <pathentry base-path="/usr/include/qt4" include="QtWebKit" kind="inc" path="" system="true"/>
 <pathentry base-path="/usr/include/qt4" include="QtScript" kind="inc" path="" system="true"/>
 <pathentry base-path="/usr/include/qt4" include="QtNetwork" kind="inc" path="" system="true"/>
