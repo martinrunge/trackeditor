@@ -80,6 +80,7 @@ public slots:
     void selectionChanged(QItemSelection,QItemSelection);
 
     void addData(QByteArray data);
+    void sendData(QByteArray data);
 
 private:
     Ui::TrackEditor2Class ui;

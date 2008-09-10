@@ -22,7 +22,7 @@ CWintec::CWintec(QString name) : IDeviceIO(name) , m_num_retries(5){
     m_retry_count = m_num_retries;
     m_timer = new QTimer();
     connect(m_timer, SIGNAL(timeout()), this, SLOT(timeout()));
-    
+
 }
 
 CWintec::~CWintec() {
@@ -49,7 +49,7 @@ void CWintec::addData(QByteArray data) {
 		do {
 			m_line = readLine();
 			if (m_line.size() != 0) {
-				qDebug() << QString("setLine: %1 !end!").arg(m_line);
+				// qDebug() << QString("setLine: %1 !end!").arg(m_line);
 				emit nemaString(m_line);
 				parseLine(m_line);
 
@@ -138,59 +138,74 @@ void CWintec::timeout() {
     if(m_retry_count == 0) {
         // fatal error
         emit readLogFailed("Timeout reading from device!");
-        leaveCommandMode();   
+        leaveCommandMode();
     }
     m_retry_count--;
+    m_step_complete = true;
     enterCommandMode(m_command_mode_step);
 }
 
 
 void CWintec::enterCommandMode(int step) {
+
+	if(m_step_complete == false) {
+		// the command mode step has not finished yet
+		// but this function is triggered by any incoming data.
+		// Only enter a step and send commands to device if previous step is complete.
+		// A timeout on waiting for a response will reset the step to finished, too.
+		return;
+	}
+
 	switch (step) {
 	case 1:
 		qDebug("enterCommandMode step %d.", step);
 		qDebug("send @AL,02,01\n");
 		emit sendData(QString("@AL,02,01\n").toUtf8());
-		// sleep(1);
-		// m_command_mode_step++;
+		m_step_complete = false;
 		// wait for readLine to finish ...
 		break;
 
 	case 2:
         qDebug("enterCommandMode step %d.", step);
         qDebug("send @AL\n");
-        //qDebug("@AL,2,3\n");
-        //qDebug("@AL,2,3\n");
+        qDebug("@AL,2,3\n");
+        qDebug("@AL,2,3\n");
 
         emit sendData(QString("@AL\n").toUtf8());
+        emit sendData(QString("@AL,2,3\n").toUtf8());
+        emit sendData(QString("@AL,2,3\n").toUtf8());
         //write(m_device_fd, "@AL\n", strlen("@AL\n"));
 		//write(m_device_fd, "@AL,2,3\n", strlen("@AL,2,3\n"));
 		//write(m_device_fd, "@AL,2,3\n", strlen("@AL,2,3\n"));
 
         // m_command_mode_step++;
+        m_step_complete = false;
 		break;
 
 	case 3:
-		if(m_command_response_step < 2)
-		{
+		//if(m_command_response_step < 2)
+		//{
 			// LoginOK not yet received
 			//break;
-		}
+		//}
         qDebug("enterCommandMode step %d.", step);
         emit sendData(QString("@AL,07,01\n").toUtf8());
-        m_command_mode_step++;
+        m_step_complete = false;
+        // m_command_mode_step++;
 		break;
 
     case 4:
     	qDebug("enterCommandMode step %d.", step);
         emit sendData(QString("@AL,07,02\n").toUtf8());
-    	m_command_mode_step++;
+    	// m_command_mode_step++;
+        m_step_complete = false;
     	break;
 
     case 5:
         qDebug("enterCommandMode step %d.", step);
         emit sendData(QString("@AL,07,03\n").toUtf8());
-        m_command_mode_step++;
+        // m_command_mode_step++;
+        m_step_complete = false;
         break;
 
     case 6:
@@ -198,24 +213,28 @@ void CWintec::enterCommandMode(int step) {
         emit sendData(QString("@AL,05,01\n").toUtf8());
         // write(m_device_fd, "@AL,05,01\n", strlen("@AL,05,01\n"));
         // m_command_mode_step++;
+        m_step_complete = false;
         break;
 
     case 7:
         qDebug("enterCommandMode step %d. => @AL,05,02", step);
         emit sendData(QString("@AL,05,02\n").toUtf8());
         // m_command_mode_step++;
+        m_step_complete = false;
         break;
 
     case 8:
         qDebug("enterCommandMode step %d. => @AL,05,09", step);
         emit sendData(QString("@AL,05,09\n").toUtf8());
         // m_command_mode_step++;
+        m_step_complete = false;
         break;
 
     case 9:
         qDebug("enterCommandMode step %d. => @AL,05,10", step);
         emit sendData(QString("@AL,05,10\n").toUtf8());
         // m_command_mode_step++;
+        m_step_complete = false;
         break;
 
     default:
@@ -224,11 +243,12 @@ void CWintec::enterCommandMode(int step) {
 }
 
 void CWintec::parseLine(QString line) {
-	qDebug() << QString("parseLine: ") << line;
+	// qDebug() << QString("parseLine: ") << line;
 
 	if (m_command_mode_step == 0) {
 		parseNEMA(line);
 	} else {
+		qDebug() << QString("parseLine: ") << line;
 		parseAL(line);
 	}
 }
@@ -237,12 +257,23 @@ void CWintec::parseAL(QString line) {
 
     // expect the responses from the set to command mode state machine.
 	// wait for LoginOK. If received, switchng to command mode was successful
-	// and we can continue reading out data. In thins state m_command_response_step in 2.
-    QString expectstr("@AL,LoginOK");
+	// and we can continue reading out data.
+
+    QString expectstr("@AL,02,01");
+    //qDebug() << QString("expecting line %1: %2").arg(m_command_response_step).arg(expectstr);
+    if (expectstr.compare(line) == 0) {
+            qDebug() << QString("got %1 proceeding... ").arg(expectstr);
+            m_command_mode_step = 2;
+            m_step_complete = true;
+            return;
+    }
+
+    expectstr = QString("@AL,LoginOK");
     //qDebug() << QString("expecting line %1: %2").arg(m_command_response_step).arg(expectstr);
     if (expectstr.compare(line) == 0) {
             qDebug("got LoginOK, proceeding... ");
-            m_command_response_step = 2;
+            m_command_mode_step = 3;
+            m_step_complete = true;
             return;
     }
 
@@ -253,6 +284,8 @@ void CWintec::parseAL(QString line) {
     	QString model = line.section(',', 3, 3);
         qDebug() << QString("model = %1").arg(model);
         m_dev_data->setDeviceName(model);
+        m_command_mode_step = 4;
+        m_step_complete = true;
         return;
     }
 
@@ -262,6 +295,8 @@ void CWintec::parseAL(QString line) {
         QString info = line.section(',', 3, 3);
         qDebug() << QString("device info = %1.").arg(info);
         m_dev_data->setDeviceInfo(info);
+        m_command_mode_step = 5;
+        m_step_complete = true;
         return;
     }
 
@@ -271,6 +306,8 @@ void CWintec::parseAL(QString line) {
         QString serial = line.section(',', 3, 3);
         qDebug() << QString("device serial No = %1.").arg(serial);
         m_dev_data->setDeviceSerial(serial);
+        m_command_mode_step = 6;
+        m_step_complete = true;
         return;
     }
 
@@ -281,7 +318,8 @@ void CWintec::parseAL(QString line) {
         long logstart = log_start_str.toLong();
         qDebug() << QString("Log start = %1. As int %2").arg(log_start_str).arg(logstart);
         m_dev_data->setLogStart(logstart);
-        m_command_mode_step++;
+        m_command_mode_step = 7;
+        m_step_complete = true;
         if(m_dev_data->complete()) {
         	readLogMode();
         }
@@ -295,7 +333,8 @@ void CWintec::parseAL(QString line) {
         long logend = log_end_str.toLong();
         qDebug() << QString("Log end = %1. As int %2").arg(log_end_str).arg(logend);
         m_dev_data->setLogEnd(logend);
-        m_command_mode_step++;
+        m_command_mode_step = 8;
+        m_step_complete = true;
         if(m_dev_data->complete()) {
         	readLogMode();
         }
@@ -309,7 +348,8 @@ void CWintec::parseAL(QString line) {
         long logareastart = log_area_start_str.toLong();
         qDebug() << QString("Log area start = %1. As int %2").arg(log_area_start_str).arg(logareastart);
         m_dev_data->setLogAreaStart(logareastart);
-        m_command_mode_step++;
+        m_command_mode_step = 9;
+        m_step_complete = true;
         if(m_dev_data->complete()) {
         	readLogMode();
         }
@@ -324,7 +364,8 @@ void CWintec::parseAL(QString line) {
         long logareaend = log_area_end_str.toLong();
         qDebug() << QString("Log area end = %1. As int %2").arg(log_area_end_str).arg(logareaend);
         m_dev_data->setLogAreaEnd(logareaend);
-        m_command_mode_step++;
+        m_command_mode_step = 10;
+        m_step_complete = true;
         if(m_dev_data->complete()) {
         	readLogMode();
         }
@@ -467,6 +508,6 @@ void CWintec::createTrackpoints() {
 
 
 void CWintec::parseNEMA(QString line) {
-	qDebug() << line;
+	// qDebug() << line;
 }
 

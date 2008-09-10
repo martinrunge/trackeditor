@@ -130,12 +130,13 @@ void LogReader::connectDevice() {
 		openTTY("/dev/rfcomm0", 115200);
 		m_device_io = new CWintec("WBT201");
 		connect(this, SIGNAL(emitData(QByteArray)), m_device_io, SLOT(addData(QByteArray)));
+		connect(m_device_io, SIGNAL(sendData(QByteArray)), this, SLOT(sendData(QByteArray)));
 		connect(m_device_io, SIGNAL(nemaString(QString)), ui.nemaText, SLOT(appendPlainText(QString)));
 	}
 }
 
 void LogReader::openTTY(const char* name, int speed) {
-    
+
 	m_device_fd = open(name, O_RDWR | O_NOCTTY | O_NDELAY | O_SYNC);
     m_device_file = new QFile();
 
@@ -201,9 +202,17 @@ void LogReader::readDevice(int dev_fd) {
 }
 
 
+void LogReader::sendData(QByteArray data) {
+	if(m_device_fd != -1) {
+		write(m_device_fd, data.data(), data.size());
+	}
+}
+
+
 void LogReader::disconnectDevice() {
 	if(m_device_io != 0) {
 		disconnect(m_device_io, SLOT(addData(QByteArray)));
+		disconnect(m_device_io, SIGNAL(sendData(QByteArray)), this, SLOT(sendData(QByteArray)));
 		disconnect(m_device_io, SIGNAL(nemaString(QString)), ui.nemaText, SLOT(appendPlainText(QString)));
 		delete m_device_io;
 		m_device_io = 0;
@@ -214,9 +223,9 @@ void LogReader::disconnectDevice() {
 }
 
 void LogReader::readLog() {
-    
+
     m_device_io->readLog();
-    
+
 	//if (m_command_mode_step != 0) {
 	//	qDebug("already in command mode.");
 	//	return;

@@ -17,6 +17,8 @@ class DeviceData;
 
 
 class CWintec: public IDeviceIO {
+	Q_OBJECT;
+
 public:
 	CWintec(QString name);
 	virtual ~CWintec();
@@ -27,7 +29,7 @@ public:
 
 public slots:
 	void addData(QByteArray);
-    
+
     void timeout();
 
 private:
