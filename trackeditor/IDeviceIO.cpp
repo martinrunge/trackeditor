@@ -22,3 +22,7 @@ QStringList IDeviceIO::getInterfaceList() {
 bool IDeviceIO::readLog() {
 	return false;
 }
+
+void IDeviceIO::cancelReadLog() {
+	return;
+}

@@ -25,6 +25,8 @@ public:
 
 	QStringList getInterfaceList();
 	bool readLog();
+	void cancelReadLog();
+
 
 
 public slots:
@@ -45,10 +47,15 @@ private:
     void readLogData();
 
     void createTrackpoints();
+    TrackPoint* dataToWayPoint(QByteArray data);
+    void parseWayPoints(QByteArray data);
+
+    bool checksumCorrect(QByteArray data, QString checksum);
 
     void save();
     void load(QString filename);
 
+    Track* m_tmp_track;
     DeviceData* m_dev_data;
 
     int m_command_mode_step;
@@ -85,6 +92,8 @@ private:
     int m_binary_data_already_read;
     bool m_lastsection;
     int m_blocksize;
+
+    const int m_timeout_in_ms;
 
 //    TrackCollection *m_track_collection;
 //    QItemSelectionModel* m_selection_model;

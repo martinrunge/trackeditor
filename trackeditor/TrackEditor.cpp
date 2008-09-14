@@ -69,10 +69,13 @@ LogReader::LogReader(QWidget *parent) :
 
 	connect(this, SIGNAL(setText(QString)), ui.nemaText, SLOT(appendPlainText(QString)));
 
+	m_track_collection = new TrackCollection();
+
 	m_track_view = new TrackView(ui.scrollArea);
 	ui.scrollArea->setWidget(m_track_view);
+	m_track_view->setTrackColletcion(m_track_collection);
 
-	m_track_collection = new TrackCollection();
+
 
     m_device_io = 0;
 	m_dev_data = 0;
@@ -96,6 +99,11 @@ LogReader::LogReader(QWidget *parent) :
 								| QAbstractItemView::EditKeyPressed );
 
 
+    m_progress_dlg = new QDialog(this);
+    prg_dlg.setupUi(m_progress_dlg);
+    m_progress_dlg->setModal(false);
+    connect(prg_dlg.cancelButton, SIGNAL(clicked()), this, SLOT(readLogFinished()));
+
 }
 
 LogReader::~LogReader() {
@@ -116,6 +124,8 @@ LogReader::~LogReader() {
 	delete m_track_collection;
 
 	closeTTY();
+
+	delete m_progress_dlg;
 }
 
 void LogReader::connectDevice() {
@@ -132,6 +142,15 @@ void LogReader::connectDevice() {
 		connect(this, SIGNAL(emitData(QByteArray)), m_device_io, SLOT(addData(QByteArray)));
 		connect(m_device_io, SIGNAL(sendData(QByteArray)), this, SLOT(sendData(QByteArray)));
 		connect(m_device_io, SIGNAL(nemaString(QString)), ui.nemaText, SLOT(appendPlainText(QString)));
+
+		connect(m_device_io, SIGNAL(progress(int)), this, SLOT(progress(int)));
+
+		connect(m_device_io, SIGNAL(readLogFinished()), this, SLOT(readLogFinished()));
+		connect(m_device_io, SIGNAL(cancelReadLog()), this, SLOT(cancelReadLog()));
+
+		connect(m_device_io, SIGNAL(newTrack(Track*)), this, SLOT(newTrack(Track*)));
+		connect(m_device_io, SIGNAL(newWayPoint(TrackPoint*)), this, SLOT(newWayPoint(TrackPoint*)));
+		connect(m_device_io, SIGNAL(newLogPoint(TrackPoint*)), this, SLOT(newLogPoint(TrackPoint*)));
 	}
 }
 
@@ -214,6 +233,16 @@ void LogReader::disconnectDevice() {
 		disconnect(m_device_io, SLOT(addData(QByteArray)));
 		disconnect(m_device_io, SIGNAL(sendData(QByteArray)), this, SLOT(sendData(QByteArray)));
 		disconnect(m_device_io, SIGNAL(nemaString(QString)), ui.nemaText, SLOT(appendPlainText(QString)));
+
+		disconnect(m_device_io, SIGNAL(progress(int)), this, SLOT(progress(int)));
+
+		disconnect(m_device_io, SIGNAL(readLogFinished()), this, SLOT(readLogFinished()));
+		disconnect(m_device_io, SIGNAL(cancelReadLog()), this, SLOT(cancelReadLog()));
+
+		disconnect(m_device_io, SIGNAL(newTrack(Track*)), this, SLOT(newTrack(Track*)));
+		disconnect(m_device_io, SIGNAL(newWayPoint(TrackPoint*)), this, SLOT(newWayPoint(TrackPoint*)));
+		disconnect(m_device_io, SIGNAL(newLogPoint(TrackPoint*)), this, SLOT(newLogPoint(TrackPoint*)));
+
 		delete m_device_io;
 		m_device_io = 0;
 
@@ -223,6 +252,16 @@ void LogReader::disconnectDevice() {
 }
 
 void LogReader::readLog() {
+
+	if(m_device_io == 0) {
+		connectDevice();
+	}
+	if(m_device_io == 0) {
+		return;
+	}
+
+	progress(0);
+	m_progress_dlg->show();
 
     m_device_io->readLog();
 
@@ -235,6 +274,43 @@ void LogReader::readLog() {
 	//m_dev_data = new DeviceData();
 
 	//enterCommandMode(m_command_mode_step);
+}
+
+void LogReader::progress(int percent) {
+	prg_dlg.progressBar->setValue(percent);
+}
+
+void LogReader::cancelReadLog() {
+	m_device_io->cancelReadLog();
+	readLogFinished();
+}
+
+void LogReader::readLogFinished() {
+	m_progress_dlg->close();
+}
+
+void LogReader::newTrack(Track* track) {
+	track->setIndex(m_track_collection->size() -1);
+	m_track_collection->appendTrack(track);
+
+	ui.treeView->resizeColumnToContents(0);
+	ui.treeView->resizeColumnToContents(1);
+	ui.treeView->resizeColumnToContents(2);
+	ui.treeView->resizeColumnToContents(3);
+
+	prg_dlg.m_num_tracks->setText(QString().number(m_track_collection->size()));
+
+	m_track_view->update();
+}
+
+void LogReader::newWayPoint(TrackPoint* tp) {
+
+}
+
+void LogReader::newLogPoint(TrackPoint* tp) {
+
+	prg_dlg.m_num_logpoints->setText(QString().number(m_track_collection->getNumWaypoints()));
+
 }
 
 void LogReader::startRecording() {

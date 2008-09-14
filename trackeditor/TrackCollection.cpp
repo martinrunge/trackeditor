@@ -126,6 +126,13 @@ void TrackCollection::commit() {
 	}
 }
 
+void TrackCollection::appendTrack(Track* track) {
+	append(track);
+	QList<QStandardItem*> itemlist = at(size() - 1)->getItemList();
+	appendRow(itemlist);
+}
+
+
 void TrackCollection::clear() {
 	// remove all logpoints
 	for(int i= 0; i < getNumWaypoints(); i++) {

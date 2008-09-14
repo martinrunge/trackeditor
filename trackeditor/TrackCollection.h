@@ -27,8 +27,12 @@ public:
 	TrackCollection();
 	virtual ~TrackCollection();
 
-	void clear();
+
+	void appendTrack(Track* track);
+
 	void commit();
+	void clear();
+
 
 	int getNumWaypoints();
 	Track* getWaypoints();

@@ -22,13 +22,18 @@ public:
 	virtual QStringList getInterfaceList();
 
 	virtual bool readLog();
+	virtual void cancelReadLog();
 
 signals:
 	void nemaString(QString);
+
+	void progress(int percent);
+
 	void newTrack(Track*);
 	void newWayPoint(TrackPoint*);
 	void newLogPoint(TrackPoint*);
 	void sendData(QByteArray);
+    void readLogFinished();
     void readLogFailed(QString);
 
 public slots:

@@ -46,6 +46,10 @@ TrackPoint::TrackPoint(QByteArray data) {
     // qDebug() << QString("Waypoint: %1: long:%2 lat:%3 alt:%4").arg(m_time.toString()).arg(m_lng,8, 'f', 8).arg(m_lat,8, 'f', 8).arg(m_alt);
 }
 
+TrackPoint::TrackPoint() {
+    initMetaData();
+}
+
 TrackPoint::~TrackPoint() {
 	// TODO Auto-generated destructor stub
 }
@@ -58,6 +62,10 @@ bool TrackPoint::isBeginOfTrack() {
 	return m_is_begin_of_track;
 }
 
+void TrackPoint::isBeginOfTrack(bool begin) {
+	m_is_begin_of_track = begin;
+}
+
 bool TrackPoint::isLogPoint() {
 	return m_is_log_point;
 }
@@ -68,6 +76,10 @@ void TrackPoint::isLogPoint(bool logpoint) {
 
 bool TrackPoint::isOverSpeed() {
 	return m_is_over_speed;
+}
+
+void TrackPoint::isOverSpeed(bool overspeed) {
+	m_is_over_speed = overspeed;
 }
 
 void TrackPoint::initMetaData() {

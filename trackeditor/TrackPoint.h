@@ -17,12 +17,15 @@
 class TrackPoint : public CommonAttributes, public CommonTrackAttributes {
 public:
 	TrackPoint(QByteArray data);
+	TrackPoint();
 	virtual ~TrackPoint();
 
 	bool isBeginOfTrack();
+	void isBeginOfTrack(bool begin);
 	bool isLogPoint();
 	void isLogPoint(bool logpoint);
 	bool isOverSpeed();
+	void isOverSpeed(bool overspeed);
 
 	double getLat();
 	void setLat(double lat);

@@ -34,7 +34,10 @@
 #include <termios.h>
 
 #include <QtGui/QMainWindow>
+
 #include "ui_TrackEditor.h"
+#include "ui_ProgressDialog.h"
+
 #include "TrackPoint.h"
 #include "Track.h"
 #include "TrackCollection.h"
@@ -69,6 +72,14 @@ public slots:
     void disconnectDevice();
 
     void readLog();
+    void progress(int percent);
+    void cancelReadLog();
+    void readLogFinished();
+
+    void newTrack(Track* track);
+    void newWayPoint(TrackPoint* tp);
+    void newLogPoint(TrackPoint* tp);
+
     void startRecording();
     void stopRecording();
 
@@ -85,6 +96,9 @@ public slots:
 private:
     Ui::TrackEditor2Class ui;
     TrackView *m_track_view;
+
+    QDialog *m_progress_dlg;
+    Ui::ProgressDialog prg_dlg;
 
 
     void openTTY(const char* name, int speed);
