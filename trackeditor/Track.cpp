@@ -91,13 +91,6 @@ void Track::initMetaData() {
 
 	m_track_index = 0;
 
-//	m_track_name.clear();
-//	m_track_comment.clear();
-//	m_track_description.clear();
-//	m_track_data_src.clear();
-//	m_track_link.clear();
-//	m_track_type.clear();
-
 }
 
 double Track::getMinLat() {
@@ -126,6 +119,10 @@ QDateTime Track::getTrackEnd() {
 
 void Track::setIndex(int index) {
 	m_track_index = index;
+	QString nrpoints;
+	nrpoints.setNum(m_track_index);
+
+	m_index_item->setText(nrpoints);
 }
 
 int Track::getIndex(void) {
@@ -145,31 +142,3 @@ QList<QStandardItem*> Track::getItemList() {
 	return m_itemlist;
 }
 
-//
-//void Track::setTrackName(QString name) {
-//	m_track_name = name;
-//}
-//
-//QString Track::getTrackName(void) {
-//	return m_track_name;
-//}
-//
-//
-//void Track::setTrackDescription(QString desc) {
-//	m_track_description = desc;
-//}
-//
-//QString Track::getTrackDescription(void) {
-//	return m_track_description;
-//}
-//
-//
-//
-//void Track::setTrackLink(QString link) {
-//	m_track_link = link;
-//}
-//
-//QString Track::getTrackLink(void) {
-//	return m_track_link;
-//}
-//

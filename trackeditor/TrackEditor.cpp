@@ -63,6 +63,7 @@ LogReader::LogReader(QWidget *parent) :
 	connect(ui.action_Save_Track_As, SIGNAL(triggered()), this, SLOT(saveTrackAs()));
 
 	connect(ui.action_Read_Log, SIGNAL(triggered()), this, SLOT(readLog()));
+	ui.action_Read_Log->setDisabled(true);
 	connect(ui.action_Start_Recording, SIGNAL(triggered()), this, SLOT(startRecording()));
 	connect(ui.action_Stop_Recording, SIGNAL(triggered()), this, SLOT(stopRecording()));
 
@@ -151,6 +152,8 @@ void LogReader::connectDevice() {
 		connect(m_device_io, SIGNAL(newTrack(Track*)), this, SLOT(newTrack(Track*)));
 		connect(m_device_io, SIGNAL(newWayPoint(TrackPoint*)), this, SLOT(newWayPoint(TrackPoint*)));
 		connect(m_device_io, SIGNAL(newLogPoint(TrackPoint*)), this, SLOT(newLogPoint(TrackPoint*)));
+
+		ui.action_Read_Log->setDisabled(false);
 	}
 }
 
@@ -243,7 +246,10 @@ void LogReader::disconnectDevice() {
 		disconnect(m_device_io, SIGNAL(newWayPoint(TrackPoint*)), this, SLOT(newWayPoint(TrackPoint*)));
 		disconnect(m_device_io, SIGNAL(newLogPoint(TrackPoint*)), this, SLOT(newLogPoint(TrackPoint*)));
 
+		ui.action_Read_Log->setDisabled(true);
+
 		delete m_device_io;
+
 		m_device_io = 0;
 
 		closeTTY();
@@ -290,7 +296,7 @@ void LogReader::readLogFinished() {
 }
 
 void LogReader::newTrack(Track* track) {
-	track->setIndex(m_track_collection->size() -1);
+	track->setIndex(m_track_collection->size());
 	m_track_collection->appendTrack(track);
 
 	ui.treeView->resizeColumnToContents(0);
