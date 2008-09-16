@@ -6,6 +6,7 @@
  */
 
 #include <QDebug>
+#include <QMessageBox>
 
 #include "gpxFile.h"
 #include "TrackCollection.h"
@@ -15,11 +16,15 @@ gpxFile::gpxFile() {
 	m_xml_writer = new QXmlStreamWriter();
 	m_xml_writer->setAutoFormatting(true);
 
+	m_xml_reader = new QXmlStreamReader();
 }
 
 gpxFile::~gpxFile() {
 	qDebug() << QString("gpxFile D-tor");
+
 	delete m_xml_writer;
+	delete m_xml_reader;
+
 	m_track_collection = 0;
 }
 
@@ -27,15 +32,82 @@ TrackCollection* gpxFile::read(QString filename) {
 	qDebug() << QString("gpxFile::read( %1 )").arg(filename);
 	TrackCollection* tc = 0;
 	m_file = new QFile(filename);
+	m_file->open(QIODevice::ReadOnly);
+	m_xml_reader->setDevice(m_file);
 
+	while (!m_xml_reader->atEnd()) {
+		m_xml_reader->readNext();
+		if(m_xml_reader->isStartDocument()) {
+			readDocument();
+		}
+	}
+	if (m_xml_reader->hasError()) {
+	    QString errormsg = QString("Error parsing GPX file: '%1' at line %2  column %3")
+						   .arg(m_xml_reader->errorString())
+						   .arg(m_xml_reader->lineNumber())
+						   .arg(m_xml_reader->columnNumber());
+		qDebug() << errormsg;
+	}
 
 
 	delete m_file;
 	return tc;
 }
 
+
+
+}
+
+void gpxFile::readDocument() {
+	enum QXmlStreamReader::TokenType type;
+
+		type = m_xml_reader->readNext();
+
+		switch(type) {
+			case QXmlStreamReader::StartDocument:
+				qDebug() << QString("StartDocument: ");
+				// .arg << m_xml_reader->name().toString() << m_xml_reader->text().toString();
+
+				break;
+
+			case QXmlStreamReader::EndDocument:
+
+				break;
+
+			case QXmlStreamReader::StartElement:
+
+				break;
+
+			case QXmlStreamReader::EndElement:
+
+				break;
+
+			case QXmlStreamReader::Characters:
+
+				break;
+
+			case QXmlStreamReader::Comment:
+				break;
+
+			case QXmlStreamReader::DTD:
+				break;
+
+			case QXmlStreamReader::EntityReference:
+				break;
+
+			case QXmlStreamReader::ProcessingInstruction:
+				break;
+
+			default:
+				qDebug() << "unknown token type!";
+		}
+		qDebug() << m_xml_reader->tokenString() << m_xml_reader->name().toString() << m_xml_reader->text().toString();
+	}
+}
+
 void gpxFile::write(TrackCollection* tc,  QString filename) {
 	qDebug() << QString("gpxFile::write( %1 )").arg(filename);
+
 	m_track_collection = tc;
 	m_file = new QFile(filename);
 	m_file->open(QIODevice::ReadWrite|QIODevice::Truncate);

@@ -24,8 +24,11 @@ public:
 	TrackCollection* read(QString filename);
 	void write(TrackCollection* tc,  QString filename);
 
+
 private:
 	QXmlStreamWriter* m_xml_writer;
+	QXmlStreamReader* m_xml_reader;
+
 	TrackCollection* m_track_collection;
     QFile* m_file;
 

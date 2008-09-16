@@ -29,7 +29,8 @@ SOURCES += CWintec.cpp \
     DeviceData.cpp \
     main.cpp \
     TrackEditor.cpp
-FORMS += DeviceDialog.ui \
+FORMS += ProgressDialog.ui \
+    DeviceDialog.ui \
     TrackEditor.ui \
     ProgressDialog.ui
 RESOURCES += 
