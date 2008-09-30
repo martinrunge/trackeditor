@@ -7,12 +7,14 @@
 
 #include <QDebug>
 #include <QMessageBox>
+#include <QXmlStreamAttributes>
 
 #include "gpxFile.h"
 #include "TrackCollection.h"
 
 gpxFile::gpxFile() {
 	m_track_collection = 0;
+	m_namespace_uri.clear();
 	m_xml_writer = new QXmlStreamWriter();
 	m_xml_writer->setAutoFormatting(true);
 
@@ -30,15 +32,19 @@ gpxFile::~gpxFile() {
 
 TrackCollection* gpxFile::read(QString filename) {
 	qDebug() << QString("gpxFile::read( %1 )").arg(filename);
-	TrackCollection* tc = 0;
+
 	m_file = new QFile(filename);
 	m_file->open(QIODevice::ReadOnly);
 	m_xml_reader->setDevice(m_file);
 
+	m_track_collection = new TrackCollection();
+
 	while (!m_xml_reader->atEnd()) {
 		m_xml_reader->readNext();
 		if(m_xml_reader->isStartDocument()) {
+			qDebug() << QString("StartDocument .... ");
 			readDocument();
+			qDebug() << QString("EndDocument .... ");
 		}
 	}
 	if (m_xml_reader->hasError()) {
@@ -49,36 +55,49 @@ TrackCollection* gpxFile::read(QString filename) {
 		qDebug() << errormsg;
 	}
 
-
 	delete m_file;
-	return tc;
+	return m_track_collection;
 }
 
-
-
-}
 
 void gpxFile::readDocument() {
 	enum QXmlStreamReader::TokenType type;
+
+	do {
 
 		type = m_xml_reader->readNext();
 
 		switch(type) {
 			case QXmlStreamReader::StartDocument:
-				qDebug() << QString("StartDocument: ");
-				// .arg << m_xml_reader->name().toString() << m_xml_reader->text().toString();
-
+				qDebug() << QString("StartDocument!! Should never happen here!!! ");
 				break;
 
 			case QXmlStreamReader::EndDocument:
-
+				qDebug() << QString("readDocument() : EndDocument found. returning ... ");
+				return;
 				break;
 
 			case QXmlStreamReader::StartElement:
+			{
+				qDebug() << QString("StartElement: ") << m_xml_reader->name().toString() << m_xml_reader->text().toString();
+				QXmlStreamAttributes attr;
+				if(m_xml_reader->name() == QString("gpx") ) {
+					attr = m_xml_reader->attributes();
+					QString version = attr.value(QString(), QString("version")).toString();
+					QString creator = attr.value(QString(), QString("creator")).toString();
+					m_namespace_uri = m_xml_reader->namespaceUri().toString();
+					qDebug() << QString("version: %1  Creator: %2 ns: %3").arg(version).arg(creator).arg(m_namespace_uri);
+					readGpxType(version);
+				}
+				else
+				{
+					qDebug() << QString("Unknown StartElement '%1' unknown here. Expected 'gpx'").arg(m_xml_reader->name().toString());
+				}
 
 				break;
-
+			}
 			case QXmlStreamReader::EndElement:
+				qDebug() << QString("EndElement: ") << m_xml_reader->name().toString() << m_xml_reader->text().toString();
 
 				break;
 
@@ -101,9 +120,831 @@ void gpxFile::readDocument() {
 			default:
 				qDebug() << "unknown token type!";
 		}
-		qDebug() << m_xml_reader->tokenString() << m_xml_reader->name().toString() << m_xml_reader->text().toString();
-	}
+//		qDebug() << m_xml_reader->tokenString() << m_xml_reader->name().toString() << m_xml_reader->text().toString();
+	} while (!m_xml_reader->atEnd());
 }
+
+
+/**
+ * <gpx>
+ *   we are here
+ * </gpx>
+ */
+void gpxFile::readGpxType(QString version) {
+	enum QXmlStreamReader::TokenType type;
+
+	// assume version "1.1" for now ....
+
+	do {
+
+		type = m_xml_reader->readNext();
+
+		switch(type) {
+			case QXmlStreamReader::StartDocument:
+				qDebug() << QString("StartDocument!! Should never happen here!!! ");
+				break;
+
+			case QXmlStreamReader::EndDocument:
+				qDebug() << QString("EndDocument!! Should never happen here!!! ");
+				break;
+
+			case QXmlStreamReader::StartElement:
+			{
+				qDebug() << QString("StartElement: ") << m_xml_reader->name().toString() << m_xml_reader->text().toString();
+				QXmlStreamAttributes attr;
+				if(m_xml_reader->name() == QString("metadata")) {
+					readMetadataType();
+				}
+				if(m_xml_reader->name() == QString("wpt")) {
+					readWptType("wpt");
+				}
+				if(m_xml_reader->name() == QString("rte")) {
+					Track* rte = readRteType();
+					m_track_collection->append(rte);
+				}
+				if(m_xml_reader->name() == QString("trk")) {
+					Track *tr = readTrkType();
+					m_track_collection->append(tr);
+				}
+
+				break;
+			}
+			case QXmlStreamReader::EndElement:
+				// expect </gpx> only !!!
+				if(m_xml_reader->name() == QString("gpx")) {
+					m_track_collection->commit();
+					return;
+				}
+				else {
+					qDebug() << QString("EndElement: expected 'gpx' but got: '%1'!").arg(m_xml_reader->name().toString());
+				}
+
+				break;
+
+			case QXmlStreamReader::Characters:
+
+				break;
+
+			case QXmlStreamReader::Comment:
+				break;
+
+			case QXmlStreamReader::DTD:
+				break;
+
+			case QXmlStreamReader::EntityReference:
+				break;
+
+			case QXmlStreamReader::ProcessingInstruction:
+				break;
+
+			default:
+				qDebug() << "unknown token type!";
+		}
+//		qDebug() << m_xml_reader->tokenString() << m_xml_reader->name().toString() << m_xml_reader->text().toString();
+	} while (!m_xml_reader->atEnd());
+}
+
+
+void gpxFile::readMetadataType() {
+	enum QXmlStreamReader::TokenType type;
+	QString tmp_string, open_tag;
+	do {
+		type = m_xml_reader->readNext();
+		switch(type) {
+			case QXmlStreamReader::StartDocument:
+				qDebug() << QString("StartDocument!! Should never happen here!!! ");
+				break;
+
+			case QXmlStreamReader::EndDocument:
+				qDebug() << QString("EndDocument!! Should never happen here!!! ");
+				break;
+
+			case QXmlStreamReader::StartElement:
+			{
+				QXmlStreamAttributes attr;
+				tmp_string.clear();
+				open_tag.clear();
+
+				qDebug() << QString("StartElement: ") << m_xml_reader->name().toString() << m_xml_reader->text().toString();
+				if(m_xml_reader->name() == QString("name")) {
+					open_tag = QString("name");
+				}
+				if(m_xml_reader->name() == QString("desc")) {
+					open_tag = QString("desc");
+				}
+				if(m_xml_reader->name() == QString("author")) {
+					personType pt = readPersonType();
+
+					m_track_collection->setAuthorName(pt.name);
+					m_track_collection->setAuthorEMail(QString("%1@%2").arg(pt.email.id).arg(pt.email.domain));
+					m_track_collection->setAuthorLinkUrl(pt.link.uri);
+					m_track_collection->setAuthorLinkText(pt.link.text);
+					m_track_collection->setAuthorLinkMimeType(pt.link.type);
+				}
+				if(m_xml_reader->name() == QString("time")) {
+					open_tag = QString("time");
+				}
+				if(m_xml_reader->name() == QString("keywords")) {
+					open_tag = QString("keywords");
+				}
+				if(m_xml_reader->name() == QString("bounds")) {
+					open_tag = QString("bounds");
+				}
+				if(m_xml_reader->name() == QString("link")) {
+					linkType lt = readLinkType();
+					if(lt.isValid()) {
+						m_track_collection->setLinkUrl(lt.uri);
+						m_track_collection->setLinkMimeType(lt.type);
+						m_track_collection->setLinkText(lt.text);
+					}
+					else {
+						m_track_collection->setLinkUrl(QString());
+					}
+				}
+
+				break;
+			}
+			case QXmlStreamReader::EndElement:
+				// return tag for this state: </metadata>
+				if(m_xml_reader->name() == open_tag) {
+					if(open_tag == QString("name")) {
+						m_track_collection->setName(tmp_string);
+					}
+					if(open_tag == QString("desc")) {
+						m_track_collection->setDescription(tmp_string);
+					}
+					if(open_tag == QString("time")) {
+						m_track_collection->setDateTime(readXsdDateTime(tmp_string));
+					}
+					if(open_tag == QString("keywords")) {
+						m_track_collection->setKeywords(tmp_string);
+					}
+					open_tag.clear();
+					tmp_string.clear();
+				}
+				else {
+					if(m_xml_reader->name() == QString("metadata")) {
+						return;
+					}
+					else {
+						qDebug() << QString("EndElement: expected 'metadata' but got: '%1'!").arg(m_xml_reader->name().toString());
+					}
+				}
+
+				break;
+
+			case QXmlStreamReader::Characters:
+				tmp_string.append(m_xml_reader->text());
+				break;
+
+			case QXmlStreamReader::Comment:
+				break;
+
+			default:
+				qDebug() << "unknown token type!";
+		}
+//		qDebug() << m_xml_reader->tokenString() << m_xml_reader->name().toString() << m_xml_reader->text().toString();
+	} while (!m_xml_reader->atEnd());
+}
+
+personType gpxFile::readPersonType() {
+	personType pt;
+	enum QXmlStreamReader::TokenType type;
+	QString tmp_string, open_tag;
+	do {
+		type = m_xml_reader->readNext();
+		switch(type) {
+			case QXmlStreamReader::StartDocument:
+				qDebug() << QString("StartDocument!! Should never happen here!!! ");
+				break;
+
+			case QXmlStreamReader::EndDocument:
+				qDebug() << QString("EndDocument!! Should never happen here!!! ");
+				break;
+
+			case QXmlStreamReader::StartElement:
+			{
+				tmp_string.clear();
+				open_tag.clear();
+
+				qDebug() << QString("StartElement: ") << m_xml_reader->name().toString() << m_xml_reader->text().toString();
+				if(m_xml_reader->name() == QString("name")) {
+					open_tag = QString("name");
+				}
+				if(m_xml_reader->name() == QString("link")) {
+					linkType lt = readLinkType();
+					if(lt.isValid()) {
+						pt.link = lt;
+					}
+				}
+				if(m_xml_reader->name() == QString("email")) {
+					emailType et = readEmailType();
+					if(et.isValid()) {
+						pt.email = et;
+					}
+				}
+				break;
+			}
+			case QXmlStreamReader::EndElement:
+				// return tag for this state: </copyright>
+				if(m_xml_reader->name() == open_tag) {
+					if(open_tag == QString("name")) {
+						pt.name = tmp_string;
+					}
+				}
+				else {
+					if(m_xml_reader->name() == QString("author")) {
+						return pt;
+					}
+					else {
+						qDebug() << QString("EndElement: expected 'license' but got: '%1'!").arg(m_xml_reader->name().toString());
+					}
+				}
+				break;
+
+			case QXmlStreamReader::Characters:
+				tmp_string.append(m_xml_reader->text());
+				break;
+			default:
+				qDebug() << "unknown token type!";
+		}
+	} while (!m_xml_reader->atEnd());
+	return pt;
+}
+
+
+void gpxFile::readCopyrightType() {
+	enum QXmlStreamReader::TokenType type;
+	QString tmp_string, open_tag;
+	do {
+		type = m_xml_reader->readNext();
+		switch(type) {
+			case QXmlStreamReader::StartDocument:
+				qDebug() << QString("StartDocument!! Should never happen here!!! ");
+				break;
+
+			case QXmlStreamReader::EndDocument:
+				qDebug() << QString("EndDocument!! Should never happen here!!! ");
+				break;
+
+			case QXmlStreamReader::StartElement:
+			{
+				tmp_string.clear();
+				open_tag.clear();
+
+				qDebug() << QString("StartElement: ") << m_xml_reader->name().toString() << m_xml_reader->text().toString();
+				if(m_xml_reader->name() == QString("author")) {
+					open_tag = QString("author");
+				}
+				if(m_xml_reader->name() == QString("year")) {
+					open_tag = QString("year");
+				}
+				if(m_xml_reader->name() == QString("license")) {
+					open_tag = QString("license");
+				}
+				break;
+			}
+			case QXmlStreamReader::EndElement:
+				// return tag for this state: </copyright>
+				if(m_xml_reader->name() == open_tag) {
+					if(open_tag == QString("author")) {
+						m_track_collection->setCopyrightAuthor(tmp_string);
+					}
+					if(open_tag == QString("year")) {
+						bool ok;
+						int year = tmp_string.toInt(&ok, 10);
+						if(ok) {
+							m_track_collection->setCopyrightYear(year);
+						}
+						else {
+							m_track_collection->setCopyrightYear(0);
+						}
+					}
+					if(open_tag == QString("license")) {
+						m_track_collection->setCopyrightLicenseUrl(tmp_string);
+					}
+					open_tag.clear();
+					tmp_string.clear();
+				}
+				else {
+					if(m_xml_reader->name() == QString("license")) {
+						return;
+					}
+					else {
+						qDebug() << QString("EndElement: expected 'license' but got: '%1'!").arg(m_xml_reader->name().toString());
+					}
+				}
+				break;
+
+			case QXmlStreamReader::Characters:
+				tmp_string.append(m_xml_reader->text());
+				break;
+			default:
+				qDebug() << "unknown token type!";
+		}
+	} while (!m_xml_reader->atEnd());
+}
+
+linkType gpxFile::readLinkType() {
+	QXmlStreamAttributes attr = m_xml_reader->attributes();
+	QString href = attr.value(QString(), QString("href")).toString();
+	qDebug() << QString("link (raw): href=%1").arg(href);
+	if(href.startsWith('"')) {
+		href = href.right(href.size() - 1);
+	}
+	if(href.endsWith('"')) {
+		href.chop(1);
+	}
+
+	enum QXmlStreamReader::TokenType type;
+	linkType lt;
+	lt.uri = href;
+	QString tmp_string, open_tag;
+	do {
+		type = m_xml_reader->readNext();
+		switch(type) {
+			case QXmlStreamReader::StartDocument:
+				qDebug() << QString("StartDocument!! Should never happen here!!! ");
+				break;
+
+			case QXmlStreamReader::EndDocument:
+				qDebug() << QString("EndDocument!! Should never happen here!!! ");
+				break;
+
+			case QXmlStreamReader::StartElement:
+			{
+				tmp_string.clear();
+				open_tag.clear();
+
+				qDebug() << QString("StartElement: ") << m_xml_reader->name().toString() << m_xml_reader->text().toString();
+				if(m_xml_reader->name() == QString("text")) {
+					open_tag = QString("text");
+				}
+				if(m_xml_reader->name() == QString("type")) {
+					open_tag = QString("type");
+				}
+				break;
+			}
+			case QXmlStreamReader::EndElement:
+				// return tag for this state: </copyright>
+				if(m_xml_reader->name() == open_tag) {
+					if(open_tag == QString("text")) {
+						lt.text = tmp_string;
+					}
+					if(open_tag == QString("type")) {
+						lt.type = tmp_string;
+					}
+					open_tag.clear();
+					tmp_string.clear();
+				}
+				else {
+					if(m_xml_reader->name() == QString("link")) {
+						return lt;
+					}
+					else {
+						qDebug() << QString("EndElement: expected 'license' but got: '%1'!").arg(m_xml_reader->name().toString());
+					}
+				}
+				break;
+
+			case QXmlStreamReader::Characters:
+				tmp_string.append(m_xml_reader->text());
+				break;
+			default:
+				qDebug() << "unknown token type!";
+		}
+	} while (!m_xml_reader->atEnd());
+	return lt;
+}
+
+emailType gpxFile::readEmailType() {
+	QXmlStreamAttributes attr = m_xml_reader->attributes();
+	emailType et;
+	et.id = attr.value(QString(), QString("id")).toString();
+	et.domain = attr.value(QString(), QString("domain")).toString();
+	qDebug() << QString("email:%1@%2").arg(et.id).arg(et.domain);
+
+	// read the </email> end tag
+	do {
+		m_xml_reader->readNext();
+	} while( m_xml_reader->isEndElement() && m_xml_reader->name() == QString("email") );
+	return et;
+}
+
+
+TrackPoint* gpxFile::readWptType(QString tagname) {
+	TrackPoint* tp = new TrackPoint();
+	QXmlStreamAttributes attr = m_xml_reader->attributes();
+	bool ok;
+	double lat = attr.value(QString(), QString("lat")).toString().toDouble(&ok);
+	if(!ok) {
+		delete tp;
+		tp = 0;
+		return tp;
+	}
+	double lon = attr.value(QString(), QString("lon")).toString().toDouble(&ok);
+	if(!ok) {
+		delete tp;
+		tp = 0;
+		return 0;
+	}
+
+	tp->setLat(lat);
+	tp->setLong(lon);
+
+	QString tmp_string, open_tag;
+	enum QXmlStreamReader::TokenType type;
+	do {
+		type = m_xml_reader->readNext();
+		switch(type) {
+			case QXmlStreamReader::StartDocument:
+			case QXmlStreamReader::EndDocument:
+				qDebug() << QString("Start- or EndDocument!! Should never happen here!!! ");
+				break;
+
+			case QXmlStreamReader::StartElement:
+			{
+				qDebug() << QString("StartElement: ") << m_xml_reader->name().toString() << m_xml_reader->text().toString();
+				tmp_string.clear();
+				open_tag.clear();
+				if(m_xml_reader->name() == QString("ele")) {
+					open_tag = QString("ele");
+				}
+				if(m_xml_reader->name() == QString("time")) {
+					open_tag = QString("time");
+				}
+				if(m_xml_reader->name() == QString("magvar")) {
+					open_tag = QString("magvar");
+				}
+				if(m_xml_reader->name() == QString("geoidheight")) {
+					open_tag = QString("geoidheight");
+				}
+				if(m_xml_reader->name() == QString("name")) {
+					open_tag = QString("name");
+				}
+				if(m_xml_reader->name() == QString("cmt")) {
+					open_tag = QString("desc");
+				}
+				if(m_xml_reader->name() == QString("src")) {
+					open_tag = QString("src");
+				}
+				if(m_xml_reader->name() == QString("link")) {
+					linkType lt = readLinkType();
+					tp->setLinkUrl(lt.uri);
+					tp->setLinkText(lt.text);
+					tp->setLinkMimeType(lt.type);
+				}
+				if(m_xml_reader->name() == QString("sym")) {
+					open_tag = QString("sym");
+				}
+				if(m_xml_reader->name() == QString("type")) {
+					open_tag = QString("type");
+				}
+				if(m_xml_reader->name() == QString("fix")) {
+					open_tag = QString("fix");
+				}
+				if(m_xml_reader->name() == QString("sat")) {
+					open_tag = QString("sat");
+				}
+				if(m_xml_reader->name() == QString("hdop")) {
+					open_tag = QString("hdop");
+				}
+				if(m_xml_reader->name() == QString("vdop")) {
+					open_tag = QString("vdop");
+				}
+				if(m_xml_reader->name() == QString("pdop")) {
+					open_tag = QString("pdop");
+				}
+				if(m_xml_reader->name() == QString("ageofdgpsdata")) {
+					open_tag = QString("ageofdgpsdata");
+				}
+				if(m_xml_reader->name() == QString("dgpsid")) {
+					open_tag = QString("dgpsid");
+				}
+				if(m_xml_reader->name() == QString("extensions")) {
+					open_tag = QString("extensions");
+				}
+
+				break;
+			}
+			case QXmlStreamReader::EndElement:
+				if(m_xml_reader->name() == open_tag) {
+					if(m_xml_reader->name() == QString("ele")) {
+						double alt = tmp_string.toDouble(&ok);
+						tp->setAlt(alt);
+					}
+					if(m_xml_reader->name() == QString("time")) {
+						tp->setTime(readXsdDateTime(tmp_string));
+					}
+					if(m_xml_reader->name() == QString("magvar")) {
+						double magvar = tmp_string.toDouble(&ok);
+						tp->setMagneticVariation(magvar);
+					}
+					if(m_xml_reader->name() == QString("geoidheight")) {
+						double geoidheight = tmp_string.toDouble(&ok);
+						tp->setGeoidHeight(geoidheight);
+					}
+					if(m_xml_reader->name() == QString("name")) {
+						tp->setName(tmp_string);
+					}
+					if(m_xml_reader->name() == QString("cmt")) {
+						tp->setComment(tmp_string);
+					}
+					if(m_xml_reader->name() == QString("src")) {
+						tp->setComment(tmp_string);
+					}
+					if(m_xml_reader->name() == QString("sym")) {
+						tp->setSymbol(tmp_string);
+					}
+					if(m_xml_reader->name() == QString("type")) {
+						tp->setType(tmp_string);
+					}
+					if(m_xml_reader->name() == QString("fix")) {
+						tp->setFixType(tmp_string);
+					}
+					if(m_xml_reader->name() == QString("sat")) {
+						unsigned num_sats = tmp_string.toUInt(&ok);
+						tp->setNumSats(num_sats);
+					}
+					if(m_xml_reader->name() == QString("hdop")) {
+						double hdop = tmp_string.toDouble(&ok);
+						tp->setHdop(hdop);
+					}
+					if(m_xml_reader->name() == QString("vdop")) {
+						double vdop = tmp_string.toDouble(&ok);
+						tp->setVdop(vdop);
+					}
+					if(m_xml_reader->name() == QString("pdop")) {
+						double pdop = tmp_string.toDouble(&ok);
+						tp->setPdop(pdop);
+					}
+					if(m_xml_reader->name() == QString("ageofdgpsdata")) {
+						double age = tmp_string.toDouble(&ok);
+						tp->setDgpsAge(age);
+					}
+					if(m_xml_reader->name() == QString("dgpsid")) {
+						unsigned dgpsid = tmp_string.toUInt(&ok);
+						tp->setDgpsStationId(dgpsid);
+					}
+					if(m_xml_reader->name() == QString("extensions")) {
+						qDebug() << QString("found extension: %1").arg(tmp_string);
+					}
+				}
+				else {
+					if(m_xml_reader->name() == tagname) {
+						return tp;
+					}
+				}
+				break;
+
+			case QXmlStreamReader::Characters:
+				tmp_string.append(m_xml_reader->text());
+				break;
+
+			case QXmlStreamReader::Comment:
+			case QXmlStreamReader::DTD:
+			case QXmlStreamReader::EntityReference:
+			case QXmlStreamReader::ProcessingInstruction:
+				break;
+
+			default:
+				qDebug() << "unknown token type!";
+		}
+//		qDebug() << m_xml_reader->tokenString() << m_xml_reader->name().toString() << m_xml_reader->text().toString();
+	} while (!m_xml_reader->atEnd());
+	return tp;
+}
+
+Track* gpxFile::readRteType() {
+	QString tmp_string, open_tag;
+	bool ok;
+
+	Track* tr = new Track();
+
+	enum QXmlStreamReader::TokenType type;
+	do {
+		type = m_xml_reader->readNext();
+		switch(type) {
+			case QXmlStreamReader::StartDocument:
+				qDebug() << QString("StartDocument!! Should never happen here!!! ");
+				break;
+
+			case QXmlStreamReader::EndDocument:
+				qDebug() << QString("EndDocument!! Should never happen here!!! ");
+				break;
+
+			case QXmlStreamReader::StartElement:
+			{
+				qDebug() << QString("StartElement: ") << m_xml_reader->name().toString() << m_xml_reader->text().toString();
+				break;
+			}
+			case QXmlStreamReader::EndElement:
+				// expect </rte> only !!!
+				if(m_xml_reader->name() == QString("rte")) {
+					return tr;
+				}
+				else {
+					qDebug() << QString("EndElement: expected 'rte' but got: '%1'!").arg(m_xml_reader->name().toString());
+				}
+
+				break;
+
+			case QXmlStreamReader::Characters:
+				tmp_string.append(m_xml_reader->text());
+				break;
+
+			case QXmlStreamReader::Comment:
+			case QXmlStreamReader::DTD:
+			case QXmlStreamReader::EntityReference:
+			case QXmlStreamReader::ProcessingInstruction:
+				break;
+
+			default:
+				qDebug() << "unknown token type!";
+		}
+//		qDebug() << m_xml_reader->tokenString() << m_xml_reader->name().toString() << m_xml_reader->text().toString();
+	} while (!m_xml_reader->atEnd());
+	return tr;
+}
+
+Track* gpxFile::readTrkType() {
+	QString tmp_string, open_tag;
+	bool ok;
+	int trkseg = 0;
+	unsigned track_index;
+
+	Track* tr = new Track();
+
+	enum QXmlStreamReader::TokenType type;
+	do {
+		type = m_xml_reader->readNext();
+		switch(type) {
+			case QXmlStreamReader::StartDocument:
+			case QXmlStreamReader::EndDocument:
+				qDebug() << QString("Start- or EndDocument!! Should never happen here!!! ");
+				break;
+
+			case QXmlStreamReader::StartElement:
+			{
+				qDebug() << QString("StartElement: ") << m_xml_reader->name().toString() << m_xml_reader->text().toString();
+				tmp_string.clear();
+				open_tag.clear();
+
+				if(m_xml_reader->name() == QString("name")) {
+					open_tag = QString("name");
+				}
+				if(m_xml_reader->name() == QString("cmt")) {
+					open_tag = QString("cmt");
+				}
+				if(m_xml_reader->name() == QString("desc")) {
+					open_tag = QString("desc");
+				}
+				if(m_xml_reader->name() == QString("src")) {
+					open_tag = QString("src");
+				}
+				if(m_xml_reader->name() == QString("link")) {
+					linkType lt = readLinkType();
+					tr->setLinkUrl(lt.uri);
+					tr->setLinkText(lt.text);
+					tr->setLinkMimeType(lt.type);
+				}
+				if(m_xml_reader->name() == QString("number")) {
+					open_tag = QString("number");
+				}
+				if(m_xml_reader->name() == QString("type")) {
+					open_tag = QString("type");
+				}
+				if(m_xml_reader->name() == QString("extensions")) {
+					open_tag = QString("extensions");
+				}
+				if(m_xml_reader->name() == QString("trkseg")) {
+					trkseg++;
+				}
+				if(m_xml_reader->name() == QString("trkpt")) {
+					TrackPoint * tp = readWptType("trkpt");
+					if(trkseg == 1) {
+						tr->append(tp);
+					}
+				}
+
+
+				break;
+			}
+			case QXmlStreamReader::EndElement:
+				// expect </trk> only !!!
+				if(m_xml_reader->name() == open_tag) {
+					if(m_xml_reader->name() == QString("name")) {
+						tr->setName(tmp_string);
+					}
+					if(m_xml_reader->name() == QString("cmt")) {
+						tr->setComment(tmp_string);
+					}
+					if(m_xml_reader->name() == QString("desc")) {
+						tr->setDescription(tmp_string);
+					}
+					if(m_xml_reader->name() == QString("src")) {
+						tr->setDataSource(tmp_string);
+					}
+					if(m_xml_reader->name() == QString("number")) {
+						track_index = tmp_string.toUInt(&ok);
+					}
+					if(m_xml_reader->name() == QString("type")) {
+						tr->setType(tmp_string);
+					}
+					if(m_xml_reader->name() == QString("extensions")) {
+						qDebug() << QString("extensions: %1").arg(tmp_string);
+					}
+					if(m_xml_reader->name() == QString("trkseg")) {
+						trkseg--;
+					}
+				}
+				else {
+					if(m_xml_reader->name() == QString("trk")) {
+						tr->commit();
+						tr->setIndex(track_index);
+						return tr;
+					}
+					else {
+						qDebug() << QString("EndElement: expected 'trk' but got: '%1'!").arg(m_xml_reader->name().toString());
+					}
+				}
+				break;
+
+			case QXmlStreamReader::Characters:
+				tmp_string.append(m_xml_reader->text());
+				break;
+
+			case QXmlStreamReader::Comment:
+			case QXmlStreamReader::DTD:
+			case QXmlStreamReader::EntityReference:
+			case QXmlStreamReader::ProcessingInstruction:
+				break;
+
+			default:
+				qDebug() << "unknown token type!";
+		}
+//		qDebug() << m_xml_reader->tokenString() << m_xml_reader->name().toString() << m_xml_reader->text().toString();
+	} while (!m_xml_reader->atEnd());
+	return tr;
+}
+
+
+
+/**
+ * TODO: add millisecond support here !!!
+ */
+
+QDateTime gpxFile::readXsdDateTime(QString timestring) {
+	QDateTime dt;
+	bool error = false;
+	if(timestring.endsWith('Z')) {
+		// time string is in UTC
+		dt = QDateTime::fromString(timestring, "yyyy-MM-ddThh:mm:ss'Z'");
+		dt.setTimeSpec(Qt::UTC);
+		qDebug() << QString("converting %1 to %2").arg(timestring).arg(dt.toString());
+	}
+	else {
+		QStringList strlist = timestring.split(":");
+		if(strlist.size() == 3) {
+			// timestring is in format "yyyy-MM-ddThh:mm:ss"
+			dt = QDateTime::fromString(timestring, "yyyy-MM-ddThh:mm:ss");
+			dt.setTimeSpec(Qt::LocalTime);
+		}
+		else {
+			if(strlist.size() == 4) {
+				// timestring is in format "yyyy-MM-ddThh:mm:ss.zzz+01:00"
+				bool ok;
+				int mins = strlist[3].toInt(&ok, 10);
+				if(!ok) error=true;
+
+				int hours = strlist[2].right(3).toInt(&ok, 10);
+				if(!ok) error=true;
+
+				// tmpstring = timstring without the "+01:00" at the end
+				QString tmpstring = timestring.left(timestring.size() - 6);
+				dt = QDateTime::fromString(tmpstring, "yyyy-MM-ddThh:mm:ss");
+				dt.setTimeSpec(Qt::UTC);
+				dt.addSecs(mins * 60 + hours * 60 * 60);
+			}
+			else {
+				qDebug() << QString("unknown date format: %1   (number of ':' unknown)").arg(timestring);
+			}
+		}
+	}
+
+	if(error) {
+		// return an invalid QDateTime
+		dt = QDateTime(QDate(0,0,0));
+	}
+
+	return dt;
+}
+
+
+
+
+
+
 
 void gpxFile::write(TrackCollection* tc,  QString filename) {
 	qDebug() << QString("gpxFile::write( %1 )").arg(filename);
@@ -269,7 +1110,7 @@ void gpxFile::write_routes() {
 void gpxFile::write_tracks() {
 
     std::vector<int> mi = m_track_collection->getIndexList();
-    for(int mi_idx = 0; mi_idx < mi.size(); mi_idx++ ) {
+    for(unsigned mi_idx = 0; mi_idx < mi.size(); mi_idx++ ) {
     	int tr_idx = mi[mi_idx];
 
 //  for complete GPX file

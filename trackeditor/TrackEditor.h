@@ -76,6 +76,7 @@ public slots:
     void cancelReadLog();
     void readLogFinished();
 
+    void setTrackCollection(TrackCollection* track_collection);
     void newTrack(Track* track);
     void newWayPoint(TrackPoint* tp);
     void newLogPoint(TrackPoint* tp);
@@ -90,7 +91,7 @@ public slots:
     void treeViewClicked(QModelIndex index);
     void selectionChanged(QItemSelection,QItemSelection);
 
-    void addData(QByteArray data);
+//    void addData(QByteArray data);
     void sendData(QByteArray data);
 
 private:
