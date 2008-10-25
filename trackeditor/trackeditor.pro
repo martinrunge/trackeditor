@@ -34,3 +34,6 @@ FORMS += ProgressDialog.ui \
     TrackEditor.ui \
     ProgressDialog.ui
 RESOURCES += 
+LIBS += -lproj
+
+

@@ -53,7 +53,8 @@ void TrackView::paintEvent( QPaintEvent * event ) {
     }
 
     QPainter painter(this);
-    QRectF dimension = m_track_collection->getDimension();
+    //QRectF dimension = m_track_collection->getDimension();
+    QRectF dimension = m_track_collection->getDimensionXY();
 
     double dh = dimension.top() - dimension.bottom();
     double dw = dimension.right() - dimension.left();
@@ -82,14 +83,15 @@ void TrackView::paintEvent( QPaintEvent * event ) {
         }
         tr_ptr = m_track_collection->at(tr_idx);
         for(int tp_idx = 0; tp_idx < m_track_collection->at(tr_idx)->size(); tp_idx++) {
-        	double x = (tr_ptr->at(tp_idx)->getLong() - x_off) * x_scale;
-        	double y = (tr_ptr->at(tp_idx)->getLat() - y_off) * y_scale;
+//        	double x = (tr_ptr->at(tp_idx)->getLong() - x_off) * x_scale;
+//        	double y = (tr_ptr->at(tp_idx)->getLat() - y_off) * y_scale;
+           	double x = (tr_ptr->at(tp_idx)->getX() - x_off) * x_scale;
+         	double y = (tr_ptr->at(tp_idx)->getY() - y_off) * y_scale;
 
         	painter.drawPoint(QPointF(x,y));
 
         }
     }
-
 
 }
 

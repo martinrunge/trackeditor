@@ -20,10 +20,16 @@ TrackCollection::TrackCollection() {
     		this, SLOT(editFinished(const QModelIndex&, const QModelIndex&)));
 
 
+    static char* params[] = {"proj=merc", "ellps=wgs84", "lat_ts=48" };
+
+    m_pj = pj_init(3, params);
+
+
 }
 
 TrackCollection::~TrackCollection() {
 	delete m_waypoints;
+	pj_free(m_pj);
 }
 
 
@@ -83,6 +89,29 @@ QRectF TrackCollection::getDimension(QModelIndexList indices) {
 
 }
 
+QRectF TrackCollection::getDimensionXY() {
+	return getDimensionXY(m_model_index_list);
+}
+
+QRectF TrackCollection::getDimensionXY(QModelIndexList indices) {
+	// iterate over QVector and find min and max lat and long
+	double min_x = -1000000000.0;
+	double max_x = 1000000000.0;
+	double min_y = -1000000000.0;
+	double max_y = 1000000000.0;
+
+	for(int i = 0; i < indices.size(); i++) {
+		int tmp_i = indices.at(i).row();
+		if(min_x > at(tmp_i)->getMinX() ) min_x = at(tmp_i)->getMinX();
+		if(max_x < at(tmp_i)->getMaxX() ) max_x = at(tmp_i)->getMaxX();
+		if(min_y > at(tmp_i)->getMinY()) min_y = at(tmp_i)->getMinY();
+		if(max_y < at(tmp_i)->getMaxY()) max_y = at(tmp_i)->getMaxY();
+	}
+
+	return QRectF(QPointF(min_x, max_x), QPointF(max_y, min_y));
+
+}
+
 bool TrackCollection::validBounds() {
 	return true;
 }
@@ -130,6 +159,7 @@ void TrackCollection::appendTrack(Track* track) {
 	append(track);
 	QList<QStandardItem*> itemlist = at(size() - 1)->getItemList();
 	appendRow(itemlist);
+	track->setPJ(m_pj);
 }
 
 

@@ -33,6 +33,11 @@ void Track::commit() {
 	m_min_lng = 360.0;
 	m_max_lng = 0;
 
+	m_min_x = 100000000.0;
+	m_max_x = -100000000.0;
+	m_min_y = 100000000.0;
+	m_max_y = -100000000.0;
+
 	if(size() == 0) return;
 
 	m_min_time = at(0)->getTime();
@@ -45,8 +50,16 @@ void Track::commit() {
 		if(m_min_lng > at(i)->getLong() ) m_min_lng = at(i)->getLong();
 		if(m_max_lng < at(i)->getLong() ) m_max_lng = at(i)->getLong();
 
+		at(i)->setPJ(m_pj);
+
+		if(m_min_x > at(i)->getX() ) m_min_x = at(i)->getX();
+		if(m_max_x < at(i)->getX() ) m_max_x = at(i)->getX();
+		if(m_min_y > at(i)->getY() ) m_min_y = at(i)->getY();
+		if(m_max_y < at(i)->getY() ) m_max_y = at(i)->getY();
+
 		if(m_min_time > at(i)->getTime()) m_min_time = at(i)->getTime();
 		if(m_max_time < at(i)->getTime()) m_max_time = at(i)->getTime();
+
 	}
 
 	QString tracknr;
@@ -89,6 +102,11 @@ void Track::initMetaData() {
 	m_min_lng = 0;
 	m_max_lng = 0;
 
+	m_min_x = 0;
+	m_max_x = 0;
+	m_min_y = 0;
+	m_max_y = 0;
+
 	m_track_index = 0;
 
 }
@@ -108,6 +126,23 @@ double Track::getMinLong() {
 double Track::getMaxLong() {
 	return m_max_lng;
 }
+
+double Track::getMinX() {
+	return m_min_x;
+}
+
+double Track::getMaxX() {
+	return m_max_x;
+}
+
+double Track::getMinY() {
+	return m_min_y;
+}
+
+double Track::getMaxY() {
+	return m_max_y;
+}
+
 
 QDateTime Track::getTrackBegin() {
 	return m_min_time;

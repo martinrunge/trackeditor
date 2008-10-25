@@ -39,6 +39,8 @@ public:
 
 	QRectF getDimension();
 	QRectF getDimension(QModelIndexList indices);
+	QRectF getDimensionXY();
+	QRectF getDimensionXY(QModelIndexList indices);
 	QRectF getCompleteDimension();
 	bool validBounds();
 
@@ -130,6 +132,8 @@ private:
 	// see getDimensions()
 
 	void initMetaData();
+
+	PJ* m_pj;
 
 };
 

@@ -12,7 +12,7 @@
 
 const int TrackPoint::m_size = 16;
 
-TrackPoint::TrackPoint(QByteArray data) {
+TrackPoint::TrackPoint(QByteArray data) : m_pj(0) {
 	m_data = data;
 	uint32_t* tmp;
 	uint16_t *stmp;
@@ -90,28 +90,8 @@ void TrackPoint::initMetaData() {
     //    INT_MIN == not set
 	m_geoid_height = INT_MIN;
 
-    //    <name> xsd:string </name> [0..1]
-//	m_name.clear();
-
-	//    <cmt> xsd:string </cmt> [0..1]
-//	m_comment.clear();
-
-	//    <desc> xsd:string </desc> [0..1]
-//	m_description.clear();
-
-	//    <src> xsd:string </src> [0..1]
-//	m_data_source.clear();
-
-	//    <link> linkType </link> [0..*]
-//	m_link_url.clear();
-//	m_link_mime_type.clear();
-//	m_link_text.clear();
-
 	//    <sym> xsd:string </sym> [0..1]
 	m_symbol.clear();
-
-	//    <type> xsd:string </type> [0..1]
-//	m_type.clear();
 
 	//    <fix> fixType </fix> [0..1]
 	// {none|2d|3d|dgps|pps}
@@ -142,7 +122,66 @@ void TrackPoint::initMetaData() {
 	m_dgps_station_id = -1;
 
 }
+void TrackPoint::setPJ(PJ* pj) {
+	m_pj = pj;
 
+	projUV tmp;
+	tmp.u = m_lat;
+	tmp.v = m_lng;
+	// transform
+	tmp = pj_fwd(tmp, m_pj);
+	m_trans_x = tmp.u;
+	m_trans_y = tmp.v;
+
+}
+
+void TrackPoint::setXY(double x, double y ) {
+	m_trans_x = x;
+	m_trans_y = y;
+
+	if(m_pj != 0) {
+		projUV tmp;
+		tmp.u = m_trans_x;
+		tmp.v = m_trans_y;
+		// transform
+		tmp = pj_inv(tmp, m_pj);
+		m_lat = tmp.u;
+		m_lng = tmp.v;
+	}
+}
+
+QPointF TrackPoint::getXY(void) {
+	return QPointF(m_trans_x, m_trans_y);
+}
+
+double TrackPoint::getX() {
+	return m_trans_x;
+}
+
+double TrackPoint::getY() {
+	return m_trans_y;
+}
+
+
+
+void TrackPoint::setLatLong(double lat, double lng) {
+	m_lat = lat;
+	m_lng = lng;
+
+	if(m_pj != 0) {
+		projUV tmp;
+		tmp.u = m_lat;
+		tmp.v = m_lng;
+		// transform
+		tmp = pj_fwd(tmp, m_pj);
+		m_trans_x = tmp.u;
+		m_trans_y = tmp.v;
+	}
+}
+
+QPointF TrackPoint::getLatLong(void) {
+	return QPointF(m_lat, m_lng);
+}
 
 double TrackPoint::getLat() {
 	return m_lat;
@@ -191,15 +230,6 @@ bool TrackPoint::validTime() {
 }
 
 
-//void TrackPoint::setName(QString name) {
-//	m_name = name;
-//}
-//
-//QString TrackPoint::getName() {
-//	return m_name;
-//}
-
-
 void TrackPoint::setMagneticVariation(double degrees) {
 	m_magmetic_variation = degrees;
 }
@@ -236,58 +266,6 @@ bool TrackPoint::validGeoidHeight() {
 }
 
 
-//void TrackPoint::setComment(QString comment) {
-//	m_comment = comment;
-//}
-//
-//QString TrackPoint::getComment() {
-//	return m_comment;
-//}
-//
-//
-//void TrackPoint::setDescription(QString desc) {
-//	m_description = desc;
-//}
-//
-//QString TrackPoint::getDescription() {
-//	return m_description;
-//}
-//
-//
-//void TrackPoint::setDataSource(QString src) {
-//	m_data_source = src;
-//}
-//
-//QString TrackPoint::getDataSource() {
-//	return m_data_source;
-//}
-//
-//
-//void TrackPoint::setLinkUrl(QString url) {
-//	m_link_url = url;
-//}
-//
-//QString TrackPoint::getLinkUrl() {
-//	return m_link_url;
-//}
-//
-//void TrackPoint::setLinkMimeType(QString mime_type) {
-//	m_link_mime_type = mime_type;
-//}
-//
-//QString TrackPoint::getLinkMimeType() {
-//	return m_link_mime_type;
-//}
-//
-//void TrackPoint::setLinkText(QString text) {
-//	m_link_text = text;
-//}
-//
-//QString TrackPoint::getLinkText() {
-//	return m_link_text;
-//}
-
-
 void TrackPoint::setSymbol(QString sym) {
 	m_symbol = sym;
 }
@@ -299,15 +277,6 @@ QString TrackPoint::getSymbol() {
 bool TrackPoint::validSymbol() {
 	return !(m_symbol.isEmpty());
 }
-
-//
-//void TrackPoint::setType(QString type) {
-//	m_type = type;
-//}
-//
-//QString TrackPoint::getType() {
-//	return m_type;
-//}
 
 
 void TrackPoint::setFixType(QString type) {
@@ -429,33 +398,5 @@ bool TrackPoint::validDgpsStationId() {
 		return true;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

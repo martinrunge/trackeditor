@@ -10,6 +10,9 @@
 
 #include <QByteArray>
 #include <QDateTime>
+#include <QPointF>
+
+#include <projects.h>
 
 #include "CommonAttributes.h"
 #include "CommonTrackAttributes.h"
@@ -27,6 +30,17 @@ public:
 	bool isOverSpeed();
 	void isOverSpeed(bool overspeed);
 
+	void setPJ(PJ* pj);
+
+	void setXY(double x, double y );
+	QPointF getXY(void);
+
+	double getX();
+	double getY();
+
+	void setLatLong(double lat, double lng);
+	QPointF getLatLong(void);
+
 	double getLat();
 	void setLat(double lat);
 
@@ -41,9 +55,6 @@ public:
 	void setTime(QDateTime dt);
     bool validTime();
 
-//	void setName(QString name);
-//	QString getName();
-
 	void setMagneticVariation(double degrees);
 	double getMagneticVariation();
 	bool validMagneticVariation();
@@ -52,30 +63,11 @@ public:
 	int getGeoidHeight();
 	bool validGeoidHeight();
 
-//	void setComment(QString comment);
-//	QString getComment();
-
-//	void setDescription(QString desc);
-//	QString getDescription();
-
-//	void setDataSource(QString src);
-//	QString getDataSource();
-
-//	void setLinkUrl(QString url);
-//	QString getLinkUrl();
-
-//	void setLinkMimeType(QString mime_type);
-//	QString getLinkMimeType();
-//
-//	void setLinkText(QString text);
-//	QString getLinkText();
 
 	void setSymbol(QString sym);
 	QString getSymbol();
 	bool validSymbol();
 
-//	void setType(QString type);
-//	QString getType();
 
 	void setFixType(QString type);
 	QString getFixType();
@@ -109,6 +101,7 @@ public:
 
 	static const int size();
 
+
 private:
 	QByteArray m_data;
     static const int m_size;
@@ -117,6 +110,11 @@ private:
 
     double m_lat;
     double m_lng;
+
+    PJ* m_pj;
+
+    double m_trans_x;
+    double m_trans_y;
 
     //    <ele> xsd:decimal </ele> [0..1]
     //    m_alt < -1000000 == not set
@@ -133,28 +131,8 @@ private:
     //    INT_MIN == not set
 	int m_geoid_height;
 
-    //    <name> xsd:string </name> [0..1]
-//	QString m_name;
-
-	//    <cmt> xsd:string </cmt> [0..1]
-//	QString m_comment;
-
-	//    <desc> xsd:string </desc> [0..1]
-//	QString m_description;
-
-	//    <src> xsd:string </src> [0..1]
-//	QString m_data_source;
-
-	//    <link> linkType </link> [0..*]
-//	QString m_link_url;
-//	QString m_link_mime_type;
-//	QString m_link_text;
-
 	//    <sym> xsd:string </sym> [0..1]
 	QString m_symbol;
-
-	//    <type> xsd:string </type> [0..1]
-//	QString m_type;
 
 	//    <fix> fixType </fix> [0..1]
 	// {none|2d|3d|dgps|pps}

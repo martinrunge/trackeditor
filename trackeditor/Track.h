@@ -26,6 +26,11 @@ public:
 	double getMinLong();
 	double getMaxLong();
 
+	double getMinX();
+	double getMaxX();
+	double getMinY();
+	double getMaxY();
+
 	QDateTime getTrackBegin();
 	QDateTime getTrackEnd();
 
@@ -38,10 +43,16 @@ public:
 
 	void commit();
 
+	inline void setPJ(PJ* pj) {m_pj = pj; };
+
+
 private:
 	void initMetaData();
 
+	PJ* m_pj;
+
 	double m_min_lat, m_max_lat, m_min_lng, m_max_lng;
+	double m_min_x, m_max_x, m_min_y, m_max_y;
 
 	QDateTime m_min_time, m_max_time;
 
