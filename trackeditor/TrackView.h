@@ -9,10 +9,17 @@
 #define TRACKVIEW_H_
 
 #include <QWidget>
+
 class TrackCollection;
 class QFrame;
+class QScrollArea;
 
 class TrackView : public QWidget {
+	Q_OBJECT
+
+public slots:
+	void zoomValueChanged(int value);
+
 
 public:
 	TrackView(QWidget* parent = 0);
@@ -30,7 +37,10 @@ protected:
 
 private:
 	TrackCollection* m_track_collection;
+	QScrollArea* m_scroll_area;
 	QFrame *m_frame;
+
+	int m_zoom_value;
 };
 
 #endif /* TRACKVIEW_H_ */

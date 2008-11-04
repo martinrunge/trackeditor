@@ -5,7 +5,6 @@
  *      Author: martin
  */
 
-
 #include <assert.h>
 
 #include <QDebug>
@@ -14,16 +13,15 @@
 TrackCollection::TrackCollection() {
 	m_waypoints = new Track();
 	m_parentItem = invisibleRootItem();
-	setHorizontalHeaderLabels(QStringList() << "Nr " << "Start Time" << "End Time" << "Name" << "Nr Points");
+	setHorizontalHeaderLabels(QStringList() << "Nr " << "Start Time"
+			<< "End Time" << "Name" << "Nr Points");
 	initMetaData();
-    connect(this, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)),
-    		this, SLOT(editFinished(const QModelIndex&, const QModelIndex&)));
+	connect(this, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)),
+	this, SLOT(editFinished(const QModelIndex&, const QModelIndex&)));
 
+	static char* params[] = { "proj=merc", "ellps=WGS84", "lat_ts=48" };
 
-    static char* params[] = {"proj=merc", "ellps=wgs84", "lat_ts=48" };
-
-    m_pj = pj_init(3, params);
-
+	m_pj = pj_init(3, params);
 
 }
 
@@ -32,14 +30,16 @@ TrackCollection::~TrackCollection() {
 	pj_free(m_pj);
 }
 
-
-void TrackCollection::editFinished(const QModelIndex & topLeft, const QModelIndex & bottomRight) {
-	qDebug() << QString("editFinished: (%1,%2) - (%3,%4)").arg(topLeft.column()).arg(topLeft.row()).arg(bottomRight.column()).arg(bottomRight.row());
+void TrackCollection::editFinished(const QModelIndex & topLeft,
+		const QModelIndex & bottomRight) {
+	qDebug()
+			<< QString("editFinished: (%1,%2) - (%3,%4)").arg(topLeft.column()).arg(
+					topLeft.row()).arg(bottomRight.column()).arg(
+					bottomRight.row());
 	assert(topLeft == bottomRight);
 
 	at(topLeft.row())->dataChanged(topLeft.column());
 }
-
 
 int TrackCollection::getNumWaypoints() {
 	return m_waypoints->size();
@@ -56,11 +56,15 @@ QRectF TrackCollection::getCompleteDimension() {
 	double min_lng = 360;
 	double max_lng = 0;
 
-	for(int i = 0; i < size(); i++) {
-		if(min_lat > at(i)->getMinLat() ) min_lat = at(i)->getMinLat();
-		if(max_lat < at(i)->getMaxLat() ) max_lat = at(i)->getMaxLat();
-		if(min_lng > at(i)->getMinLong()) min_lng = at(i)->getMinLong();
-		if(max_lng < at(i)->getMaxLong()) max_lng = at(i)->getMaxLong();
+	for (int i = 0; i < size(); i++) {
+		if (min_lat > at(i)->getMinLat())
+			min_lat = at(i)->getMinLat();
+		if (max_lat < at(i)->getMaxLat())
+			max_lat = at(i)->getMaxLat();
+		if (min_lng > at(i)->getMinLong())
+			min_lng = at(i)->getMinLong();
+		if (max_lng < at(i)->getMaxLong())
+			max_lng = at(i)->getMaxLong();
 	}
 
 	return QRectF(QPointF(min_lng, max_lat), QPointF(max_lng, min_lat));
@@ -77,12 +81,16 @@ QRectF TrackCollection::getDimension(QModelIndexList indices) {
 	double min_lng = 360;
 	double max_lng = 0;
 
-	for(int i = 0; i < indices.size(); i++) {
+	for (int i = 0; i < indices.size(); i++) {
 		int tmp_i = indices.at(i).row();
-		if(min_lat > at(tmp_i)->getMinLat() ) min_lat = at(tmp_i)->getMinLat();
-		if(max_lat < at(tmp_i)->getMaxLat() ) max_lat = at(tmp_i)->getMaxLat();
-		if(min_lng > at(tmp_i)->getMinLong()) min_lng = at(tmp_i)->getMinLong();
-		if(max_lng < at(tmp_i)->getMaxLong()) max_lng = at(tmp_i)->getMaxLong();
+		if (min_lat > at(tmp_i)->getMinLat())
+			min_lat = at(tmp_i)->getMinLat();
+		if (max_lat < at(tmp_i)->getMaxLat())
+			max_lat = at(tmp_i)->getMaxLat();
+		if (min_lng > at(tmp_i)->getMinLong())
+			min_lng = at(tmp_i)->getMinLong();
+		if (max_lng < at(tmp_i)->getMaxLong())
+			max_lng = at(tmp_i)->getMaxLong();
 	}
 
 	return QRectF(QPointF(min_lng, max_lat), QPointF(max_lng, min_lat));
@@ -95,27 +103,32 @@ QRectF TrackCollection::getDimensionXY() {
 
 QRectF TrackCollection::getDimensionXY(QModelIndexList indices) {
 	// iterate over QVector and find min and max lat and long
-	double min_x = -1000000000.0;
-	double max_x = 1000000000.0;
-	double min_y = -1000000000.0;
-	double max_y = 1000000000.0;
+	double min_x = 1000000000.0;
+	double max_x = -1000000000.0;
+	double min_y = 1000000000.0;
+	double max_y = -1000000000.0;
 
-	for(int i = 0; i < indices.size(); i++) {
+	for (int i = 0; i < indices.size(); i++) {
 		int tmp_i = indices.at(i).row();
-		if(min_x > at(tmp_i)->getMinX() ) min_x = at(tmp_i)->getMinX();
-		if(max_x < at(tmp_i)->getMaxX() ) max_x = at(tmp_i)->getMaxX();
-		if(min_y > at(tmp_i)->getMinY()) min_y = at(tmp_i)->getMinY();
-		if(max_y < at(tmp_i)->getMaxY()) max_y = at(tmp_i)->getMaxY();
+		if (min_x > at(tmp_i)->getMinX())
+			min_x = at(tmp_i)->getMinX();
+		if (max_x < at(tmp_i)->getMaxX())
+			max_x = at(tmp_i)->getMaxX();
+		if (min_y > at(tmp_i)->getMinY())
+			min_y = at(tmp_i)->getMinY();
+		if (max_y < at(tmp_i)->getMaxY())
+			max_y = at(tmp_i)->getMaxY();
 	}
-
-	return QRectF(QPointF(min_x, max_x), QPointF(max_y, min_y));
+	qDebug() << QString("Dimension: xmin: %1 ymin: %2 xmax: %3 ymax: %4 ").arg(
+			min_x).arg(min_y).arg(max_x).arg(max_y);
+	qDebug() << QString("height: %1  width: %2" ).arg(max_y - min_y).arg(max_x - min_x);
+	return QRectF(min_x, min_y, max_x - min_x, max_y - min_y);
 
 }
 
 bool TrackCollection::validBounds() {
 	return true;
 }
-
 
 void TrackCollection::setModelIndexList(QModelIndexList index_list) {
 	m_model_index_list = index_list;
@@ -132,21 +145,20 @@ QModelIndexList TrackCollection::getModelIndexList(void) {
 std::vector<int> TrackCollection::getIndexList(void) {
 	m_index_list.clear();
 
-    for(int mi_idx = 0; mi_idx < m_model_index_list.size(); mi_idx++ ) {
-    	int tr_idx = m_model_index_list.at(mi_idx).row();
-    	std::vector<int>::iterator it;
-    	for(it = m_index_list.begin() ; it != m_index_list.end(); it++ ) {
-    	   	if(*it == tr_idx) {
-    	   		break;
-    	   	}
-    	}
-    	if(it == m_index_list.end()) {
-    		m_index_list.push_back(tr_idx);
-    	}
-    }
+	for (int mi_idx = 0; mi_idx < m_model_index_list.size(); mi_idx++) {
+		int tr_idx = m_model_index_list.at(mi_idx).row();
+		std::vector<int>::iterator it;
+		for (it = m_index_list.begin(); it != m_index_list.end(); it++) {
+			if (*it == tr_idx) {
+				break;
+			}
+		}
+		if (it == m_index_list.end()) {
+			m_index_list.push_back(tr_idx);
+		}
+	}
 	return m_index_list;
 }
-
 
 void TrackCollection::commit() {
 	for (int i = 0; i < size(); i++) {
@@ -156,22 +168,22 @@ void TrackCollection::commit() {
 }
 
 void TrackCollection::appendTrack(Track* track) {
+	track->setPJ(m_pj);
+	track->commit();
 	append(track);
 	QList<QStandardItem*> itemlist = at(size() - 1)->getItemList();
 	appendRow(itemlist);
-	track->setPJ(m_pj);
 }
-
 
 void TrackCollection::clear() {
 	// remove all logpoints
-	for(int i= 0; i < getNumWaypoints(); i++) {
+	for (int i = 0; i < getNumWaypoints(); i++) {
 		delete m_waypoints->at(i);
 	}
 	m_waypoints->clear();
 	m_waypoints->commit();
 
-	for(int i= 0; i < size(); i++) {
+	for (int i = 0; i < size(); i++) {
 		takeRow(0);
 		delete at(i);
 	}
@@ -209,7 +221,6 @@ QString TrackCollection::getCreator() {
 	return m_creator_description;
 }
 
-
 void TrackCollection::setAuthorName(QString author) {
 	m_author_name = author;
 }
@@ -225,7 +236,6 @@ bool TrackCollection::validAuthorName() {
 bool TrackCollection::validAuthor() {
 	return validAuthorName() || validAuthorEmail() || validAuthorLinkUrl();
 }
-
 
 void TrackCollection::setAuthorEMail(QString email) {
 	m_author_email = email;
@@ -259,7 +269,6 @@ QString TrackCollection::getAuthorLinkMimeType() {
 	return m_author_link_mimetype;
 }
 
-
 void TrackCollection::setAuthorLinkText(QString text) {
 	m_author_link_text = text;
 }
@@ -289,14 +298,12 @@ unsigned TrackCollection::getCopyrightYear() {
 }
 
 bool TrackCollection::validCopyrightYear() {
-	if(m_copyright_year != 0) {
+	if (m_copyright_year != 0) {
 		return true;
-	}
-	else {
+	} else {
 		return false;
 	}
 }
-
 
 void TrackCollection::setCopyrightLicenseUrl(QString license_url) {
 	m_copyright_license_url = license_url;
@@ -310,7 +317,6 @@ bool TrackCollection::validCopyrightLicenseUrl() {
 	return !(m_copyright_license_url.isEmpty());
 }
 
-
 void TrackCollection::setDateTime(QDateTime date_time) {
 	m_date_time = date_time;
 }
@@ -322,7 +328,6 @@ QDateTime TrackCollection::getDateTime() {
 bool TrackCollection::validDateTime() {
 	return m_date_time.isValid();
 }
-
 
 void TrackCollection::setKeywords(QString keywords) {
 	m_keywords = keywords;

@@ -71,11 +71,12 @@ LogReader::LogReader(QWidget *parent) :
 	connect(ui.action_Start_Recording, SIGNAL(triggered()), this, SLOT(startRecording()));
 	connect(ui.action_Stop_Recording, SIGNAL(triggered()), this, SLOT(stopRecording()));
 
-
 	connect(this, SIGNAL(setText(QString)), ui.nemaText, SLOT(appendPlainText(QString)));
 
 	m_track_view = new TrackView(ui.scrollArea);
 	ui.scrollArea->setWidget(m_track_view);
+
+	connect(ui.zoomSlider, SIGNAL(valueChanged(int)), m_track_view, SLOT(zoomValueChanged(int)));
 
 	ui.treeView->setSelectionMode(QAbstractItemView::ExtendedSelection);
     m_selection_model = ui.treeView->selectionModel();

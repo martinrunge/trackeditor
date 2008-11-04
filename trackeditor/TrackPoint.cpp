@@ -9,6 +9,7 @@
 
 #include <QDebug>
 #include <arpa/inet.h>
+#include <limits.h>
 
 const int TrackPoint::m_size = 16;
 
@@ -126,8 +127,8 @@ void TrackPoint::setPJ(PJ* pj) {
 	m_pj = pj;
 
 	projUV tmp;
-	tmp.u = m_lat;
-	tmp.v = m_lng;
+	tmp.u = m_lng * DEG_TO_RAD;
+	tmp.v = m_lat * DEG_TO_RAD;
 	// transform
 	tmp = pj_fwd(tmp, m_pj);
 	m_trans_x = tmp.u;
@@ -145,8 +146,8 @@ void TrackPoint::setXY(double x, double y ) {
 		tmp.v = m_trans_y;
 		// transform
 		tmp = pj_inv(tmp, m_pj);
-		m_lat = tmp.u;
-		m_lng = tmp.v;
+		m_lng = tmp.u * RAD_TO_DEG;
+		m_lat = tmp.v * RAD_TO_DEG;
 	}
 }
 
@@ -170,8 +171,8 @@ void TrackPoint::setLatLong(double lat, double lng) {
 
 	if(m_pj != 0) {
 		projUV tmp;
-		tmp.u = m_lat;
-		tmp.v = m_lng;
+		tmp.u = m_lng * DEG_TO_RAD;
+		tmp.v = m_lat * DEG_TO_RAD;
 		// transform
 		tmp = pj_fwd(tmp, m_pj);
 		m_trans_x = tmp.u;
@@ -180,7 +181,7 @@ void TrackPoint::setLatLong(double lat, double lng) {
 }
 
 QPointF TrackPoint::getLatLong(void) {
-	return QPointF(m_lat, m_lng);
+	return QPointF(m_lng, m_lat);
 }
 
 double TrackPoint::getLat() {

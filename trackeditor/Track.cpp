@@ -154,10 +154,6 @@ QDateTime Track::getTrackEnd() {
 
 void Track::setIndex(int index) {
 	m_track_index = index;
-	QString nrpoints;
-	nrpoints.setNum(m_track_index);
-
-	m_index_item->setText(nrpoints);
 }
 
 int Track::getIndex(void) {

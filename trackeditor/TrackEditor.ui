@@ -5,49 +5,123 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1030</width>
-    <height>878</height>
+    <width>1161</width>
+    <height>752</height>
    </rect>
   </property>
   <property name="windowTitle" >
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget" >
-   <property name="geometry" >
-    <rect>
-     <x>0</x>
-     <y>24</y>
-     <width>1030</width>
-     <height>830</height>
-    </rect>
-   </property>
    <property name="sizePolicy" >
     <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
      <horstretch>0</horstretch>
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
-   <layout class="QVBoxLayout" name="verticalLayout" >
-    <item>
-     <layout class="QHBoxLayout" name="horizontalLayout" >
-      <item>
-       <widget class="QTreeView" name="treeView" >
+   <layout class="QGridLayout" name="gridLayout" >
+    <item row="0" column="0" >
+     <widget class="QSplitter" name="splitter_2" >
+      <property name="sizePolicy" >
+       <sizepolicy vsizetype="Expanding" hsizetype="Preferred" >
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="orientation" >
+       <enum>Qt::Vertical</enum>
+      </property>
+      <widget class="QSplitter" name="splitter" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Preferred" hsizetype="Expanding" >
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="orientation" >
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <widget class="QFrame" name="frame" >
         <property name="minimumSize" >
          <size>
-          <width>324</width>
+          <width>81</width>
           <height>0</height>
          </size>
         </property>
         <property name="maximumSize" >
          <size>
-          <width>508</width>
+          <width>81</width>
           <height>16777215</height>
          </size>
         </property>
+        <property name="frameShape" >
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow" >
+         <enum>QFrame::Raised</enum>
+        </property>
+        <widget class="QLabel" name="label" >
+         <property name="geometry" >
+          <rect>
+           <x>10</x>
+           <y>17</y>
+           <width>61</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text" >
+          <string>Zoom</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_2" >
+         <property name="geometry" >
+          <rect>
+           <x>40</x>
+           <y>40</y>
+           <width>31</width>
+           <height>41</height>
+          </rect>
+         </property>
+         <property name="text" >
+          <string>100</string>
+         </property>
+        </widget>
+        <widget class="QSlider" name="zoomSlider" >
+         <property name="geometry" >
+          <rect>
+           <x>10</x>
+           <y>50</y>
+           <width>25</width>
+           <height>271</height>
+          </rect>
+         </property>
+         <property name="minimum" >
+          <number>1</number>
+         </property>
+         <property name="maximum" >
+          <number>10</number>
+         </property>
+         <property name="singleStep" >
+          <number>1</number>
+         </property>
+         <property name="orientation" >
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="tickPosition" >
+          <enum>QSlider::TicksBelow</enum>
+         </property>
+         <property name="tickInterval" >
+          <number>1</number>
+         </property>
+        </widget>
        </widget>
-      </item>
-      <item>
        <widget class="QScrollArea" name="scrollArea" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="widgetResizable" >
          <bool>true</bool>
         </property>
@@ -56,16 +130,31 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>498</width>
-           <height>600</height>
+           <width>1063</width>
+           <height>353</height>
           </rect>
          </property>
+         <zorder>treeView</zorder>
         </widget>
        </widget>
-      </item>
-     </layout>
+      </widget>
+      <widget class="QTreeView" name="treeView" >
+       <property name="minimumSize" >
+        <size>
+         <width>0</width>
+         <height>221</height>
+        </size>
+       </property>
+       <property name="maximumSize" >
+        <size>
+         <width>16777215</width>
+         <height>231</height>
+        </size>
+       </property>
+      </widget>
+     </widget>
     </item>
-    <item>
+    <item row="1" column="0" >
      <widget class="QPlainTextEdit" name="nemaText" >
       <property name="enabled" >
        <bool>true</bool>
@@ -79,7 +168,13 @@
       <property name="minimumSize" >
        <size>
         <width>0</width>
-        <height>200</height>
+        <height>100</height>
+       </size>
+      </property>
+      <property name="maximumSize" >
+       <size>
+        <width>16777215</width>
+        <height>100</height>
        </size>
       </property>
      </widget>
@@ -91,8 +186,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1030</width>
-     <height>24</height>
+     <width>1161</width>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile" >
@@ -118,16 +213,7 @@
    <addaction name="menuFile" />
    <addaction name="menuTrack" />
   </widget>
-  <widget class="QStatusBar" name="statusbar" >
-   <property name="geometry" >
-    <rect>
-     <x>0</x>
-     <y>854</y>
-     <width>1030</width>
-     <height>24</height>
-    </rect>
-   </property>
-  </widget>
+  <widget class="QStatusBar" name="statusbar" />
   <action name="action_Connect" >
    <property name="text" >
     <string>&amp;Connect to GPS Device ...</string>

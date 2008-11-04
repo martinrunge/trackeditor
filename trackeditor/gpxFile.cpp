@@ -160,11 +160,11 @@ void gpxFile::readGpxType(QString version) {
 				}
 				if(m_xml_reader->name() == QString("rte")) {
 					Track* rte = readRteType();
-					m_track_collection->append(rte);
+					m_track_collection->appendTrack(rte);
 				}
 				if(m_xml_reader->name() == QString("trk")) {
 					Track *tr = readTrkType();
-					m_track_collection->append(tr);
+					m_track_collection->appendTrack(tr);
 				}
 
 				break;
@@ -860,7 +860,6 @@ Track* gpxFile::readTrkType() {
 				}
 				else {
 					if(m_xml_reader->name() == QString("trk")) {
-						tr->commit();
 						tr->setIndex(track_index);
 						return tr;
 					}
