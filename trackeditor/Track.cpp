@@ -7,7 +7,7 @@
 
 #include "Track.h"
 
-Track::Track() {
+Track::Track() : m_pj(0){
 	initMetaData();
 
 	m_index_item = 0;

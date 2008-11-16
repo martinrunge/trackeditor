@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>1161</width>
-    <height>752</height>
+    <height>730</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -131,10 +131,9 @@
            <x>0</x>
            <y>0</y>
            <width>1063</width>
-           <height>353</height>
+           <height>331</height>
           </rect>
          </property>
-         <zorder>treeView</zorder>
         </widget>
        </widget>
       </widget>

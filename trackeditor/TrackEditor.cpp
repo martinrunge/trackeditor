@@ -54,7 +54,7 @@ LogReader::LogReader(QWidget *parent) :
 	QMainWindow(parent) {
 	ui.setupUi(this);
 
-	// set m_track_collection to 0 to prevent setTrackCollection() from deleting it.
+	// set m_track_collection to 0 to prevent setTrackCollection() from trying to delete it.
 	m_track_collection = 0;
 
 	connect(ui.actionExit, SIGNAL(triggered()), this, SLOT(close()));

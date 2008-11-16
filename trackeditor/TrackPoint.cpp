@@ -126,13 +126,15 @@ void TrackPoint::initMetaData() {
 void TrackPoint::setPJ(PJ* pj) {
 	m_pj = pj;
 
-	projUV tmp;
-	tmp.u = m_lng * DEG_TO_RAD;
-	tmp.v = m_lat * DEG_TO_RAD;
-	// transform
-	tmp = pj_fwd(tmp, m_pj);
-	m_trans_x = tmp.u;
-	m_trans_y = tmp.v;
+	if(m_pj != 0){
+		projUV tmp;
+		tmp.u = m_lng * DEG_TO_RAD;
+		tmp.v = m_lat * DEG_TO_RAD;
+		// transform
+		tmp = pj_fwd(tmp, m_pj);
+		m_trans_x = tmp.u;
+		m_trans_y = tmp.v;
+	}
 
 }
 
