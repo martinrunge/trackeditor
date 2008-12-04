@@ -34,6 +34,7 @@
 #include <qapplication.h>
 #include <QSocketNotifier>
 #include <QDebug>
+#include <QGridLayout>
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QStandardItemModel>
@@ -47,6 +48,7 @@
 #include "tk1File.h"
 #include "gpxFile.h"
 #include "CWintec.h"
+#include "plotWidget.h"
 
 #include "ui_DeviceDialog.h"
 
@@ -83,6 +85,11 @@ LogReader::LogReader(QWidget *parent) :
     connect(m_selection_model, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(selectionChanged(QItemSelection,QItemSelection)));
 
 	setTrackCollection(new TrackCollection);
+
+	m_plotLayout = new QGridLayout;
+	m_plotWidget = new plotWidget(ui.diagramWidget);
+	m_plotLayout->addWidget(m_plotWidget);
+	ui.diagramWidget->setLayout(m_plotLayout);
 
     m_device_io = 0;
 	m_dev_data = 0;
@@ -342,7 +349,7 @@ void LogReader::actionTriggered() {
 }
 
 void LogReader::treeViewClicked(QModelIndex index) {
-	//qDebug() << QString("treeViewClicked (%1,%2)").arg(index.row()).arg(index.column());
+	m_plotWidget->setTrack(m_track_collection->at(index.row()));
 }
 
 void LogReader::selectionChanged(QItemSelection selected,QItemSelection deselected) {

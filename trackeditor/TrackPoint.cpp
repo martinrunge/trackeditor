@@ -402,4 +402,20 @@ bool TrackPoint::validDgpsStationId() {
 	}
 }
 
+double TrackPoint::getDist() {
+    return m_dist;
+}
+
+void TrackPoint::setDist(double dist) {
+    m_dist = dist;
+}
+
+double TrackPoint::getSpeed() {
+    return m_speed;
+}
+
+void TrackPoint::setSpeed(double speed) {
+    m_speed = speed;
+}
+
 

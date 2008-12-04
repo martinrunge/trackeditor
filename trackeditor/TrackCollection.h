@@ -42,6 +42,7 @@ public:
 	QRectF getDimensionXY();
 	QRectF getDimensionXY(QModelIndexList indices);
 	QRectF getCompleteDimension();
+	QRectF getCompleteDimensionXY();
 	bool validBounds();
 
 	void setModelIndexList(QModelIndexList index_list);

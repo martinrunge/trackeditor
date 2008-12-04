@@ -49,6 +49,10 @@ public:
 private:
 	void initMetaData();
 
+	double distance(TrackPoint* tp1, TrackPoint* tp2);
+	double speed(TrackPoint* tp1, TrackPoint* tp2);
+	double speed(TrackPoint* tp1, TrackPoint* tp2, double dist_in_m);
+
 	PJ* m_pj;
 
 	double m_min_lat, m_max_lat, m_min_lng, m_max_lng;

@@ -43,6 +43,7 @@
 #include "TrackCollection.h"
 
 
+class QGridLayout;
 class QSocketNotifier;
 class DeviceData;
 class TrackView;
@@ -51,6 +52,7 @@ class QStandardItem;
 class QItemSelectionModel;
 class QFile;
 class IDeviceIO;
+class plotWidget;
 
 class LogReader : public QMainWindow
 {
@@ -97,6 +99,8 @@ public slots:
 private:
     Ui::TrackEditor2Class ui;
     TrackView *m_track_view;
+    plotWidget *m_plotWidget;
+    QGridLayout *m_plotLayout;
 
     QDialog *m_progress_dlg;
     Ui::ProgressDialog prg_dlg;

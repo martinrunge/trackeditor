@@ -2,20 +2,16 @@ TEMPLATE = app
 TARGET = trackeditor
 QT += core \
     gui
-HEADERS += CWintec.h \
+HEADERS += PlotData.h \
+    plotWidget.h \
     IDeviceIO.h \
-    CommonTrackAttributes.h \
-    CommonAttributes.h \
-    trackFile.h \
-    tk1File.h \
-    gpxFile.h \
-    Track.h \
+    CWintec.h \
     TrackCollection.h \
-    TrackView.h \
-    TrackPoint.h \
-    DeviceData.h \
-    TrackEditor.h
-SOURCES += CWintec.cpp \
+    TrackEditor.h \
+    TrackView.h
+SOURCES += PlotData.cpp \
+    plotWidget.cpp \
+    CWintec.cpp \
     IDeviceIO.cpp \
     CommonTrackAttributes.cpp \
     CommonAttributes.cpp \
@@ -34,6 +30,5 @@ FORMS += ProgressDialog.ui \
     TrackEditor.ui \
     ProgressDialog.ui
 RESOURCES += 
-LIBS += -lproj
-
-
+LIBS += -lproj \
+    -lqwt-qt4

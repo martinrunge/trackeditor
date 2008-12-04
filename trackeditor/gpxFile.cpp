@@ -854,17 +854,23 @@ Track* gpxFile::readTrkType() {
 					if(m_xml_reader->name() == QString("extensions")) {
 						qDebug() << QString("extensions: %1").arg(tmp_string);
 					}
+				}
+				else {
 					if(m_xml_reader->name() == QString("trkseg")) {
 						trkseg--;
 					}
-				}
-				else {
-					if(m_xml_reader->name() == QString("trk")) {
-						tr->setIndex(track_index);
-						return tr;
-					}
 					else {
-						qDebug() << QString("EndElement: expected 'trk' but got: '%1'!").arg(m_xml_reader->name().toString());
+						if(m_xml_reader->name() == QString("trk")) {
+							tr->setIndex(track_index);
+							if(trkseg != 0 ){
+								qDebug() << QString("EndElement: got 'trk' end tag with %d trkseg open!!!").arg(trkseg);
+							}
+
+							return tr;
+						}
+						else {
+							qDebug() << QString("EndElement: expected 'trk' but got: '%1'!").arg(m_xml_reader->name().toString());
+						}
 					}
 				}
 				break;

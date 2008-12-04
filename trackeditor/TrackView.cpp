@@ -82,7 +82,9 @@ void TrackView::paintEvent( QPaintEvent * event ) {
     double x_scale = (w / dw) * m_zoom_value;
     double y_scale = (h / dh) * m_zoom_value;
 
-	setMinimumSize(dw * x_scale, dh * x_scale);
+    double scale = (x_scale < y_scale) ? x_scale : y_scale;
+
+	setMinimumSize(dw * scale, dh * scale);
 
 
     // painter.setRenderHint(QPainter::Antialiasing);
@@ -107,8 +109,8 @@ void TrackView::paintEvent( QPaintEvent * event ) {
         for(int tp_idx = 0; tp_idx < m_track_collection->at(tr_idx)->size(); tp_idx++) {
 //        	double x = (tr_ptr->at(tp_idx)->getLong() - x_off) * x_scale;
 //        	double y = (tr_ptr->at(tp_idx)->getLat() - y_off) * y_scale;
-           	double x = (tr_ptr->at(tp_idx)->getX() - x_off) * x_scale;
-         	double y = (tr_ptr->at(tp_idx)->getY() - y_off) * x_scale;
+           	double x = (tr_ptr->at(tp_idx)->getX() - x_off) * scale;
+         	double y = (tr_ptr->at(tp_idx)->getY() - y_off) * scale;
 
         	painter.drawPoint(QPointF(x,y));
 

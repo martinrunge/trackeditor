@@ -98,6 +98,11 @@ public:
 	int getDgpsStationId();
 	bool validDgpsStationId();
 
+	double getDist();
+	void setDist(double dist);
+
+	double getSpeed();
+	void setSpeed(double speed);
 
 	static const int size();
 
@@ -163,6 +168,13 @@ private:
 	int m_dgps_station_id;
 
 
+	// distance between this TrackPoint and begin of Track in meters.
+	// 0 for first TrackPoint of a Track, that is if m_is_begin_of_track == true
+	double m_dist;
+
+	// speed between this TrackPoint and the previous one in meters per second.
+	// not defined for first TrackPoint of a Track, that is if m_is_begin_of_track == true
+	double m_speed;
 
     bool m_is_log_point;
     bool m_is_begin_of_track;

@@ -97,6 +97,30 @@ QRectF TrackCollection::getDimension(QModelIndexList indices) {
 
 }
 
+QRectF TrackCollection::getCompleteDimensionXY() {
+	// iterate over QVector and find min and max lat and long
+	double min_x = 1000000000.0;
+	double max_x = -1000000000.0;
+	double min_y = 1000000000.0;
+	double max_y = -1000000000.0;
+
+	for (int i = 0; i < size(); i++) {
+		if (min_x > at(i)->getMinX())
+			min_x = at(i)->getMinX();
+		if (max_x < at(i)->getMaxX())
+			max_x = at(i)->getMaxX();
+		if (min_y > at(i)->getMinY())
+			min_y = at(i)->getMinY();
+		if (max_y < at(i)->getMaxY())
+			max_y = at(i)->getMaxY();
+	}
+	qDebug() << QString("Complete Dimension: xmin: %1 ymin: %2 xmax: %3 ymax: %4 ").arg(
+			min_x).arg(min_y).arg(max_x).arg(max_y);
+	qDebug() << QString("height: %1  width: %2" ).arg(max_y - min_y).arg(max_x - min_x);
+	return QRectF(min_x, min_y, max_x - min_x, max_y - min_y);
+
+}
+
 QRectF TrackCollection::getDimensionXY() {
 	return getDimensionXY(m_model_index_list);
 }
@@ -161,17 +185,18 @@ std::vector<int> TrackCollection::getIndexList(void) {
 }
 
 void TrackCollection::commit() {
-	for (int i = 0; i < size(); i++) {
-		QList<QStandardItem*> itemlist = at(i)->getItemList();
-		appendRow(itemlist);
-	}
+	//for (int i = 0; i < size(); i++) {
+	//	QList<QStandardItem*> itemlist = at(i)->getItemList();
+	//	appendRow(itemlist);
+	//}
 }
 
 void TrackCollection::appendTrack(Track* track) {
 	track->setPJ(m_pj);
 	track->commit();
 	append(track);
-	QList<QStandardItem*> itemlist = at(size() - 1)->getItemList();
+	int index = size() - 1;
+	QList<QStandardItem*> itemlist = at(index)->getItemList();
 	appendRow(itemlist);
 }
 
