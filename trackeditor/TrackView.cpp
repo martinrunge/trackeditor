@@ -102,10 +102,12 @@ void TrackView::paintEvent( QPaintEvent * event ) {
     for(int mi_idx = 0; mi_idx < mi.size(); mi_idx++ ) {
     	int tr_idx = mi.at(mi_idx);
 
-        if(m_track_collection->at(tr_idx)->size() == 0) {
+    	if(m_track_collection->at(tr_idx)->size() == 0) {
         	return;
         }
         tr_ptr = m_track_collection->at(tr_idx);
+    	painter.setPen(tr_ptr->getColor());
+
         for(int tp_idx = 0; tp_idx < m_track_collection->at(tr_idx)->size(); tp_idx++) {
 //        	double x = (tr_ptr->at(tp_idx)->getLong() - x_off) * x_scale;
 //        	double y = (tr_ptr->at(tp_idx)->getLat() - y_off) * y_scale;

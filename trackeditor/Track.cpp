@@ -8,7 +8,7 @@
 #include "Track.h"
 #include <QDebug>
 
-Track::Track() : m_pj(0){
+Track::Track() : m_pj(0), m_color(Qt::black){
 	initMetaData();
 
 	m_index_item = 0;
@@ -16,6 +16,9 @@ Track::Track() : m_pj(0){
 	m_end_time_item = 0;
 	m_name_item = 0;
 	m_num_points_item = 0;
+
+	m_color_item = new QStandardItem();
+	// new QPushButton("change");
 
 //	m_itemlist = new QList<QStandardItem*>;
 }
@@ -81,6 +84,10 @@ void Track::commit() {
 	m_index_item->setEditable(false);
 	m_itemlist.append(m_index_item);
 
+	m_color_item->setEditable(false);
+	setColor(m_color);
+	m_itemlist.append(m_color_item);
+
 	QString starttime = m_min_time.toString("yy-MM-dd  hh:mm:ss");
 	m_start_time_item = new QStandardItem(starttime);
 	m_start_time_item->setEditable(false);
@@ -93,6 +100,20 @@ void Track::commit() {
 
 	m_name_item = new QStandardItem(getName());
 	m_itemlist.append(m_name_item);
+
+	QString length;
+	if(!isEmpty()) {
+		double dist = last()->getDist();
+		if(dist < 10000) {
+			length = QString("%1 m").arg(dist);
+		}
+		else {
+			length = QString("%1 km").arg(dist / 1000);
+		}
+	}
+	m_length_item = new QStandardItem(length);
+	m_length_item->setEditable(false);
+	m_itemlist.append(m_length_item);
 
 	QString nrpoints;
 	nrpoints.setNum(size());
@@ -107,6 +128,16 @@ void Track::dataChanged(int column) {
 		setName(m_name_item->text());
 	}
 }
+
+void Track::setColor(QColor col) {
+	m_color = col;
+
+	QBrush bg = m_color_item->background();
+	bg.setColor(m_color);
+	bg.setStyle(Qt::SolidPattern);
+	m_color_item->setBackground(bg);
+}
+
 
 
 void Track::initMetaData() {
@@ -188,9 +219,10 @@ QList<QStandardItem*> Track::getItemList() {
 
 double Track::distance(TrackPoint* tp1, TrackPoint* tp2) {
     double r = 6371000.8;
-    double dlat = (tp1->getLat() - tp2->getLat()) * (r * 2 * M_PI / 360);
-    double dlon = (tp1->getLong() - tp2->getLong())* (r *2 * M_PI / 360) * cos((tp1->getLat() - tp2->getLat()) / 2 * DEG_TO_RAD);
-    double dist = sqrt(dlat * dlat +dlon *dlon);
+    double dlat = (tp1->getLat() - tp2->getLat()) * DEG_TO_RAD * r;
+    double dlon = (tp1->getLong() - tp2->getLong()) * DEG_TO_RAD * r * cos((tp1->getLat() + tp2->getLat()) / 2.0 * DEG_TO_RAD);
+    //double dlon = (tp1->getLong() - tp2->getLong()) * DEG_TO_RAD * r * cos(tp1->getLat() * DEG_TO_RAD);
+    double dist = sqrt(dlat * dlat + dlon * dlon);
 
     return dist;
 }

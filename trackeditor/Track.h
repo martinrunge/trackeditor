@@ -45,6 +45,8 @@ public:
 
 	inline void setPJ(PJ* pj) {m_pj = pj; };
 
+	inline QColor getColor() {return m_color; };
+	void setColor(QColor col);
 
 private:
 	void initMetaData();
@@ -63,12 +65,14 @@ private:
 	QList<QStandardItem*> m_itemlist;
 
 	QStandardItem* m_index_item;
+	QStandardItem* m_color_item;
 	QStandardItem* m_start_time_item;
 	QStandardItem* m_end_time_item;
 	QStandardItem* m_name_item;
+	QStandardItem* m_length_item;
 	QStandardItem* m_num_points_item;
 
-
+	QColor m_color;
 
 	// <number> xsd:nonNegativeInteger </number> [0..1] ?
 	int m_track_index;

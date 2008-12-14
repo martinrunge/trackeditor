@@ -13,8 +13,8 @@
 TrackCollection::TrackCollection() {
 	m_waypoints = new Track();
 	m_parentItem = invisibleRootItem();
-	setHorizontalHeaderLabels(QStringList() << "Nr " << "Start Time"
-			<< "End Time" << "Name" << "Nr Points");
+	setHorizontalHeaderLabels(QStringList() << "Nr " << "Color" << "Start Time"
+			<< "End Time" << "Name" << "Track Length" << "Nr Points");
 	initMetaData();
 	connect(this, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)),
 	this, SLOT(editFinished(const QModelIndex&, const QModelIndex&)));

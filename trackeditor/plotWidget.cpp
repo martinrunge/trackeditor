@@ -56,6 +56,7 @@ void plotWidget::setTrack(Track* track)
 	m_alt_data = new PlotData(track, TYPE_ALT, 1000);
 	//m_speed_data = new PlotData(track, TYPE_ALT, 1000);
 
+	m_alt_crv->setPen(QPen(track->getColor()));
 	m_alt_crv->setData(*m_alt_data);
 	// m_alt_crv->setData(*m_speed_data);
 

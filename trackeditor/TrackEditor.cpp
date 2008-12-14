@@ -40,6 +40,7 @@
 #include <QStandardItemModel>
 #include <QModelIndex>
 #include <QFileDialog>
+#include <QColorDialog>
 #include <QMessageBox>
 
 #include "TrackEditor.h"
@@ -295,6 +296,7 @@ void LogReader::setTrackCollection(TrackCollection* track_collection) {
 	ui.treeView->resizeColumnToContents(1);
 	ui.treeView->resizeColumnToContents(2);
 	ui.treeView->resizeColumnToContents(3);
+	ui.treeView->resizeColumnToContents(4);
 
 	if(tmp_tc != 0) {
 		delete tmp_tc;
@@ -316,6 +318,7 @@ void LogReader::newTrack(Track* track) {
 	ui.treeView->resizeColumnToContents(1);
 	ui.treeView->resizeColumnToContents(2);
 	ui.treeView->resizeColumnToContents(3);
+	ui.treeView->resizeColumnToContents(4);
 
 	prg_dlg.m_num_tracks->setText(QString().number(m_track_collection->size()));
 
@@ -350,6 +353,12 @@ void LogReader::actionTriggered() {
 
 void LogReader::treeViewClicked(QModelIndex index) {
 	m_plotWidget->setTrack(m_track_collection->at(index.row()));
+	qDebug() << QString("treeViewClicked trackNr: %1 Column %2").arg(index.row()).arg(index.column());
+	if(index.column() == 1) {
+		// clocked on the color field
+		QColor color = QColorDialog::getColor();
+		m_track_collection->at(index.row())->setColor(color);
+	}
 }
 
 void LogReader::selectionChanged(QItemSelection selected,QItemSelection deselected) {
@@ -401,6 +410,7 @@ void LogReader::createTrackpoints() {
 	ui.treeView->resizeColumnToContents(1);
 	ui.treeView->resizeColumnToContents(2);
 	ui.treeView->resizeColumnToContents(3);
+	ui.treeView->resizeColumnToContents(4);
 	fclose(fd);
 
 	m_track_view->update();
