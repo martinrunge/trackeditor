@@ -11,7 +11,13 @@
 
 class Track;
 
-PlotData::PlotData(Track* track, enum plotType type, int numPoints) : QwtData() , m_plot_type(type), m_track(track), m_copied(false) {
+PlotData::PlotData(Track* track, enum plotTypeX xtype, enum plotTypeY ytype, int numPoints) : QwtData(),
+                                                                                              m_plot_type_x(xtype),
+                                                                                              m_plot_type_y(ytype),
+                                                                                              m_track(track),
+                                                                                              m_copied(false),
+                                                                                              m_tp_index(0)
+{
 	m_num_points = numPoints;
 	if( numPoints > 0 ) {
 		m_size = numPoints;
@@ -30,13 +36,16 @@ PlotData::PlotData(Track* track, enum plotType type, int numPoints) : QwtData() 
 	// length of complete Track is stored in last TrackPoint.
 	it = track->end();
 	--it;
-	double total_dist = (*it)->getDist();
+	//double total_dist = (*it)->getDist();
+	double total_dist = getXVal(*it);
 	double distraster = total_dist / m_size;
 
 	it = track->begin();
 
-	double lastalt = (*it)->getAlt();
-	double interpol_x = (*it)->getDist();  // should be 0 for begin of track
+	// double lastalt = (*it)->getAlt();
+	double lastalt = getYVal(*it);
+	//double interpol_x = (*it)->getDist();  // should be 0 for begin of track
+	double interpol_x = getXVal(*it);        // should be 0 for begin of track
 	double interpol_y = lastalt;
 	double ddist;
 	double part = 0;
@@ -50,21 +59,28 @@ PlotData::PlotData(Track* track, enum plotType type, int numPoints) : QwtData() 
 		part = 0;
 
 		//qDebug() << QString("in for loop: d: %1, dist: %2 interpol_x: %3 part %4").arg(d).arg((*it)->getDist()).arg(interpol_x).arg(part);
-		while( (*it)->getDist() < d) {
-			ddist = (*it)->getDist() - interpol_x;
-			part += (((*it)->getAlt() + interpol_y) / 2) * ( ddist /  distraster);
+		//while( (*it)->getDist() < d) {
+		while( getXVal(*it) < d) {
+			//ddist = (*it)->getDist() - interpol_x;
+			ddist = getXVal(*it) - interpol_x;
+			//part += (((*it)->getAlt() + interpol_y) / 2) * ( ddist /  distraster);
+			part += ((getYVal(*it) + interpol_y) / 2) * ( ddist /  distraster);
 
 			// qDebug() << QString("in while loop: dist: %1, interpol_x: %2 ddist: %3 part %4").arg((*it)->getDist()).arg(interpol_x).arg(ddist).arg(part);
 
 
-			interpol_x = (*it)->getDist();
-			lastalt = (*it)->getAlt();
+			//interpol_x = (*it)->getDist();
+			interpol_x = getXVal(*it);
+			//lastalt = (*it)->getAlt();
+			lastalt = getYVal(*it);
 			interpol_y = lastalt;
 			it++;
+			m_tp_index++;
 		}
 		// (*it) is right of d + ddist -> interpolate linearly between last TP and (*it) at pos d
 		// interpol_x = d;
-		interpol_y = lastalt + ((*it)->getAlt() - lastalt) * (d - interpol_x) / ((*it)->getDist() - interpol_x) ;
+		//interpol_y = lastalt + ((*it)->getAlt() - lastalt) * (d - interpol_x) / ((*it)->getDist() - interpol_x);
+		interpol_y = lastalt + (getYVal(*it) - lastalt) * (d - interpol_x) / (getXVal(*it) - interpol_x);
 		part += ((lastalt + interpol_y) / 2 ) * ((d - interpol_x) / distraster);
 		interpol_x = d;
 
@@ -89,7 +105,7 @@ PlotData::PlotData(Track* track, enum plotType type, int numPoints) : QwtData() 
 
 }
 
-PlotData::PlotData(double *x_vals, double *y_vals, int size): m_copied(true) {
+PlotData::PlotData(double *x_vals, double *y_vals, int size): m_copied(true), m_tp_index(0) {
 	m_x_values = x_vals;
 	m_y_values = y_vals;
 
@@ -102,6 +118,72 @@ PlotData::~PlotData() {
 		delete [] m_x_values;
 		delete [] m_y_values;
 	}
+}
+
+double PlotData::getXVal(TrackPoint* tp) {
+	double val;
+	switch(m_plot_type_x) {
+	case TYPE_X_DIST:
+		val = tp->getDist();
+		break;
+
+	case TYPE_X_TIME:
+	{
+		QDateTime dt = tp->getTime();
+		int diffdays = m_start_time.daysTo(dt);
+	    int msecs = m_start_time.time().msecsTo(dt.time());
+	    int ddays_in_ms = diffdays * 24 * 60 * 60 * 1000;
+
+	    val = ddays_in_ms + msecs / 1000;
+		break;
+	}
+	case TYPE_X_POINTS:
+		val = m_tp_index;
+		break;
+
+	case TYPE_X_NONE:
+	default:
+		val = 0.0;
+		break;
+	}
+
+	return val;
+}
+
+double PlotData::getYVal(TrackPoint* tp) {
+	double val;
+	switch(m_plot_type_y) {
+	case TYPE_Y_ALT:
+		val = tp->getAlt();
+		break;
+
+	case TYPE_Y_SPEED:
+		val = tp->getSpeed();
+		break;
+
+	case TYPE_Y_HDOP:
+		val = tp->getHdop();
+		break;
+
+	case TYPE_Y_VDOP:
+		val = tp->getVdop();
+		break;
+
+	case TYPE_Y_PDOP:
+		val = tp->getPdop();
+		break;
+
+	case TYPE_Y_DGPS_DIFF:
+		val = 0.0;
+		break;
+	case TYPE_Y_NONE:
+	default:
+		val = 0.0;
+		break;
+	}
+
+	return val;
+
 }
 
 

@@ -221,7 +221,6 @@ double Track::distance(TrackPoint* tp1, TrackPoint* tp2) {
     double r = 6371000.8;
     double dlat = (tp1->getLat() - tp2->getLat()) * DEG_TO_RAD * r;
     double dlon = (tp1->getLong() - tp2->getLong()) * DEG_TO_RAD * r * cos((tp1->getLat() + tp2->getLat()) / 2.0 * DEG_TO_RAD);
-    //double dlon = (tp1->getLong() - tp2->getLong()) * DEG_TO_RAD * r * cos(tp1->getLat() * DEG_TO_RAD);
     double dist = sqrt(dlat * dlat + dlon * dlon);
 
     return dist;

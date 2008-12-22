@@ -436,6 +436,10 @@ void CWintec::parseAL(QString line) {
 
         if(m_lastsection == 1 || m_tmp_buf.size() == 0) {
         	//createTrackpoints();
+        	if(m_tmp_track != 0) {
+        		m_tmp_track->commit();
+        		emit newTrack(m_tmp_track);
+        	}
         	emit readLogFinished();
         	leaveCommandMode();
             return;

@@ -38,6 +38,13 @@ plotWidget::plotWidget(QWidget * parent) : QwtPlot(parent) , m_alt_data(0), m_sp
     m_speed_crv->setYAxis(QwtPlot::yRight);
     m_speed_crv->attach(this);
 
+    enableAxis(QwtPlot::yRight);
+
+    setAxisTitle(QwtPlot::xBottom, "Distance [km]");
+    setAxisTitle(QwtPlot::yLeft, "Elevation [m]");
+    setAxisTitle(QwtPlot::yRight, "Speed [m/s]");
+
+
 }
 
 plotWidget::~plotWidget() {
@@ -53,12 +60,14 @@ plotWidget::~plotWidget() {
 
 void plotWidget::setTrack(Track* track)
 {
-	m_alt_data = new PlotData(track, TYPE_ALT, 1000);
-	//m_speed_data = new PlotData(track, TYPE_ALT, 1000);
+	m_alt_data = new PlotData(track, TYPE_X_DIST, TYPE_Y_ALT, 1000);
+	m_speed_data = new PlotData(track, TYPE_X_DIST, TYPE_Y_SPEED, 1000);
 
 	m_alt_crv->setPen(QPen(track->getColor()));
 	m_alt_crv->setData(*m_alt_data);
 	// m_alt_crv->setData(*m_speed_data);
+	m_speed_crv->setPen(QPen(track->getColor()));
+	m_speed_crv->setData(*m_speed_data);
 
 	setAutoReplot(true);
 }

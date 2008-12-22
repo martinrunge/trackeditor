@@ -12,18 +12,27 @@
 
 #include "Track.h"
 
-enum plotType {
-	TYPE_ALT,
-	TYPE_SPEED,
-	TYPE_DGPS_DIFF,
-	TYPE_HDOP,
-	TYPE_PDOP,
-	TYPE_NONE
+enum plotTypeX {
+	TYPE_X_DIST,
+	TYPE_X_TIME,
+	TYPE_X_POINTS,
+	TYPE_X_NONE
 };
+
+enum plotTypeY {
+	TYPE_Y_ALT,
+	TYPE_Y_SPEED,
+	TYPE_Y_DGPS_DIFF,
+	TYPE_Y_HDOP,
+	TYPE_Y_VDOP,
+	TYPE_Y_PDOP,
+	TYPE_Y_NONE
+};
+
 
 class PlotData : public QwtData {
 public:
-	PlotData(Track* track, enum plotType type, int numPoints);
+	PlotData(Track* track, enum plotTypeX xtype, enum plotTypeY ytype, int numPoints);
 	PlotData(double *x_vals, double *y_vals, int size);
 	virtual ~PlotData();
 
@@ -33,7 +42,14 @@ public:
     virtual double y(size_t i) const;
 
 private:
-	enum plotType m_plot_type;
+
+	double getXVal(TrackPoint* tp);
+	double getYVal(TrackPoint* tp);
+
+	enum plotTypeX m_plot_type_x;
+	enum plotTypeY m_plot_type_y;
+
+	QDateTime  m_start_time;
 
     size_t m_size;
     int m_num_points;
@@ -43,6 +59,7 @@ private:
 
 
     Track* m_track;
+    long m_tp_index;
 
     bool m_copied;
 };
