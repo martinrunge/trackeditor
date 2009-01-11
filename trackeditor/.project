@@ -64,7 +64,7 @@
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.environment</key>
-					<value>PATH=/usr/bin:${env_var:PATH}:${env_var:PATH}:/usr/bin/:/usr/share/qt4/bin|</value>
+					<value>PATH=/usr/bin/:${env_var:PATH}:${env_var:PATH}:/usr/bin:/usr/share/qt4/bin|</value>
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.stopOnError</key>

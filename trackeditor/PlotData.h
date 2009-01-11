@@ -62,6 +62,7 @@ private:
     long m_tp_index;
 
     bool m_copied;
+
 };
 
 #endif /* PLOTDATA_H_ */

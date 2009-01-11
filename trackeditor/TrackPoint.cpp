@@ -55,7 +55,7 @@ TrackPoint::~TrackPoint() {
 	// TODO Auto-generated destructor stub
 }
 
-const int TrackPoint::size() {
+int TrackPoint::size() {
 	return m_size;
 }
 

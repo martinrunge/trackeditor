@@ -2,14 +2,16 @@ TEMPLATE = app
 TARGET = trackeditor
 QT += core \
     gui
-HEADERS += PlotData.h \
+HEADERS += csettingsdlg.h \
+    PlotData.h \
     plotWidget.h \
     IDeviceIO.h \
     CWintec.h \
     TrackCollection.h \
     TrackEditor.h \
     TrackView.h
-SOURCES += PlotData.cpp \
+SOURCES += csettingsdlg.cpp \
+    PlotData.cpp \
     plotWidget.cpp \
     CWintec.cpp \
     IDeviceIO.cpp \
@@ -25,7 +27,8 @@ SOURCES += PlotData.cpp \
     DeviceData.cpp \
     main.cpp \
     TrackEditor.cpp
-FORMS += ProgressDialog.ui \
+FORMS += csettingsdlg.ui \
+    ProgressDialog.ui \
     DeviceDialog.ui \
     TrackEditor.ui \
     ProgressDialog.ui

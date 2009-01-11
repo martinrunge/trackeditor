@@ -52,6 +52,7 @@
 #include "plotWidget.h"
 
 #include "ui_DeviceDialog.h"
+#include "csettingsdlg.h"
 
 LogReader::LogReader(QWidget *parent) :
         QMainWindow(parent),
@@ -94,6 +95,8 @@ LogReader::LogReader(QWidget *parent) :
 	ui.action_Read_Log->setDisabled(true);
 	connect(ui.action_Start_Recording, SIGNAL(triggered()), this, SLOT(startRecording()));
 	connect(ui.action_Stop_Recording, SIGNAL(triggered()), this, SLOT(stopRecording()));
+
+	connect(ui.actionSettings, SIGNAL(triggered()), this, SLOT(showSettingsDlg()));
 
 	connect(this, SIGNAL(setText(QString)), ui.nemaText, SLOT(appendPlainText(QString)));
 
@@ -365,6 +368,10 @@ void LogReader::stopRecording() {
 }
 
 
+void LogReader::showSettingsDlg() {
+	CSettingsDlg dlg;
+	dlg.exec();
+}
 
 void LogReader::actionTriggered() {
 	openTTY("/dev/rfcomm0", 115200);

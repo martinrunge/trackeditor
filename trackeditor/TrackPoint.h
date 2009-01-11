@@ -104,7 +104,7 @@ public:
 	double getSpeed();
 	void setSpeed(double speed);
 
-	static const int size();
+	static int size();
 
 
 private:

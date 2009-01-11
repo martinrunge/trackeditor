@@ -90,6 +90,8 @@ public slots:
     void saveTrack();
     void saveTrackAs();
 
+    void showSettingsDlg();
+
     void treeViewClicked(QModelIndex index);
     void selectionChanged(QItemSelection,QItemSelection);
 

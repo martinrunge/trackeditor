@@ -15,8 +15,8 @@ PlotData::PlotData(Track* track, enum plotTypeX xtype, enum plotTypeY ytype, int
                                                                                               m_plot_type_x(xtype),
                                                                                               m_plot_type_y(ytype),
                                                                                               m_track(track),
-                                                                                              m_copied(false),
-                                                                                              m_tp_index(0)
+                                                                                              m_tp_index(0),
+                                                                                              m_copied(false)
 {
 	m_num_points = numPoints;
 	if( numPoints > 0 ) {
@@ -105,7 +105,7 @@ PlotData::PlotData(Track* track, enum plotTypeX xtype, enum plotTypeY ytype, int
 
 }
 
-PlotData::PlotData(double *x_vals, double *y_vals, int size): m_copied(true), m_tp_index(0) {
+PlotData::PlotData(double *x_vals, double *y_vals, int size): m_tp_index(0), m_copied(true) {
 	m_x_values = x_vals;
 	m_y_values = y_vals;
 
