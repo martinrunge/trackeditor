@@ -135,7 +135,7 @@
            <x>0</x>
            <y>0</y>
            <width>1054</width>
-           <height>197</height>
+           <height>262</height>
           </rect>
          </property>
         </widget>
@@ -219,8 +219,29 @@
     <addaction name="action_Start_Recording" />
     <addaction name="action_Stop_Recording" />
    </widget>
+   <widget class="QMenu" name="menuView" >
+    <property name="title" >
+     <string>View</string>
+    </property>
+    <widget class="QMenu" name="menuProfiles" >
+     <property name="title" >
+      <string>Profiles</string>
+     </property>
+     <addaction name="actionElevation" />
+     <addaction name="actionSpeed" />
+    </widget>
+    <widget class="QMenu" name="menuMap_Projection" >
+     <property name="title" >
+      <string>Map Projection</string>
+     </property>
+     <addaction name="actionMerkator" />
+    </widget>
+    <addaction name="menuMap_Projection" />
+    <addaction name="menuProfiles" />
+   </widget>
    <addaction name="menuFile" />
    <addaction name="menuTrack" />
+   <addaction name="menuView" />
   </widget>
   <widget class="QStatusBar" name="statusbar" />
   <action name="action_Connect" >
@@ -266,6 +287,21 @@
   <action name="action_Stop_Recording" >
    <property name="text" >
     <string>&amp;Stop Recording</string>
+   </property>
+  </action>
+  <action name="actionElevation" >
+   <property name="text" >
+    <string>Elevation</string>
+   </property>
+  </action>
+  <action name="actionSpeed" >
+   <property name="text" >
+    <string>Speed</string>
+   </property>
+  </action>
+  <action name="actionMerkator" >
+   <property name="text" >
+    <string>Merkator</string>
    </property>
   </action>
  </widget>
