@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>1161</width>
-    <height>730</height>
+    <height>722</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -134,8 +134,8 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>1054</width>
-           <height>262</height>
+           <width>1063</width>
+           <height>255</height>
           </rect>
          </property>
         </widget>
@@ -196,7 +196,7 @@
      <x>0</x>
      <y>0</y>
      <width>1161</width>
-     <height>22</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile" >
@@ -300,6 +300,15 @@
    </property>
   </action>
   <action name="actionMerkator" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="checked" >
+    <bool>true</bool>
+   </property>
+   <property name="enabled" >
+    <bool>false</bool>
+   </property>
    <property name="text" >
     <string>Merkator</string>
    </property>
