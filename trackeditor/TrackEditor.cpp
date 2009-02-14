@@ -397,7 +397,7 @@ void LogReader::actionTriggered() {
 }
 
 void LogReader::treeViewClicked(QModelIndex index) {
-	m_diagrams_layout->setTrack(m_track_collection->at(index.row()));
+	// m_diagrams_layout->setTrack(m_track_collection->at(index.row()));
 	// m_plotWidget->setTrack(m_track_collection->at(index.row()));
 	qDebug() << QString("treeViewClicked trackNr: %1 Column %2").arg(index.row()).arg(index.column());
 	if(index.column() == 1) {
@@ -411,6 +411,9 @@ void LogReader::selectionChanged(QItemSelection selected,QItemSelection deselect
 	qDebug() << QString("selction changed");
 	QModelIndexList selected_indices = m_selection_model->selectedIndexes();
     m_track_collection->setModelIndexList(selected_indices);
+
+    m_diagrams_layout->setTracks(m_track_collection->getSelectedTracks());
+
     m_track_view->update();
 }
 

@@ -48,6 +48,8 @@ public:
 	void setModelIndexList(QModelIndexList index_list);
 	QModelIndexList getModelIndexList(void);
 
+	QList<Track*> getSelectedTracks();
+
 	std::vector<int> getIndexList(void);
 
 	QString getCreator();

@@ -13,8 +13,10 @@
 #include <qwt-qt4/qwt_plot_curve.h>
 #include <qwt-qt4/qwt_plot_grid.h>
 
+#include <QDebug>
 
-plotWidget::plotWidget(QWidget * parent) : QwtPlot(parent) , m_alt_data(0), m_speed_data(0){
+
+plotWidget::plotWidget(QWidget * parent) : QwtPlot(parent) {
     //m_qwtPlot = new QwtPlot(parent);
     //m_qwtPlot->setObjectName(QString::fromUtf8("m_qwtPlot"));
     //m_qwtPlot->setGeometry(QRect(20, 40, 511, 200));
@@ -26,68 +28,99 @@ plotWidget::plotWidget(QWidget * parent) : QwtPlot(parent) , m_alt_data(0), m_sp
     m_grid->attach(this);
 
     // curves
-    m_alt_crv = new QwtPlotCurve("Altitude");
+    // m_alt_crv = new QwtPlotCurve("Altitude");
     //m_alt_crv->setRenderHint(QwtPlotItem::RenderAntialiased);
-    m_alt_crv->setPen(QPen(Qt::blue));
-    m_alt_crv->setYAxis(QwtPlot::yLeft);
-    m_alt_crv->attach(this);
+    // m_alt_crv->setPen(QPen(Qt::blue));
+    // m_alt_crv->setYAxis(QwtPlot::yLeft);
+    // m_alt_crv->attach(this);
 
-    m_speed_crv = new QwtPlotCurve("Speed");
-    //m_speed_crv->setRenderHint(QwtPlotItem::RenderAntialiased);
-    m_speed_crv->setPen(QPen(Qt::red));
-    m_speed_crv->setYAxis(QwtPlot::yRight);
-    m_speed_crv->attach(this);
+    // m_speed_crv = new QwtPlotCurve("Speed");
+    // m_speed_crv->setRenderHint(QwtPlotItem::RenderAntialiased);
+    // m_speed_crv->setPen(QPen(Qt::red));
+    // m_speed_crv->setYAxis(QwtPlot::yRight);
+    // m_speed_crv->attach(this);
 
     enableAxis(QwtPlot::yRight);
 
-	m_curve_list = new QList<QwtPlotCurve*>;
+	// m_curve_list = new QList<QwtPlotCurve*>;
+
+    m_curve_list.clear();
 
     setAxisTitle(QwtPlot::xBottom, "Distance [km]");
     setAxisTitle(QwtPlot::yLeft, "Elevation [m]");
-    setAxisTitle(QwtPlot::yRight, "Speed [m/s]");
+    // setAxisTitle(QwtPlot::yRight, "Speed [m/s]");
 
 }
 
 plotWidget::~plotWidget() {
 	delete m_grid;
 
-	delete m_alt_crv;
-	delete m_speed_crv;
+	// delete m_alt_crv;
+	// delete m_speed_crv;
 
-	delete m_curve_list;
+	// delete m_curve_list;
 
-	if( m_alt_data != 0) delete m_alt_data;
-	if( m_speed_data != 0) delete m_speed_data;
+	// if( m_alt_data != 0) delete m_alt_data;
+	// if( m_speed_data != 0) delete m_speed_data;
 
 }
 
-void plotWidget::setTrack(Track* track)
-{
-	m_alt_data = new PlotData(track, TYPE_X_DIST, TYPE_Y_ALT, 1000);
-	m_speed_data = new PlotData(track, TYPE_X_DIST, TYPE_Y_SPEED, 1000);
-
-	m_alt_crv->setPen(QPen(track->getColor()));
-	m_alt_crv->setData(*m_alt_data);
-	// m_alt_crv->setData(*m_speed_data);
-	m_speed_crv->setPen(QPen(track->getColor()));
-	m_speed_crv->setData(*m_speed_data);
-
-	setAutoReplot(true);
-}
+//void plotWidget::setTrack(Track* track)
+//{
+//	m_alt_data = new PlotData(track, TYPE_X_DIST, TYPE_Y_ALT, 1000);
+//	m_speed_data = new PlotData(track, TYPE_X_DIST, TYPE_Y_SPEED, 1000);
+//
+//	m_alt_crv->setPen(QPen(track->getColor()));
+//	m_alt_crv->setData(*m_alt_data);
+//	// m_alt_crv->setData(*m_speed_data);
+//	m_speed_crv->setPen(QPen(track->getColor()));
+//	m_speed_crv->setData(*m_speed_data);
+//
+//	setAutoReplot(true);
+//}
 
 void plotWidget::setTracks(QList<Track*> tracks) {
 
 	QList<Track*>::iterator it;
 	QList<QwtPlotCurve*>::iterator cplit;
-	cplit = m_curve_list.begin();
-    for(it = tracks.begin(); it != tracks.end(); it++, cplit++) {
-    	//if()
 
+	int n_tracks = tracks.size();
+	int n_curves = m_curve_list.size();
+
+
+	int diff = n_tracks - n_curves;
+
+	qDebug() << QString("setTracks: n_tracks=%1 n_curves=%2").arg(n_tracks).arg(n_curves);
+	// if diff is > 0, there are more tracks than curves -> add curves
+	if(diff > 0) {
+		for(int i=0; i < abs(diff); i++ ) {
+			QwtPlotCurve* cplot = new QwtPlotCurve();
+			cplot->attach(this);
+			m_curve_list.append(cplot);
+		}
+	}
+	else {
+		// if diff is < 0, there are less tracks than curves -> remove curves
+		for(int i=0; i < abs(diff); i++ ) {
+			QwtPlotCurve* last = m_curve_list.takeLast();
+			last->detach();
+			delete last;
+		}
+	}
+
+	// now, there is exactly one curve per track
+
+    for(int i = 0; i < n_tracks; i++) {
+    	m_curve_list[i]->attach(this);
+    	m_curve_list[i]->setPen(QPen(tracks[i]->getColor()));
+
+    	PlotData* data = new PlotData(tracks[i], TYPE_X_DIST, TYPE_Y_SPEED, 1000);
+
+    	m_curve_list[i]->setData(*data);
     }
 
 	m_track_list = tracks;
-
+	setAutoReplot(true);
 
 	//m_curve_list;
-
 }

@@ -21,7 +21,7 @@ public:
 	plotWidget(QWidget * parent = 0);
 	virtual ~plotWidget();
 
-	void setTrack(Track* track);
+	// void setTrack(Track* track);
 	void setTracks(QList<Track*> tracks);
 
 private:
@@ -31,11 +31,11 @@ private:
 	QList<QwtPlotCurve*> m_curve_list;
 	QList<Track*> m_track_list;
 
-	QwtPlotCurve* m_alt_crv;
-	QwtPlotCurve* m_speed_crv;
+	// QwtPlotCurve* m_alt_crv;
+	// QwtPlotCurve* m_speed_crv;
 
-	PlotData* m_alt_data;
-	PlotData* m_speed_data;
+	// PlotData* m_alt_data;
+	// PlotData* m_speed_data;
 };
 
 #endif /* PLOTWIDGET_H_ */

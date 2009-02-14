@@ -156,11 +156,27 @@ bool TrackCollection::validBounds() {
 
 void TrackCollection::setModelIndexList(QModelIndexList index_list) {
 	m_model_index_list = index_list;
+	getIndexList();
 }
 
 QModelIndexList TrackCollection::getModelIndexList(void) {
 	return m_model_index_list;
 }
+
+QList<Track*> TrackCollection::getSelectedTracks() {
+	QList<Track*> tracks;
+
+	int size =  m_index_list.size();
+	qDebug() << QString("m_index_list.size() = %1").arg(size);
+	for (int i = 0; i < size; i++) {
+		int index = m_index_list[i];
+		// qDebug() << QString("index: %1").arg(index);
+		tracks.append(at(index));
+	}
+	qDebug() << QString("tracks.size() = %1 ").arg(tracks.size());
+	return tracks;
+}
+
 
 // void TrackCollection::setIndexList(QModelIndexList index_list) {
 //	m_index_list = index_list;

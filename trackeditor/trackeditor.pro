@@ -31,11 +31,13 @@ SOURCES += CDiagramsLayout.cpp \
     DeviceData.cpp \
     main.cpp \
     TrackEditor.cpp
-FORMS += csettingsdlg.ui \
+FORMS += diagramSettings.ui \
+    csettingsdlg.ui \
     ProgressDialog.ui \
     DeviceDialog.ui \
     TrackEditor.ui \
     diagramSettings.ui
-RESOURCES += trackeditor.qrc
+RESOURCES += trackeditor.qrc \
+    trackeditor.qrc
 LIBS += -lproj \
     -lqwt-qt4

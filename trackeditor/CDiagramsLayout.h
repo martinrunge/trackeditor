@@ -20,7 +20,7 @@ public:
 	CDiagramsLayout(QWidget * parent = 0);
 	virtual ~CDiagramsLayout();
 
-	void setTrack(Track* track);
+	// void setTrack(Track* track);
 	void setTracks(QList<Track*> track);
 
 	void setQuantities(QStringList distVals, QStringList timeVals, QStringList trackPointVals );

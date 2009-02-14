@@ -12,8 +12,8 @@
 
 CDiagramsLayout::CDiagramsLayout(QWidget * parent) : QGridLayout(parent) {
 	// TODO Auto-generated constructor stub
-	m_plotWidget = new plotWidget();
-	addWidget(m_plotWidget);
+	// m_plotWidget = new plotWidget();
+	// addWidget(m_plotWidget);
 
 }
 
@@ -23,9 +23,9 @@ CDiagramsLayout::~CDiagramsLayout() {
 	delete m_plotWidget;
 }
 
-void CDiagramsLayout::setTrack(Track* track) {
-	m_plotWidget->setTrack(track);
-}
+// void CDiagramsLayout::setTrack(Track* track) {
+// 	m_plotWidget->setTrack(track);
+//}
 
 void CDiagramsLayout::setTracks(QList<Track*> tracks) {
 
