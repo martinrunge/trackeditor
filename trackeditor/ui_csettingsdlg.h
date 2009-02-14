@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'csettingsdlg.ui'
 **
-** Created: Sun Jan 11 19:39:34 2009
+** Created: Wed Jan 21 21:54:17 2009
 **      by: Qt User Interface Compiler version 4.4.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
@@ -15,6 +15,7 @@
 #include <QtGui/QApplication>
 #include <QtGui/QButtonGroup>
 #include <QtGui/QDialog>
+#include <QtGui/QFrame>
 #include <QtGui/QGridLayout>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QListWidget>
@@ -33,6 +34,7 @@ public:
     QStackedWidget *pagesWidget;
     QWidget *page;
     QWidget *page_2;
+    QFrame *line;
     QHBoxLayout *horizontalLayout;
     QSpacerItem *horizontalSpacer;
     QPushButton *okButton;
@@ -55,7 +57,7 @@ public:
     contentsWidget->setSpacing(12);
     contentsWidget->setViewMode(QListView::IconMode);
 
-    gridLayout->addWidget(contentsWidget, 0, 0, 2, 1);
+    gridLayout->addWidget(contentsWidget, 0, 0, 3, 1);
 
     pagesWidget = new QStackedWidget(CSettingsDlgClass);
     pagesWidget->setObjectName(QString::fromUtf8("pagesWidget"));
@@ -67,6 +69,13 @@ public:
     pagesWidget->addWidget(page_2);
 
     gridLayout->addWidget(pagesWidget, 0, 1, 1, 1);
+
+    line = new QFrame(CSettingsDlgClass);
+    line->setObjectName(QString::fromUtf8("line"));
+    line->setFrameShape(QFrame::HLine);
+    line->setFrameShadow(QFrame::Sunken);
+
+    gridLayout->addWidget(line, 1, 1, 1, 1);
 
     horizontalLayout = new QHBoxLayout();
     horizontalLayout->setSpacing(6);
@@ -91,7 +100,7 @@ public:
     horizontalLayout->addWidget(cancelButton);
 
 
-    gridLayout->addLayout(horizontalLayout, 1, 1, 1, 1);
+    gridLayout->addLayout(horizontalLayout, 2, 1, 1, 1);
 
 
     retranslateUi(CSettingsDlgClass);

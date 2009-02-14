@@ -40,10 +40,11 @@ plotWidget::plotWidget(QWidget * parent) : QwtPlot(parent) , m_alt_data(0), m_sp
 
     enableAxis(QwtPlot::yRight);
 
+	m_curve_list = new QList<QwtPlotCurve*>;
+
     setAxisTitle(QwtPlot::xBottom, "Distance [km]");
     setAxisTitle(QwtPlot::yLeft, "Elevation [m]");
     setAxisTitle(QwtPlot::yRight, "Speed [m/s]");
-
 
 }
 
@@ -52,6 +53,8 @@ plotWidget::~plotWidget() {
 
 	delete m_alt_crv;
 	delete m_speed_crv;
+
+	delete m_curve_list;
 
 	if( m_alt_data != 0) delete m_alt_data;
 	if( m_speed_data != 0) delete m_speed_data;
@@ -70,4 +73,21 @@ void plotWidget::setTrack(Track* track)
 	m_speed_crv->setData(*m_speed_data);
 
 	setAutoReplot(true);
+}
+
+void plotWidget::setTracks(QList<Track*> tracks) {
+
+	QList<Track*>::iterator it;
+	QList<QwtPlotCurve*>::iterator cplit;
+	cplit = m_curve_list.begin();
+    for(it = tracks.begin(); it != tracks.end(); it++, cplit++) {
+    	//if()
+
+    }
+
+	m_track_list = tracks;
+
+
+	//m_curve_list;
+
 }

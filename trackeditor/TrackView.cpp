@@ -99,7 +99,7 @@ void TrackView::paintEvent( QPaintEvent * event ) {
 
     Track* tr_ptr;
     std::vector<int> mi = m_track_collection->getIndexList();
-    for(int mi_idx = 0; mi_idx < mi.size(); mi_idx++ ) {
+    for(unsigned mi_idx = 0; mi_idx < mi.size(); mi_idx++ ) {
     	int tr_idx = mi.at(mi_idx);
 
     	if(m_track_collection->at(tr_idx)->size() == 0) {

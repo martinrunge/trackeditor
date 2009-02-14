@@ -4,6 +4,8 @@
 #include <QtGui/QDialog>
 #include "ui_csettingsdlg.h"
 
+#include "CDiagramSettings.h"
+
 class LogReader;
 
 
@@ -20,7 +22,11 @@ public slots:
 	void accept();
 	void reject();
 
+	void changePage(QListWidgetItem *current, QListWidgetItem *previous);
+
 private:
+
+	void createIcons();
 
 	void loadSettings();
 	void saveSettings();
@@ -28,6 +34,8 @@ private:
     Ui::CSettingsDlgClass ui;
 
     LogReader* m_parent;
+
+    CDiagramSettings *m_diagram_settings;
 
 };
 

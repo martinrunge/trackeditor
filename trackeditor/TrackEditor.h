@@ -53,6 +53,7 @@ class QItemSelectionModel;
 class QFile;
 class IDeviceIO;
 class plotWidget;
+class CDiagramsLayout;
 
 class LogReader : public QMainWindow
 {
@@ -91,6 +92,7 @@ public slots:
     void saveTrackAs();
 
     void showSettingsDlg();
+    void setDiagramQuantities(QStringList distVals, QStringList timeVals, QStringList trackPointVals);
 
     void treeViewClicked(QModelIndex index);
     void selectionChanged(QItemSelection,QItemSelection);
@@ -103,9 +105,16 @@ private:
     TrackView *m_track_view;
     plotWidget *m_plotWidget;
     QGridLayout *m_plotLayout;
+    CDiagramsLayout *m_diagrams_layout;
+
+    QStringList m_distVals;
+    QStringList m_timeVals;
+    QStringList m_trackPointVals;
 
     QDialog *m_progress_dlg;
     Ui::ProgressDialog prg_dlg;
+
+
 
 
     void openTTY(const char* name, int speed);

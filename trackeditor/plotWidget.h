@@ -18,14 +18,18 @@ class Track;
 class plotWidget : public QwtPlot {
 	Q_OBJECT
 public:
-	plotWidget(QWidget * parent);
+	plotWidget(QWidget * parent = 0);
 	virtual ~plotWidget();
 
 	void setTrack(Track* track);
+	void setTracks(QList<Track*> tracks);
 
 private:
 	QwtPlotGrid *m_grid;
 	//QwtPlot * m_qwtPlot;
+
+	QList<QwtPlotCurve*> m_curve_list;
+	QList<Track*> m_track_list;
 
 	QwtPlotCurve* m_alt_crv;
 	QwtPlotCurve* m_speed_crv;

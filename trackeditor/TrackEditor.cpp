@@ -50,6 +50,7 @@
 #include "gpxFile.h"
 #include "CWintec.h"
 #include "plotWidget.h"
+#include "CDiagramsLayout.h"
 
 #include "ui_DeviceDialog.h"
 #include "csettingsdlg.h"
@@ -82,6 +83,10 @@ LogReader::LogReader(QWidget *parent) :
         // set m_track_collection to 0 to prevent setTrackCollection() from trying to delete it.
 	m_track_collection = 0;
 
+    QCoreApplication::setOrganizationName("TrackEditor");
+    QCoreApplication::setOrganizationDomain("trackeditor.berlios.de");
+    QCoreApplication::setApplicationName("TrackEditor");
+
 	connect(ui.actionExit, SIGNAL(triggered()), this, SLOT(close()));
 
 	connect(ui.action_Connect, SIGNAL(triggered()), this, SLOT(connectDevice()));
@@ -111,10 +116,13 @@ LogReader::LogReader(QWidget *parent) :
 
 	setTrackCollection(new TrackCollection);
 
-	m_plotLayout = new QGridLayout;
-	m_plotWidget = new plotWidget(ui.diagramWidget);
-	m_plotLayout->addWidget(m_plotWidget);
-	ui.diagramWidget->setLayout(m_plotLayout);
+	m_diagrams_layout = new CDiagramsLayout(ui.diagramWidget);
+	ui.diagramWidget->setLayout(m_diagrams_layout);
+
+//	m_plotLayout = new QGridLayout;
+//	m_plotWidget = new plotWidget(ui.diagramWidget);
+//	m_plotLayout->addWidget(m_plotWidget);
+//	ui.diagramWidget->setLayout(m_plotLayout);
 
     m_device_io = 0;
 	m_dev_data = 0;
@@ -369,9 +377,18 @@ void LogReader::stopRecording() {
 
 
 void LogReader::showSettingsDlg() {
-	CSettingsDlg dlg;
+	CSettingsDlg dlg(this);
 	dlg.exec();
 }
+
+void LogReader::setDiagramQuantities(QStringList distVals, QStringList timeVals, QStringList trackPointVals) {
+	//m_distVals = distVals;
+	//m_timeVals = timeVals;
+	//m_trackPointVals = trackPointVals;
+
+	m_diagrams_layout->setQuantities(distVals, timeVals, trackPointVals);
+}
+
 
 void LogReader::actionTriggered() {
 	openTTY("/dev/rfcomm0", 115200);
@@ -380,7 +397,8 @@ void LogReader::actionTriggered() {
 }
 
 void LogReader::treeViewClicked(QModelIndex index) {
-	m_plotWidget->setTrack(m_track_collection->at(index.row()));
+	m_diagrams_layout->setTrack(m_track_collection->at(index.row()));
+	// m_plotWidget->setTrack(m_track_collection->at(index.row()));
 	qDebug() << QString("treeViewClicked trackNr: %1 Column %2").arg(index.row()).arg(index.column());
 	if(index.column() == 1) {
 		// clocked on the color field
