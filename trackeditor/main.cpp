@@ -36,6 +36,11 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+
+    QCoreApplication::setOrganizationName("TrackEditor");
+    QCoreApplication::setOrganizationDomain("trackeditor.berlios.de");
+    QCoreApplication::setApplicationName("TrackEditor");
+
     LogReader w;
     w.show();
     return a.exec();

@@ -34,6 +34,7 @@
 #include <termios.h>
 
 #include <QtGui/QMainWindow>
+#include <QSettings>
 
 #include "ui_TrackEditor.h"
 #include "ui_ProgressDialog.h"
@@ -114,7 +115,7 @@ private:
     QDialog *m_progress_dlg;
     Ui::ProgressDialog prg_dlg;
 
-
+    QSettings m_settings;
 
 
     void openTTY(const char* name, int speed);

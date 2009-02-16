@@ -1,0 +1,194 @@
+<ui version="4.0" >
+ <class>CQuantitiesConfigClass</class>
+ <widget class="QWidget" name="CQuantitiesConfigClass" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>CQuantitiesConfig</string>
+  </property>
+  <widget class="QCheckBox" name="timeCheckBox" >
+   <property name="geometry" >
+    <rect>
+     <x>230</x>
+     <y>20</y>
+     <width>101</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text" >
+    <string>Time</string>
+   </property>
+   <property name="checked" >
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="latLongCheckBox" >
+   <property name="geometry" >
+    <rect>
+     <x>230</x>
+     <y>50</y>
+     <width>101</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text" >
+    <string>(Lat, Long)</string>
+   </property>
+   <property name="checked" >
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="elevationCheckBox" >
+   <property name="geometry" >
+    <rect>
+     <x>230</x>
+     <y>80</y>
+     <width>83</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text" >
+    <string>Elevation</string>
+   </property>
+   <property name="checked" >
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="speedCheckBox" >
+   <property name="geometry" >
+    <rect>
+     <x>230</x>
+     <y>110</y>
+     <width>83</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text" >
+    <string>Speed</string>
+   </property>
+   <property name="checked" >
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="courseCheckBox" >
+   <property name="enabled" >
+    <bool>false</bool>
+   </property>
+   <property name="geometry" >
+    <rect>
+     <x>230</x>
+     <y>140</y>
+     <width>83</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text" >
+    <string>Course</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="hdopCheckBox" >
+   <property name="geometry" >
+    <rect>
+     <x>230</x>
+     <y>170</y>
+     <width>83</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text" >
+    <string>HDOP</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="vdopCheckBox" >
+   <property name="geometry" >
+    <rect>
+     <x>230</x>
+     <y>200</y>
+     <width>83</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text" >
+    <string>VDOP</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="pdopCheckBox" >
+   <property name="geometry" >
+    <rect>
+     <x>230</x>
+     <y>230</y>
+     <width>83</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text" >
+    <string>PDOP</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="numSatsCheckBox" >
+   <property name="geometry" >
+    <rect>
+     <x>230</x>
+     <y>260</y>
+     <width>161</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text" >
+    <string>number of Satellites</string>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="comboBox" >
+   <property name="geometry" >
+    <rect>
+     <x>30</x>
+     <y>50</y>
+     <width>151</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text" >
+     <string>File</string>
+    </property>
+   </item>
+   <item>
+    <property name="text" >
+     <string>Gps Logger</string>
+    </property>
+   </item>
+   <item>
+    <property name="text" >
+     <string>NEMA GPS</string>
+    </property>
+   </item>
+   <item>
+    <property name="text" >
+     <string>gpsd</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QLabel" name="dataSourceLabel" >
+   <property name="geometry" >
+    <rect>
+     <x>30</x>
+     <y>20</y>
+     <width>91</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text" >
+    <string>Data Source:</string>
+   </property>
+  </widget>
+ </widget>
+ <layoutdefault spacing="6" margin="11" />
+ <resources/>
+ <connections/>
+</ui>

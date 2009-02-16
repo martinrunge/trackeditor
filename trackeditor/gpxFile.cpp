@@ -22,7 +22,7 @@ gpxFile::gpxFile() {
 }
 
 gpxFile::~gpxFile() {
-	qDebug() << QString("gpxFile D-tor");
+	// qDebug() << QString("gpxFile D-tor");
 
 	delete m_xml_writer;
 	delete m_xml_reader;
@@ -79,14 +79,14 @@ void gpxFile::readDocument() {
 
 			case QXmlStreamReader::StartElement:
 			{
-				qDebug() << QString("StartElement: ") << m_xml_reader->name().toString() << m_xml_reader->text().toString();
+				// qDebug() << QString("StartElement: ") << m_xml_reader->name().toString() << m_xml_reader->text().toString();
 				QXmlStreamAttributes attr;
 				if(m_xml_reader->name() == QString("gpx") ) {
 					attr = m_xml_reader->attributes();
 					QString version = attr.value(QString(), QString("version")).toString();
 					QString creator = attr.value(QString(), QString("creator")).toString();
 					m_namespace_uri = m_xml_reader->namespaceUri().toString();
-					qDebug() << QString("version: %1  Creator: %2 ns: %3").arg(version).arg(creator).arg(m_namespace_uri);
+					// qDebug() << QString("version: %1  Creator: %2 ns: %3").arg(version).arg(creator).arg(m_namespace_uri);
 					readGpxType(version);
 				}
 				else
@@ -97,7 +97,7 @@ void gpxFile::readDocument() {
 				break;
 			}
 			case QXmlStreamReader::EndElement:
-				qDebug() << QString("EndElement: ") << m_xml_reader->name().toString() << m_xml_reader->text().toString();
+				// qDebug() << QString("EndElement: ") << m_xml_reader->name().toString() << m_xml_reader->text().toString();
 
 				break;
 
@@ -150,7 +150,7 @@ void gpxFile::readGpxType(QString version) {
 
 			case QXmlStreamReader::StartElement:
 			{
-				qDebug() << QString("StartElement: ") << m_xml_reader->name().toString() << m_xml_reader->text().toString();
+				// qDebug() << QString("StartElement: ") << m_xml_reader->name().toString() << m_xml_reader->text().toString();
 				QXmlStreamAttributes attr;
 				if(m_xml_reader->name() == QString("metadata")) {
 					readMetadataType();
@@ -225,7 +225,7 @@ void gpxFile::readMetadataType() {
 				tmp_string.clear();
 				open_tag.clear();
 
-				qDebug() << QString("StartElement: ") << m_xml_reader->name().toString() << m_xml_reader->text().toString();
+				// qDebug() << QString("StartElement: ") << m_xml_reader->name().toString() << m_xml_reader->text().toString();
 				if(m_xml_reader->name() == QString("name")) {
 					open_tag = QString("name");
 				}
@@ -327,7 +327,7 @@ personType gpxFile::readPersonType() {
 				tmp_string.clear();
 				open_tag.clear();
 
-				qDebug() << QString("StartElement: ") << m_xml_reader->name().toString() << m_xml_reader->text().toString();
+				// qDebug() << QString("StartElement: ") << m_xml_reader->name().toString() << m_xml_reader->text().toString();
 				if(m_xml_reader->name() == QString("name")) {
 					open_tag = QString("name");
 				}
@@ -392,7 +392,7 @@ void gpxFile::readCopyrightType() {
 				tmp_string.clear();
 				open_tag.clear();
 
-				qDebug() << QString("StartElement: ") << m_xml_reader->name().toString() << m_xml_reader->text().toString();
+				// qDebug() << QString("StartElement: ") << m_xml_reader->name().toString() << m_xml_reader->text().toString();
 				if(m_xml_reader->name() == QString("author")) {
 					open_tag = QString("author");
 				}
@@ -448,7 +448,7 @@ void gpxFile::readCopyrightType() {
 linkType gpxFile::readLinkType() {
 	QXmlStreamAttributes attr = m_xml_reader->attributes();
 	QString href = attr.value(QString(), QString("href")).toString();
-	qDebug() << QString("link (raw): href=%1").arg(href);
+	// qDebug() << QString("link (raw): href=%1").arg(href);
 	if(href.startsWith('"')) {
 		href = href.right(href.size() - 1);
 	}
@@ -476,7 +476,7 @@ linkType gpxFile::readLinkType() {
 				tmp_string.clear();
 				open_tag.clear();
 
-				qDebug() << QString("StartElement: ") << m_xml_reader->name().toString() << m_xml_reader->text().toString();
+				// qDebug() << QString("StartElement: ") << m_xml_reader->name().toString() << m_xml_reader->text().toString();
 				if(m_xml_reader->name() == QString("text")) {
 					open_tag = QString("text");
 				}
@@ -522,7 +522,7 @@ emailType gpxFile::readEmailType() {
 	emailType et;
 	et.id = attr.value(QString(), QString("id")).toString();
 	et.domain = attr.value(QString(), QString("domain")).toString();
-	qDebug() << QString("email:%1@%2").arg(et.id).arg(et.domain);
+	// qDebug() << QString("email:%1@%2").arg(et.id).arg(et.domain);
 
 	// read the </email> end tag
 	do {
@@ -564,7 +564,7 @@ TrackPoint* gpxFile::readWptType(QString tagname) {
 
 			case QXmlStreamReader::StartElement:
 			{
-				qDebug() << QString("StartElement: ") << m_xml_reader->name().toString() << m_xml_reader->text().toString();
+				// qDebug() << QString("StartElement: ") << m_xml_reader->name().toString() << m_xml_reader->text().toString();
 				tmp_string.clear();
 				open_tag.clear();
 				if(m_xml_reader->name() == QString("ele")) {
@@ -735,7 +735,7 @@ Track* gpxFile::readRteType() {
 
 			case QXmlStreamReader::StartElement:
 			{
-				qDebug() << QString("StartElement: ") << m_xml_reader->name().toString() << m_xml_reader->text().toString();
+				// qDebug() << QString("StartElement: ") << m_xml_reader->name().toString() << m_xml_reader->text().toString();
 				break;
 			}
 			case QXmlStreamReader::EndElement:
@@ -786,7 +786,7 @@ Track* gpxFile::readTrkType() {
 
 			case QXmlStreamReader::StartElement:
 			{
-				qDebug() << QString("StartElement: ") << m_xml_reader->name().toString() << m_xml_reader->text().toString();
+				// qDebug() << QString("StartElement: ") << m_xml_reader->name().toString() << m_xml_reader->text().toString();
 				tmp_string.clear();
 				open_tag.clear();
 
@@ -906,7 +906,7 @@ QDateTime gpxFile::readXsdDateTime(QString timestring) {
 		// time string is in UTC
 		dt = QDateTime::fromString(timestring, "yyyy-MM-ddThh:mm:ss'Z'");
 		dt.setTimeSpec(Qt::UTC);
-		qDebug() << QString("converting %1 to %2").arg(timestring).arg(dt.toString());
+		// qDebug() << QString("converting %1 to %2").arg(timestring).arg(dt.toString());
 	}
 	else {
 		QStringList strlist = timestring.split(":");

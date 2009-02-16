@@ -15,10 +15,22 @@
   <layout class="QGridLayout" name="gridLayout" >
    <item rowspan="3" row="0" column="0" >
     <widget class="QListWidget" name="contentsWidget" >
+     <property name="minimumSize" >
+      <size>
+       <width>128</width>
+       <height>0</height>
+      </size>
+     </property>
      <property name="maximumSize" >
       <size>
        <width>128</width>
        <height>16777215</height>
+      </size>
+     </property>
+     <property name="iconSize" >
+      <size>
+       <width>96</width>
+       <height>84</height>
       </size>
      </property>
      <property name="movement" >
@@ -34,7 +46,6 @@
    </item>
    <item row="0" column="1" >
     <widget class="QStackedWidget" name="pagesWidget" >
-     <widget class="QWidget" name="page" />
      <widget class="QWidget" name="page_2" />
     </widget>
    </item>

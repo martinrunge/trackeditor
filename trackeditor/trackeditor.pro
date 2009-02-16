@@ -2,7 +2,10 @@ TEMPLATE = app
 TARGET = trackeditor
 QT += core \
     gui
-HEADERS += CDiagramsLayout.h \
+HEADERS += CQuantitiesConfig.h \
+    CUnitConfig.h \
+    CSettings.h \
+    CDiagramsLayout.h \
     csettingsdlg.h \
     CDiagramSettings.h \
     PlotData.h \
@@ -12,7 +15,10 @@ HEADERS += CDiagramsLayout.h \
     TrackCollection.h \
     TrackEditor.h \
     TrackView.h
-SOURCES += CDiagramsLayout.cpp \
+SOURCES += CQuantitiesConfig.cpp \
+    CUnitConfig.cpp \
+    CSettings.cpp \
+    CDiagramsLayout.cpp \
     csettingsdlg.cpp \
     CDiagramSettings.cpp \
     PlotData.cpp \
@@ -31,7 +37,9 @@ SOURCES += CDiagramsLayout.cpp \
     DeviceData.cpp \
     main.cpp \
     TrackEditor.cpp
-FORMS += diagramSettings.ui \
+FORMS += CQuantitiesConfig.ui \
+    CUnitConfig.ui \
+    diagramSettings.ui \
     csettingsdlg.ui \
     ProgressDialog.ui \
     DeviceDialog.ui \

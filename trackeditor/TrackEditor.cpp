@@ -83,9 +83,6 @@ LogReader::LogReader(QWidget *parent) :
         // set m_track_collection to 0 to prevent setTrackCollection() from trying to delete it.
 	m_track_collection = 0;
 
-    QCoreApplication::setOrganizationName("TrackEditor");
-    QCoreApplication::setOrganizationDomain("trackeditor.berlios.de");
-    QCoreApplication::setApplicationName("TrackEditor");
 
 	connect(ui.actionExit, SIGNAL(triggered()), this, SLOT(close()));
 
@@ -118,6 +115,17 @@ LogReader::LogReader(QWidget *parent) :
 
 	m_diagrams_layout = new CDiagramsLayout(ui.diagramWidget);
 	ui.diagramWidget->setLayout(m_diagrams_layout);
+
+	QStringList distList;
+	distList = m_settings.value("diagrams/distance").toStringList();
+
+	QStringList timeList;
+	timeList = m_settings.value("diagrams/time").toStringList();
+
+	QStringList trackPointsList;
+	trackPointsList = m_settings.value("diagrams/trackpoints").toStringList();
+
+	m_diagrams_layout->setQuantities(distList, timeList, trackPointsList );
 
 //	m_plotLayout = new QGridLayout;
 //	m_plotWidget = new plotWidget(ui.diagramWidget);

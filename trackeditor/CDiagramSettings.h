@@ -17,7 +17,7 @@ class CDiagramSettings : public QWidget
     Q_OBJECT
 
 public:
-	CDiagramSettings(QWidget *parent);
+	CDiagramSettings(QWidget *parent = 0);
 	virtual ~CDiagramSettings();
 
 	QStringList getDistVals();

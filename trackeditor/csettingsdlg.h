@@ -4,6 +4,8 @@
 #include <QtGui/QDialog>
 #include "ui_csettingsdlg.h"
 
+#include "CQuantitiesConfig.h"
+#include "CUnitConfig.h"
 #include "CDiagramSettings.h"
 
 class LogReader;
@@ -35,6 +37,8 @@ private:
 
     LogReader* m_parent;
 
+    CQuantitiesConfig *m_quantities_config;
+    CUnitConfig *m_unit_config;
     CDiagramSettings *m_diagram_settings;
 
 };

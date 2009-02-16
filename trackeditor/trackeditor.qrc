@@ -1,6 +1,7 @@
 <RCC>
-  <qresource prefix="images" >
-    <file>images/arrow-up.png</file>
-    <file>images/arrow-down.png</file>
-  </qresource>
+    <qresource prefix="/images" >
+        <file>images/arrow-down.png</file>
+        <file>images/arrow-up.png</file>
+        <file>images/diagram.png</file>
+    </qresource>
 </RCC>
