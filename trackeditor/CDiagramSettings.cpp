@@ -5,8 +5,10 @@
  *      Author: martin
  */
 
+
 #include "CDiagramSettings.h"
 #include <QSettings>
+
 
 CDiagramSettings::CDiagramSettings(QWidget *parent) : QWidget(parent)
 {
@@ -39,7 +41,8 @@ CDiagramSettings::CDiagramSettings(QWidget *parent) : QWidget(parent)
 
 CDiagramSettings::~CDiagramSettings() {
 	// TODO Auto-generated destructor stub
-	saveSettings();
+
+	// saveSettings();
 }
 
 
@@ -52,7 +55,8 @@ void CDiagramSettings::loadSettings() {
 	QStringList::iterator it;
 	for(it = distList.begin(); it != distList.end(); it++) {
 		QListWidgetItem* item = new QListWidgetItem();
-		item->setText(*it);
+		QString text = PlotData::YTypeName[ PlotData::YTypeNamesForSettings[*it] ];
+		item->setText(text);
 		ui.distListWidget->addItem(item);
 	}
 
@@ -61,7 +65,8 @@ void CDiagramSettings::loadSettings() {
 
 	for(it = timeList.begin(); it != timeList.end(); it++) {
 		QListWidgetItem* item = new QListWidgetItem();
-		item->setText(*it);
+		QString text = PlotData::YTypeName[ PlotData::YTypeNamesForSettings[*it] ];
+		item->setText(text);
 		ui.timeListWidget->addItem(item);
 	}
 
@@ -70,13 +75,14 @@ void CDiagramSettings::loadSettings() {
 
 	for(it = trackpointsList.begin(); it != trackpointsList.end(); it++) {
 		QListWidgetItem* item = new QListWidgetItem();
-		item->setText(*it);
+		QString text = PlotData::YTypeName[ PlotData::YTypeNamesForSettings[*it] ];
+		item->setText(text);
 		ui.trackpointsListWidget->addItem(item);
 	}
 
 }
 
-QStringList CDiagramSettings::getDistVals() {
+QStringList CDiagramSettings::getDistValStrings() {
 	QStringList distList;
 
 	for(int i=0; i < ui.distListWidget->count(); i++) {
@@ -86,7 +92,7 @@ QStringList CDiagramSettings::getDistVals() {
 	return distList;
 }
 
-QStringList CDiagramSettings::getTimeVals() {
+QStringList CDiagramSettings::getTimeValStrings() {
 	QStringList timeList;
 
 	for(int i=0; i < ui.timeListWidget->count(); i++) {
@@ -95,7 +101,7 @@ QStringList CDiagramSettings::getTimeVals() {
 	return timeList;
 }
 
-QStringList CDiagramSettings::getTrackPointVals() {
+QStringList CDiagramSettings::getTrackPointValStrings() {
 	QStringList trackpointsList;
 
 	for(int i=0; i < ui.trackpointsListWidget->count(); i++) {
@@ -104,20 +110,69 @@ QStringList CDiagramSettings::getTrackPointVals() {
 	return trackpointsList;
 }
 
+QList<enum plotTypeY> CDiagramSettings::getDistVals() {
+	QList<enum plotTypeY> distList;
 
-void CDiagramSettings::saveSettings() {
-	QSettings settings;
-	QStringList distList = getDistVals();
+	for(int i=0; i < ui.distListWidget->count(); i++) {
+		// get the translated name of value
+		QString valueName = ui.distListWidget->item(i)->text();
+		// if no key is found for this value, discard it.
+		enum plotTypeY val = PlotData::YTypeName.key(valueName, TYPE_Y_NONE);
+		if(val != TYPE_Y_NONE ) {
+			distList.append(val);
+		}
+	}
 
-	settings.setValue("diagrams/distance", distList);
-
-	QStringList timeList = getTimeVals();
-	settings.setValue("diagrams/time", timeList);
-
-	QStringList trackpointsList = getTrackPointVals();
-	settings.setValue("diagrams/trackpoints", trackpointsList);
-
+	return distList;
 }
+
+QList<enum plotTypeY> CDiagramSettings::getTimeVals() {
+	QList<enum plotTypeY> timeList;
+
+	for(int i=0; i < ui.timeListWidget->count(); i++) {
+		// get the translated name of value
+		QString valueName = ui.timeListWidget->item(i)->text();
+		// if no key is found for this value, discard it.
+		enum plotTypeY val = PlotData::YTypeName.key(valueName, TYPE_Y_NONE);
+		if(val != TYPE_Y_NONE ) {
+			timeList.append(val);
+		}
+	}
+	return timeList;
+}
+
+QList<enum plotTypeY> CDiagramSettings::getTrackPointVals() {
+	QList<enum plotTypeY> trackpointsList;
+
+	for(int i=0; i < ui.trackpointsListWidget->count(); i++) {
+		// get the translated name of value
+		QString valueName = ui.trackpointsListWidget->item(i)->text();
+		// if no key is found for this value, discard it.
+		enum plotTypeY val = PlotData::YTypeName.key(valueName, TYPE_Y_NONE);
+		if(val != TYPE_Y_NONE ) {
+			trackpointsList.append(val);
+		}
+	}
+	return trackpointsList;
+}
+
+//void CDiagramSettings::saveSettings() {
+//	QSettings settings;
+//
+//	QList<enum plotTypeY> distList = getDistVals();
+//	QStringList savelist;
+//	for(int i = 0; i < distList.count(); i++) {
+//		savelist.append( );
+//	}
+//	settings.setValue("diagrams/distance", distList);
+//
+//	QList<enum plotTypeY> timeList = getTimeVals();
+//	settings.setValue("diagrams/time", timeList);
+//
+//	QList<enum plotTypeY> trackpointsList = getTrackPointVals();
+//	settings.setValue("diagrams/trackpoints", trackpointsList);
+//
+//}
 
 
 void CDiagramSettings::addDist() {

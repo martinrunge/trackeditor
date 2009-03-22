@@ -11,6 +11,7 @@
 
 #include <QtGui/QWidget>
 #include "ui_diagramSettings.h"
+#include "PlotData.h"
 
 class CDiagramSettings : public QWidget
 {
@@ -20,12 +21,17 @@ public:
 	CDiagramSettings(QWidget *parent = 0);
 	virtual ~CDiagramSettings();
 
-	QStringList getDistVals();
-	QStringList getTimeVals();
-	QStringList getTrackPointVals();
+	QStringList getDistValStrings();
+	QStringList getTimeValStrings();
+	QStringList getTrackPointValStrings();
+
+	QList<enum plotTypeY> getDistVals();
+	QList<enum plotTypeY> getTimeVals();
+	QList<enum plotTypeY> getTrackPointVals();
+
 
 	void loadSettings();
-	void saveSettings();
+//	void saveSettings();
 
 public slots:
 	void addDist();

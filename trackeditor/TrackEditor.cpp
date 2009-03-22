@@ -51,6 +51,7 @@
 #include "CWintec.h"
 #include "plotWidget.h"
 #include "CDiagramsLayout.h"
+#include "CSettings.h"
 
 #include "ui_DeviceDialog.h"
 #include "csettingsdlg.h"
@@ -83,6 +84,7 @@ LogReader::LogReader(QWidget *parent) :
         // set m_track_collection to 0 to prevent setTrackCollection() from trying to delete it.
 	m_track_collection = 0;
 
+	PlotData::initializeMaps();
 
 	connect(ui.actionExit, SIGNAL(triggered()), this, SLOT(close()));
 
@@ -116,14 +118,17 @@ LogReader::LogReader(QWidget *parent) :
 	m_diagrams_layout = new CDiagramsLayout(ui.diagramWidget);
 	ui.diagramWidget->setLayout(m_diagrams_layout);
 
-	QStringList distList;
-	distList = m_settings.value("diagrams/distance").toStringList();
+	m_settings = new CSettings();
+	m_settings->load();
 
-	QStringList timeList;
-	timeList = m_settings.value("diagrams/time").toStringList();
+	QList<enum plotTypeY> distList;
+	distList = m_settings->getDistQuantities();
 
-	QStringList trackPointsList;
-	trackPointsList = m_settings.value("diagrams/trackpoints").toStringList();
+	QList<enum plotTypeY> timeList;
+	timeList = m_settings->getTimeQuantities();
+
+	QList<enum plotTypeY> trackPointsList;
+	trackPointsList = m_settings->getTrackpointsQuantities();
 
 	m_diagrams_layout->setQuantities(distList, timeList, trackPointsList );
 
@@ -162,6 +167,8 @@ LogReader::~LogReader() {
                 delete m_device_io;
         }
         ui.scrollArea->setWidget(0);
+
+		delete m_settings;
         delete m_track_view;
         delete m_track_collection;
 	closeTTY();
@@ -388,13 +395,17 @@ void LogReader::showSettingsDlg() {
 	CSettingsDlg dlg(this);
 	dlg.exec();
 }
-
-void LogReader::setDiagramQuantities(QStringList distVals, QStringList timeVals, QStringList trackPointVals) {
+//void LogReader::setDiagramQuantities(QStringList distVals, QStringList timeVals, QStringList trackPointVals) {
+void LogReader::setDiagramQuantities(QList<enum plotTypeY> distVals, QList<enum plotTypeY> timeVals, QList<enum plotTypeY> trackPointVals) {
 	//m_distVals = distVals;
 	//m_timeVals = timeVals;
 	//m_trackPointVals = trackPointVals;
 
 	m_diagrams_layout->setQuantities(distVals, timeVals, trackPointVals);
+	m_settings->setDistQuantities(distVals);
+	m_settings->setTimeQuantities(timeVals);
+	m_settings->setTrackpointsQuantities(trackPointVals);
+	m_settings->save();
 }
 
 
@@ -415,7 +426,7 @@ void LogReader::treeViewClicked(QModelIndex index) {
 	}
 }
 
-void LogReader::selectionChanged(QItemSelection selected,QItemSelection deselected) {
+void LogReader::selectionChanged(QItemSelection selected, QItemSelection deselected) {
 	qDebug() << QString("selction changed");
 	QModelIndexList selected_indices = m_selection_model->selectedIndexes();
     m_track_collection->setModelIndexList(selected_indices);

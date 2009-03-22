@@ -10,6 +10,10 @@
 
 #include <QWidget>
 #include <QGridLayout>
+#include <QList>
+#include <QString>
+
+#include "PlotData.h"
 
 class plotWidget;
 class Track;
@@ -24,10 +28,12 @@ public:
 	void setTracks(QList<Track*> track);
 
 	void setQuantities(QStringList distVals, QStringList timeVals, QStringList trackPointVals );
+	void setQuantities(QList<enum plotTypeY> distVals, QList<enum plotTypeY> timeVals, QList<enum plotTypeY> trackPointVals );
+
 
 private:
 	void clear();
-	plotWidget *m_plotWidget;
+	// plotWidget *m_plotWidget;
 	QList<plotWidget*> m_distPlots;
 	QList<plotWidget*> m_timePlots;
 	QList<plotWidget*> m_trackPointPlots;

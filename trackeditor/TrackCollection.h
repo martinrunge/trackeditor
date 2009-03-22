@@ -52,6 +52,8 @@ public:
 
 	std::vector<int> getIndexList(void);
 
+    void setDiagramQuantities(QList<enum plotTypeY> distVals, QList<enum plotTypeY> timeVals, QList<enum plotTypeY> trackPointVals);
+
 	QString getCreator();
 
 	bool validAuthor();

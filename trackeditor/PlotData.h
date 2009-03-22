@@ -9,8 +9,10 @@
 #define PLOTDATA_H_
 
 #include <qwt-qt4/qwt_data.h>
+#include <QMap>
+#include <QDateTime>
 
-#include "Track.h"
+// #include "Track.h"
 
 enum plotTypeX {
 	TYPE_X_DIST,
@@ -29,6 +31,8 @@ enum plotTypeY {
 	TYPE_Y_NONE
 };
 
+class Track;
+class TrackPoint;
 
 class PlotData : public QwtData {
 public:
@@ -40,6 +44,11 @@ public:
     virtual size_t size() const;
     virtual double x(size_t i) const;
     virtual double y(size_t i) const;
+
+    static QMap<enum plotTypeY, QString> YTypeName;
+    static QMap<enum plotTypeX, QString> XTypeName;
+    static QMap<QString, enum plotTypeY> YTypeNamesForSettings;
+    static void initializeMaps();
 
 private:
 

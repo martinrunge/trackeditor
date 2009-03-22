@@ -9,13 +9,38 @@
 #include <QDebug>
 #include <QString>
 
-class Track;
+#include "Track.h"
+
+
+QMap<enum plotTypeX, QString> PlotData::XTypeName;
+QMap<enum plotTypeY, QString> PlotData::YTypeName;
+QMap<QString, enum plotTypeY> PlotData::YTypeNamesForSettings;
+
+void PlotData::initializeMaps() {
+
+	PlotData::XTypeName[ TYPE_X_DIST ] = QString(QObject::tr("Distance"));
+	PlotData::XTypeName[ TYPE_X_TIME ] = QString(QObject::tr("Time"));
+	PlotData::XTypeName[ TYPE_X_POINTS ] = QString(QObject::tr("Trackpoints"));
+
+	PlotData::YTypeName[ TYPE_Y_ALT ] = QString(QObject::tr("Elevation"));
+	PlotData::YTypeName[ TYPE_Y_SPEED ] = QString(QObject::tr("Speed"));
+	PlotData::YTypeName[ TYPE_Y_DGPS_DIFF ] = QString(QObject::tr("DGPS diff"));
+	PlotData::YTypeName[ TYPE_Y_HDOP ] = QString(QObject::tr("HDOP"));
+	PlotData::YTypeName[ TYPE_Y_VDOP ] = QString(QObject::tr("VDOP"));
+	PlotData::YTypeName[ TYPE_Y_PDOP ] = QString(QObject::tr("PDOP"));
+
+	PlotData::YTypeNamesForSettings["elevation"] = TYPE_Y_ALT;
+	PlotData::YTypeNamesForSettings["speed"] = TYPE_Y_SPEED;
+	PlotData::YTypeNamesForSettings["dgps_diff"] = TYPE_Y_DGPS_DIFF;
+	PlotData::YTypeNamesForSettings["hdop"] = TYPE_Y_HDOP;
+	PlotData::YTypeNamesForSettings["vdop"] = TYPE_Y_VDOP;
+	PlotData::YTypeNamesForSettings["pdop"] = TYPE_Y_PDOP;
+
+
+}
 
 PlotData::PlotData(Track* track, enum plotTypeX xtype, enum plotTypeY ytype, int numPoints) : QwtData(),
                                                                                               m_plot_type_x(xtype),
-                                                                                              m_plot_type_y(ytype),
-                                                                                              m_track(track),
-                                                                                              m_tp_index(0),
                                                                                               m_copied(false)
 {
 	m_num_points = numPoints;

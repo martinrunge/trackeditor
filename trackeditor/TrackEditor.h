@@ -42,6 +42,7 @@
 #include "TrackPoint.h"
 #include "Track.h"
 #include "TrackCollection.h"
+#include "PlotData.h"
 
 
 class QGridLayout;
@@ -55,6 +56,7 @@ class QFile;
 class IDeviceIO;
 class plotWidget;
 class CDiagramsLayout;
+class CSettings;
 
 class LogReader : public QMainWindow
 {
@@ -93,7 +95,8 @@ public slots:
     void saveTrackAs();
 
     void showSettingsDlg();
-    void setDiagramQuantities(QStringList distVals, QStringList timeVals, QStringList trackPointVals);
+    //void setDiagramQuantities(QStringList distVals, QStringList timeVals, QStringList trackPointVals);
+    void setDiagramQuantities(QList<enum plotTypeY> distVals, QList<enum plotTypeY> timeVals, QList<enum plotTypeY> trackPointVals);
 
     void treeViewClicked(QModelIndex index);
     void selectionChanged(QItemSelection,QItemSelection);
@@ -115,7 +118,8 @@ private:
     QDialog *m_progress_dlg;
     Ui::ProgressDialog prg_dlg;
 
-    QSettings m_settings;
+    CSettings *m_settings;
+
 
 
     void openTTY(const char* name, int speed);

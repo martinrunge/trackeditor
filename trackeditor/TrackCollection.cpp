@@ -150,6 +150,12 @@ QRectF TrackCollection::getDimensionXY(QModelIndexList indices) {
 
 }
 
+void TrackCollection::setDiagramQuantities(QList<enum plotTypeY> distVals, QList<enum plotTypeY> timeVals, QList<enum plotTypeY> trackPointVals) {
+	for (int i = 0; i < size(); i++) {
+		at(i)->setDiagramQuantities(distVals, timeVals, trackPointVals);
+	}
+}
+
 bool TrackCollection::validBounds() {
 	return true;
 }

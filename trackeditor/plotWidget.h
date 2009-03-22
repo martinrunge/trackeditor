@@ -9,16 +9,16 @@
 #define PLOTWIDGET_H_
 
 #include <qwt-qt4/qwt_plot.h>
+#include "PlotData.h"
 
 class QwtPlotGrid;
 class QwtPlotCurve;
-class PlotData;
 class Track;
 
 class plotWidget : public QwtPlot {
 	Q_OBJECT
 public:
-	plotWidget(QWidget * parent = 0);
+	plotWidget(enum plotTypeX x_type, enum plotTypeY y_type, QWidget * parent = 0);
 	virtual ~plotWidget();
 
 	// void setTrack(Track* track);
@@ -30,6 +30,10 @@ private:
 
 	QList<QwtPlotCurve*> m_curve_list;
 	QList<Track*> m_track_list;
+
+	enum plotTypeX m_x_type;
+	enum plotTypeY m_y_type;
+
 
 	// QwtPlotCurve* m_alt_crv;
 	// QwtPlotCurve* m_speed_crv;

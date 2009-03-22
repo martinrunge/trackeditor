@@ -63,7 +63,7 @@ void CSettingsDlg::changePage(QListWidgetItem *current, QListWidgetItem *previou
 	if (!current)
 		current = previous;
 
-	qDebug() << QString("switching to pane %1 ").arg(ui.contentsWidget->row(current));
+	qDebug() << QString("switchi^ng to pane %1 ").arg(ui.contentsWidget->row(current));
 	ui.pagesWidget->setCurrentIndex(ui.contentsWidget->row(current));
 }
 
@@ -73,7 +73,7 @@ void CSettingsDlg::apply() {
 
 	m_parent->setDiagramQuantities(m_diagram_settings->getDistVals(), m_diagram_settings->getTimeVals(), m_diagram_settings->getTrackPointVals());
 
-	saveSettings();
+	// saveSettings();
 }
 
 void CSettingsDlg::accept() {

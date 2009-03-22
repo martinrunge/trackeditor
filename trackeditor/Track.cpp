@@ -247,3 +247,67 @@ double Track::speed(TrackPoint* tp1, TrackPoint* tp2, double dist_in_m) {
 
 	return dist_in_m / time_diff_in_s;
 }
+
+PlotData* Track::getDistData(enum plotTypeY key) {
+	if(m_dist_data.contains(key)) {
+		return m_dist_data.value(key);
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+PlotData* Track::getTimeData(enum plotTypeY key) {
+	if(m_time_data.contains(key)) {
+		return m_time_data.value(key);
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+PlotData* Track::getTrackpointsData(enum plotTypeY key) {
+	if(m_trackpoints_data.contains(key)) {
+		return m_trackpoints_data.value(key);
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+void Track::setDiagramQuantities(QList<enum plotTypeY> distVals, QList<enum plotTypeY> timeVals, QList<enum plotTypeY> trackPointVals) {
+
+	//  first remove all values from m_dist_data that are not in distVals
+	QList<enum plotTypeY> keys = m_dist_data.keys();
+
+	for(int i = 0; i < keys.size(); i++) {
+		bool found = false;
+		for(int j=0; j < distVals.size(); j++) {
+			if(keys[i] == distVals[j] ) {
+				found = true;
+				break;
+			}
+		}
+		PlotData* pd = m_dist_data.take(keys[i]);
+		delete pd;
+	}
+
+	// now add additional values from distVals
+	keys = m_dist_data.keys();
+
+	for(int j=0; j < distVals.size(); j++) {
+		for(int i = 0; i < keys.size(); i++) {
+			if(keys[i] != distVals[j] ) {
+				PlotData* pd = new PlotData(this, TYPE_X_DIST, distVals[j], 1000);
+				m_dist_data.insert(distVals[j], pd);
+				break;
+			}
+		}
+	}
+
+	// noch die anderen
+
+}

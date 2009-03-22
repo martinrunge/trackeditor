@@ -8,6 +8,7 @@
 #ifndef TRACK_H_
 #define TRACK_H_
 
+#include "PlotData.h"
 #include "TrackPoint.h"
 #include "CommonAttributes.h"
 #include "CommonTrackAttributes.h"
@@ -15,6 +16,7 @@
 #include <QList>
 #include <QDateTime>
 #include <QStandardItem>
+
 
 class Track :public QList<TrackPoint*> , public QStandardItem, public CommonAttributes, public CommonTrackAttributes {
 public:
@@ -48,6 +50,12 @@ public:
 	inline QColor getColor() {return m_color; };
 	void setColor(QColor col);
 
+	PlotData* getDistData(enum plotTypeY key);
+	PlotData* getTimeData(enum plotTypeY key);
+	PlotData* getTrackpointsData(enum plotTypeY key);
+
+    void setDiagramQuantities(QList<enum plotTypeY> distVals, QList<enum plotTypeY> timeVals, QList<enum plotTypeY> trackPointVals);
+
 private:
 	void initMetaData();
 
@@ -73,6 +81,11 @@ private:
 	QStandardItem* m_num_points_item;
 
 	QColor m_color;
+
+	// PlotData for this track
+	QMap<enum plotTypeY, PlotData*> m_dist_data;
+	QMap<enum plotTypeY, PlotData*> m_time_data;
+	QMap<enum plotTypeY, PlotData*> m_trackpoints_data;
 
 	// <number> xsd:nonNegativeInteger </number> [0..1] ?
 	int m_track_index;

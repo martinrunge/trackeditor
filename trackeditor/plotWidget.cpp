@@ -8,6 +8,7 @@
 
 #include "PlotData.h"
 #include "plotWidget.h"
+#include "Track.h"
 
 #include <qwt-qt4/qwt_plot_marker.h>
 #include <qwt-qt4/qwt_plot_curve.h>
@@ -16,10 +17,14 @@
 #include <QDebug>
 
 
-plotWidget::plotWidget(QWidget * parent) : QwtPlot(parent) {
+
+plotWidget::plotWidget(enum plotTypeX x_type, enum plotTypeY y_type, QWidget * parent) : QwtPlot(parent) {
     //m_qwtPlot = new QwtPlot(parent);
     //m_qwtPlot->setObjectName(QString::fromUtf8("m_qwtPlot"));
     //m_qwtPlot->setGeometry(QRect(20, 40, 511, 200));
+
+	m_x_type = x_type;
+	m_y_type = y_type;
 
     m_grid = new QwtPlotGrid;
     m_grid->enableXMin(true);
@@ -40,14 +45,20 @@ plotWidget::plotWidget(QWidget * parent) : QwtPlot(parent) {
     // m_speed_crv->setYAxis(QwtPlot::yRight);
     // m_speed_crv->attach(this);
 
-    enableAxis(QwtPlot::yRight);
+    // enableAxis(QwtPlot::yRight);
 
 	// m_curve_list = new QList<QwtPlotCurve*>;
 
     m_curve_list.clear();
 
-    setAxisTitle(QwtPlot::xBottom, "Distance [km]");
-    setAxisTitle(QwtPlot::yLeft, "Elevation [m]");
+    QString x_label = PlotData::XTypeName[m_x_type];
+    // x_label.append(PlotData::XUnitName[m_x_unit]);
+
+    QString y_label = PlotData::YTypeName[m_y_type];
+    // x_label.append(PlotData::XUnitName[m_y_unit]);
+
+    setAxisTitle(QwtPlot::xBottom, x_label);
+    setAxisTitle(QwtPlot::yLeft, y_label);
     // setAxisTitle(QwtPlot::yRight, "Speed [m/s]");
 
 }
@@ -84,8 +95,8 @@ void plotWidget::setTracks(QList<Track*> tracks) {
 	QList<Track*>::iterator it;
 	QList<QwtPlotCurve*>::iterator cplit;
 
-	int n_tracks = tracks.size();
-	int n_curves = m_curve_list.size();
+	int n_tracks = tracks.isEmpty() ? 0 : tracks.size();
+	int n_curves = m_curve_list.isEmpty() ? 0 : m_curve_list.size();
 
 
 	int diff = n_tracks - n_curves;
@@ -114,7 +125,7 @@ void plotWidget::setTracks(QList<Track*> tracks) {
     	m_curve_list[i]->attach(this);
     	m_curve_list[i]->setPen(QPen(tracks[i]->getColor()));
 
-    	PlotData* data = new PlotData(tracks[i], TYPE_X_DIST, TYPE_Y_SPEED, 1000);
+    	PlotData* data = new PlotData(tracks[i], m_x_type, m_y_type, 1000);
 
     	m_curve_list[i]->setData(*data);
     }
