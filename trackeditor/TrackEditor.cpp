@@ -113,7 +113,6 @@ LogReader::LogReader(QWidget *parent) :
     m_selection_model = ui.treeView->selectionModel();
     connect(m_selection_model, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(selectionChanged(QItemSelection,QItemSelection)));
 
-	setTrackCollection(new TrackCollection);
 
 	m_diagrams_layout = new CDiagramsLayout(ui.diagramWidget);
 	ui.diagramWidget->setLayout(m_diagrams_layout);
@@ -136,6 +135,8 @@ LogReader::LogReader(QWidget *parent) :
 //	m_plotWidget = new plotWidget(ui.diagramWidget);
 //	m_plotLayout->addWidget(m_plotWidget);
 //	ui.diagramWidget->setLayout(m_plotLayout);
+
+	setTrackCollection(new TrackCollection);
 
     m_device_io = 0;
 	m_dev_data = 0;
@@ -335,6 +336,7 @@ void LogReader::setTrackCollection(TrackCollection* track_collection) {
 
 	TrackCollection* tmp_tc = m_track_collection;
 	m_track_collection = track_collection;
+	m_track_collection->setDiagramQuantities(m_settings->getDistQuantities(), m_settings->getTimeQuantities(), m_settings->getTrackpointsQuantities());
 
 	m_track_view->setTrackColletcion(m_track_collection);
     ui.treeView->setModel(m_track_collection);
@@ -359,6 +361,7 @@ void LogReader::setTrackCollection(TrackCollection* track_collection) {
 
 void LogReader::newTrack(Track* track) {
 	track->setIndex(m_track_collection->size());
+	track->setDiagramQuantities(m_settings->getDistQuantities(), m_settings->getTimeQuantities(), m_settings->getTrackpointsQuantities() );
 	m_track_collection->appendTrack(track);
 
 	ui.treeView->resizeColumnToContents(0);

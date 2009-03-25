@@ -291,23 +291,92 @@ void Track::setDiagramQuantities(QList<enum plotTypeY> distVals, QList<enum plot
 				break;
 			}
 		}
-		PlotData* pd = m_dist_data.take(keys[i]);
-		delete pd;
+		if(!found) {
+			PlotData* pd = m_dist_data.take(keys[i]);
+			delete pd;
+		}
 	}
 
 	// now add additional values from distVals
 	keys = m_dist_data.keys();
 
 	for(int j=0; j < distVals.size(); j++) {
+		bool found = false;
 		for(int i = 0; i < keys.size(); i++) {
-			if(keys[i] != distVals[j] ) {
-				PlotData* pd = new PlotData(this, TYPE_X_DIST, distVals[j], 1000);
-				m_dist_data.insert(distVals[j], pd);
+			if(keys[i] == distVals[j] ) {
+				found = true;
 				break;
 			}
+		}
+		if(!found) {
+			PlotData* pd = new PlotData(this, TYPE_X_DIST, distVals[j], 1000);
+			m_dist_data.insert(distVals[j], pd);
 		}
 	}
 
 	// noch die anderen
+	for(int i = 0; i < keys.size(); i++) {
+		bool found = false;
+		for(int j=0; j < timeVals.size(); j++) {
+			if(keys[i] == timeVals[j] ) {
+				found = true;
+				break;
+			}
+		}
+		if(!found) {
+			PlotData* pd = m_time_data.take(keys[i]);
+			delete pd;
+		}
+	}
+
+	// now add additional values from distVals
+	keys = m_time_data.keys();
+
+	for(int j=0; j < timeVals.size(); j++) {
+		bool found = false;
+		for(int i = 0; i < keys.size(); i++) {
+			if(keys[i] == timeVals[j] ) {
+				found = true;
+				break;
+			}
+		}
+		if(!found) {
+			PlotData* pd = new PlotData(this, TYPE_X_TIME, timeVals[j], 1000);
+			m_time_data.insert(timeVals[j], pd);
+			break;
+		}
+	}
+
+	for(int i = 0; i < keys.size(); i++) {
+		bool found = false;
+		for(int j=0; j < trackPointVals.size(); j++) {
+			if(keys[i] == trackPointVals[j] ) {
+				found = true;
+				break;
+			}
+		}
+		if(!found) {
+			PlotData* pd = m_trackpoints_data.take(keys[i]);
+			delete pd;
+		}
+	}
+
+	// now add additional values from distVals
+	keys = m_trackpoints_data.keys();
+
+	for(int j=0; j < trackPointVals.size(); j++) {
+		bool found = false;
+		for(int i = 0; i < keys.size(); i++) {
+			if(keys[i] == timeVals[j] ) {
+				found = true;
+				break;
+			}
+		}
+		if(!found) {
+			PlotData* pd = new PlotData(this, TYPE_X_POINTS, trackPointVals[j], 1000);
+			m_trackpoints_data.insert(trackPointVals[j], pd);
+			break;
+		}
+	}
 
 }

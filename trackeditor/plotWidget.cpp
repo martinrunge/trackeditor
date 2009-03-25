@@ -95,8 +95,8 @@ void plotWidget::setTracks(QList<Track*> tracks) {
 	QList<Track*>::iterator it;
 	QList<QwtPlotCurve*>::iterator cplit;
 
-	int n_tracks = tracks.isEmpty() ? 0 : tracks.size();
-	int n_curves = m_curve_list.isEmpty() ? 0 : m_curve_list.size();
+	int n_tracks = tracks.size();
+	int n_curves = m_curve_list.size();
 
 
 	int diff = n_tracks - n_curves;
@@ -106,7 +106,7 @@ void plotWidget::setTracks(QList<Track*> tracks) {
 	if(diff > 0) {
 		for(int i=0; i < abs(diff); i++ ) {
 			QwtPlotCurve* cplot = new QwtPlotCurve();
-			cplot->attach(this);
+			// cplot->attach(this);
 			m_curve_list.append(cplot);
 		}
 	}
@@ -125,9 +125,22 @@ void plotWidget::setTracks(QList<Track*> tracks) {
     	m_curve_list[i]->attach(this);
     	m_curve_list[i]->setPen(QPen(tracks[i]->getColor()));
 
-    	PlotData* data = new PlotData(tracks[i], m_x_type, m_y_type, 1000);
-
-    	m_curve_list[i]->setData(*data);
+    	// PlotData* data = new PlotData(tracks[i], m_x_type, m_y_type, 1000);
+    	PlotData* data;
+    	switch(m_x_type) {
+			case TYPE_X_DIST:
+				data = tracks[i]->getDistData(m_y_type);
+				break;
+			case TYPE_X_TIME:
+				data = tracks[i]->getTimeData(m_y_type);
+				break;
+			case TYPE_X_POINTS:
+				data = tracks[i]->getTrackpointsData(m_y_type);
+				break;
+			default:
+				break;
+    	}
+		m_curve_list[i]->setData(*data);
     }
 
 	m_track_list = tracks;
