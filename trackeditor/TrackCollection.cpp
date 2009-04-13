@@ -156,6 +156,7 @@ void TrackCollection::setDiagramQuantities(QList<enum plotTypeY> distVals, QList
 	}
 }
 
+
 bool TrackCollection::validBounds() {
 	return true;
 }

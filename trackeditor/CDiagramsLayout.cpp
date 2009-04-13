@@ -56,23 +56,26 @@ void CDiagramsLayout::clear() {
 	for(it = m_distPlots.begin(); it != m_distPlots.end(); it++) {
 		if(*it) {
 			removeWidget(*it);
-			//delete *it;
+			delete *it;
 		}
 	}
+	m_distPlots.clear();
 
 	for(it = m_timePlots.begin(); it != m_timePlots.end(); it++) {
 		if(*it) {
 			removeWidget(*it);
-			//delete *it;
+			delete *it;
 		}
 	}
+	m_timePlots.clear();
 
 	for(it = m_trackPointPlots.begin(); it != m_trackPointPlots.end(); it++) {
 		if(*it) {
 			removeWidget(*it);
-			//delete *it;
+			delete *it;
 		}
 	}
+	m_trackPointPlots.clear();
 
 }
 
@@ -90,13 +93,13 @@ void CDiagramsLayout::setQuantities(QStringList distVals, QStringList timeVals, 
 	for(int i=0; i < timeVals.size(); i++) {
 		widget = new plotWidget(TYPE_X_TIME, TYPE_Y_SPEED);
 		addWidget(widget, i, 1);
-		m_distPlots.append(widget);
+		m_timePlots.append(widget);
 	}
 
 	for(int i=0; i < trackPointVals.size(); i++) {
 		widget = new plotWidget(TYPE_X_POINTS, TYPE_Y_SPEED);
 		addWidget(widget, i, 3);
-		m_distPlots.append(widget);
+		m_trackPointPlots.append(widget);
 	}
 
 }
@@ -115,13 +118,13 @@ void CDiagramsLayout::setQuantities(QList<enum plotTypeY> distVals, QList<enum p
 	for(int i=0; i < timeVals.size(); i++) {
 		widget = new plotWidget(TYPE_X_TIME, timeVals[i]);
 		addWidget(widget, i, 1);
-		m_distPlots.append(widget);
+		m_timePlots.append(widget);
 	}
 
 	for(int i=0; i < trackPointVals.size(); i++) {
 		widget = new plotWidget(TYPE_X_POINTS, trackPointVals[i]);
 		addWidget(widget, i, 3);
-		m_distPlots.append(widget);
+		m_trackPointPlots.append(widget);
 	}
 
 }

@@ -15,16 +15,26 @@ CDiagramSettings::CDiagramSettings(QWidget *parent) : QWidget(parent)
 	ui.setupUi(this);
 	loadSettings();
 
-	QListWidgetItem *elevation = new QListWidgetItem(ui.quantitiesListWidget);
-	elevation->setText(tr("Elevation"));
-	QListWidgetItem *speed = new QListWidgetItem(ui.quantitiesListWidget);
-	speed->setText(tr("Speed"));
-	QListWidgetItem *hdop = new QListWidgetItem(ui.quantitiesListWidget);
-	hdop->setText(tr("hdop"));
-	QListWidgetItem *vdop = new QListWidgetItem(ui.quantitiesListWidget);
-	vdop->setText(tr("vdop"));
-	QListWidgetItem *pdop = new QListWidgetItem(ui.quantitiesListWidget);
-	pdop->setText(tr("pdop"));
+	QList<enum plotTypeY> quantityKeys = PlotData::YTypeName.keys();
+
+	for(int i = 0; i < quantityKeys.size(); i++) {
+		QString quantityName = PlotData::YTypeName[ quantityKeys[i] ];
+
+		QListWidgetItem *item = new QListWidgetItem(ui.quantitiesListWidget);
+		item->setText(quantityName);
+
+	}
+
+//	QListWidgetItem *elevation = new QListWidgetItem(ui.quantitiesListWidget);
+//	elevation->setText(tr("Elevation"));
+//	QListWidgetItem *speed = new QListWidgetItem(ui.quantitiesListWidget);
+//	speed->setText(tr("Speed"));
+//	QListWidgetItem *hdop = new QListWidgetItem(ui.quantitiesListWidget);
+//	hdop->setText(tr("hdop"));
+//	QListWidgetItem *vdop = new QListWidgetItem(ui.quantitiesListWidget);
+//	vdop->setText(tr("vdop"));
+//	QListWidgetItem *pdop = new QListWidgetItem(ui.quantitiesListWidget);
+//	pdop->setText(tr("pdop"));
 
 
 

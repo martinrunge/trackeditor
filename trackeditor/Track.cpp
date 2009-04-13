@@ -314,7 +314,9 @@ void Track::setDiagramQuantities(QList<enum plotTypeY> distVals, QList<enum plot
 		}
 	}
 
-	// noch die anderen
+	// same for m_time_data
+	keys = m_time_data.keys();
+
 	for(int i = 0; i < keys.size(); i++) {
 		bool found = false;
 		for(int j=0; j < timeVals.size(); j++) {
@@ -346,6 +348,8 @@ void Track::setDiagramQuantities(QList<enum plotTypeY> distVals, QList<enum plot
 			break;
 		}
 	}
+
+	keys = m_trackpoints_data.keys();
 
 	for(int i = 0; i < keys.size(); i++) {
 		bool found = false;
