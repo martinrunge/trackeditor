@@ -130,12 +130,15 @@ void plotWidget::setTracks(QList<Track*> tracks) {
     	switch(m_x_type) {
 			case TYPE_X_DIST:
 				data = tracks[i]->getDistData(m_y_type);
+				tracks[i]->dumpDistData();
 				break;
 			case TYPE_X_TIME:
 				data = tracks[i]->getTimeData(m_y_type);
+				tracks[i]->dumpTimeData();
 				break;
 			case TYPE_X_POINTS:
 				data = tracks[i]->getTrackpointsData(m_y_type);
+				tracks[i]->dumpTrackPointData();
 				break;
 			default:
 				break;

@@ -404,6 +404,7 @@ void LogReader::setDiagramQuantities(QList<enum plotTypeY> distVals, QList<enum 
 	//m_timeVals = timeVals;
 	//m_trackPointVals = trackPointVals;
 
+	m_track_collection->setDiagramQuantities(distVals, timeVals, trackPointVals);
 	m_diagrams_layout->setQuantities(distVals, timeVals, trackPointVals);
 	m_settings->setDistQuantities(distVals);
 	m_settings->setTimeQuantities(timeVals);

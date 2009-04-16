@@ -41,6 +41,7 @@ void PlotData::initializeMaps() {
 
 PlotData::PlotData(Track* track, enum plotTypeX xtype, enum plotTypeY ytype, int numPoints) : QwtData(),
                                                                                               m_plot_type_x(xtype),
+                                                                                              m_plot_type_y(ytype),
                                                                                               m_copied(false)
 {
 	m_num_points = numPoints;

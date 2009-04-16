@@ -54,6 +54,10 @@ public:
 	PlotData* getTimeData(enum plotTypeY key);
 	PlotData* getTrackpointsData(enum plotTypeY key);
 
+	void dumpDistData();
+	void dumpTimeData();
+	void dumpTrackPointData();
+
     void setDiagramQuantities(QList<enum plotTypeY> distVals, QList<enum plotTypeY> timeVals, QList<enum plotTypeY> trackPointVals);
 
 private:
