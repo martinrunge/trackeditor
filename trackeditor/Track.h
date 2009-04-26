@@ -66,6 +66,7 @@ private:
 	double distance(TrackPoint* tp1, TrackPoint* tp2);
 	double speed(TrackPoint* tp1, TrackPoint* tp2);
 	double speed(TrackPoint* tp1, TrackPoint* tp2, double dist_in_m);
+	double timeDiff(TrackPoint* tp1, TrackPoint* tp2);
 
 	PJ* m_pj;
 

@@ -70,9 +70,12 @@ void Track::commit() {
 		if( i > 0) {
 			double dist = distance(at(i-1), at(i));
 			double spd = speed(at(i-1), at(i), dist );
+			double td = timeDiff(at(i-1), at(i));
+
 
 			at(i)->setDist(dist + at(i-1)->getDist());
 			at(i)->setSpeed(spd);
+			at(i)->setTimeDiff(td + at(i-1)->getTimeDiff());
 			// qDebug() << QString("dist: %1").arg(at(i)->getDist());
 		}
 
@@ -233,6 +236,25 @@ double Track::speed(TrackPoint* tp1, TrackPoint* tp2) {
 	double speed_in_m_per_s = speed(tp1, tp2, dist_in_m);
 	return speed_in_m_per_s;
 }
+
+double Track::timeDiff(TrackPoint* tp1, TrackPoint* tp2) {
+	QDate d1 = tp1->getTime().date();
+	QDate d2 = tp2->getTime().date();
+
+	int diffdays = d1.daysTo(d2);
+
+	QTime t1 = tp1->getTime().time();
+	QTime t2 = tp2->getTime().time();
+
+	int m_time_diff_in_ms = t1.msecsTo(t2);
+
+	double secs = diffdays * 60 * 60 * 24;
+	secs += 0.001 * m_time_diff_in_ms;
+
+	return secs;
+
+}
+
 
 void Track::dumpDistData()
 {

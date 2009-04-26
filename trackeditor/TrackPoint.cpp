@@ -13,7 +13,7 @@
 
 const int TrackPoint::m_size = 16;
 
-TrackPoint::TrackPoint(QByteArray data) : m_pj(0) {
+TrackPoint::TrackPoint(QByteArray data) : m_pj(0), m_time_diff(0) {
 	m_data = data;
 	uint32_t* tmp;
 	uint16_t *stmp;
@@ -418,4 +418,11 @@ void TrackPoint::setSpeed(double speed) {
     m_speed = speed;
 }
 
+double TrackPoint::getTimeDiff() {
+	return m_time_diff;
+}
+
+void TrackPoint::setTimeDiff(double timeDiff) {
+	m_time_diff = timeDiff;
+}
 

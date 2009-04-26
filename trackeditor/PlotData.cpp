@@ -155,12 +155,13 @@ double PlotData::getXVal(TrackPoint* tp) {
 
 	case TYPE_X_TIME:
 	{
-		QDateTime dt = tp->getTime();
-		int diffdays = m_start_time.daysTo(dt);
-	    int msecs = m_start_time.time().msecsTo(dt.time());
-	    int ddays_in_ms = diffdays * 24 * 60 * 60 * 1000;
-
-	    val = ddays_in_ms + msecs / 1000;
+//		QDateTime dt = tp->getTime();
+//		int diffdays = m_start_time.daysTo(dt);
+//	    int msecs = m_start_time.time().msecsTo(dt.time());
+//	    int ddays_in_ms = diffdays * 24 * 60 * 60 * 1000;
+//
+//	    val = ddays_in_ms + msecs / 1000;
+	    val = tp->getTimeDiff();
 		break;
 	}
 	case TYPE_X_POINTS:

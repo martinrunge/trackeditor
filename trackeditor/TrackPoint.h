@@ -101,6 +101,9 @@ public:
 	double getDist();
 	void setDist(double dist);
 
+	double getTimeDiff();
+	void setTimeDiff(double timeDiff);
+
 	double getSpeed();
 	void setSpeed(double speed);
 
@@ -176,7 +179,11 @@ private:
 	// not defined for first TrackPoint of a Track, that is if m_is_begin_of_track == true
 	double m_speed;
 
-    bool m_is_log_point;
+	// time difference between begin of Track and this TrackPoint in seconds.
+	// 0 for first TrackPoint of a Track, that is if m_is_begin_of_track == true
+	double m_time_diff;
+
+	bool m_is_log_point;
     bool m_is_begin_of_track;
     bool m_is_over_speed;
 
