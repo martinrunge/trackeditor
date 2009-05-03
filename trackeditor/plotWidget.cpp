@@ -11,6 +11,7 @@
 #include "Track.h"
 
 #include <qwt-qt4/qwt_plot_marker.h>
+#include <qwt-qt4/qwt_plot_picker.h>
 #include <qwt-qt4/qwt_plot_curve.h>
 #include <qwt-qt4/qwt_plot_grid.h>
 
@@ -18,7 +19,8 @@
 
 
 
-plotWidget::plotWidget(enum plotTypeX x_type, enum plotTypeY y_type, QWidget * parent) : QwtPlot(parent) {
+plotWidget::plotWidget(enum plotTypeX x_type, enum plotTypeY y_type, QWidget * parent) : QwtPlot(parent)
+{
 
 	m_x_type = x_type;
 	m_y_type = y_type;
@@ -28,6 +30,15 @@ plotWidget::plotWidget(enum plotTypeX x_type, enum plotTypeY y_type, QWidget * p
     m_grid->setMajPen(QPen(Qt::black, 0, Qt::DotLine));
     m_grid->setMinPen(QPen(Qt::gray, 0 , Qt::DotLine));
     m_grid->attach(this);
+
+    m_picker = new QwtPlotPicker(QwtPlot::xBottom , QwtPlot::yLeft,
+				                 QwtPicker::PointSelection,
+				                 QwtPlotPicker::CrossRubberBand,
+				                 QwtPicker::AlwaysOn,
+				                 canvas());
+
+    connect(m_picker, SIGNAL(moved(QwtDoublePoint)), this, SLOT() );
+
 
     m_curve_list.clear();
 
@@ -44,6 +55,7 @@ plotWidget::plotWidget(enum plotTypeX x_type, enum plotTypeY y_type, QWidget * p
 }
 
 plotWidget::~plotWidget() {
+	delete m_picker;
 	delete m_grid;
 
 }
@@ -110,3 +122,10 @@ void plotWidget::setTracks(QList<Track*> tracks) {
 
 	//m_curve_list;
 }
+
+void plotWidget::pickerMoved(const QwtDoublePoint &pos) {
+
+
+
+}
+

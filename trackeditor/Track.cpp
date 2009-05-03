@@ -261,10 +261,10 @@ void Track::dumpDistData()
 	int size = m_dist_data.size();
 	QList<enum plotTypeY> keys = m_dist_data.keys();
 
-	qDebug() << QString("Track::dumpDistData this=0x%1  size: %2").arg((uint)this, 16, 16).arg(size);
+	qDebug() << QString("Track::dumpDistData this=") << this << QString(" size: %1").arg(size);
 
 	for(int i = 0; i < keys.size(); i++) {
-		qDebug() << QString("Track::dumpDistData[%1]=(%2,%3)").arg(i).arg(keys[i]).arg((uint)m_dist_data[keys[i]], 16, 16);
+		qDebug() << QString("Track::dumpDistData[%1]=(%2, ").arg(i).arg(keys[i]) << m_dist_data[keys[i]] << QString(" )");
 	}
 
 }
@@ -274,10 +274,10 @@ void Track::dumpTimeData()
 	int size = m_time_data.size();
 	QList<enum plotTypeY> keys = m_time_data.keys();
 
-	qDebug() << QString("Track::dumpTimeData this=0x%1  size: %2").arg((uint)this, 16, 16).arg(size);
+	qDebug() << QString("Track::dumpTimeData this=") << this << QString(" size: %1").arg(size);
 
 	for(int i = 0; i < keys.size(); i++) {
-		qDebug() << QString("Track::dumpTimeData[%1]=(%2,%3)").arg(i).arg(keys[i]).arg((uint)m_time_data[keys[i]], 16, 16);
+		qDebug() << QString("Track::dumpTimeData[%1]=(%2, ").arg(i).arg(keys[i]) << m_time_data[keys[i]] << QString(") )");
 	}
 
 }
@@ -287,10 +287,10 @@ void Track::dumpTrackPointData()
 	int size = m_trackpoints_data.size();
 	QList<enum plotTypeY> keys = m_trackpoints_data.keys();
 
-	qDebug() << QString("Track::dumpTrackPointsData this=0x%1  size: %2").arg((uint)this, 16, 16).arg(size);
+	qDebug() << QString("Track::dumpTrackPointsData this=") << this << QString(" size: %1").arg(size);
 
 	for(int i = 0; i < keys.size(); i++) {
-		qDebug() << QString("Track::dumpTrackPointsData[%1]=(%2,%3)").arg(i).arg(keys[i]).arg((uint)m_trackpoints_data[keys[i]], 16, 16);
+		qDebug() << QString("Track::dumpTrackPointsData[%1]=(%2,").arg(i).arg(keys[i])  << m_trackpoints_data[keys[i]] << QString(")");
 	}
 
 }

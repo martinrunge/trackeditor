@@ -441,6 +441,23 @@ void LogReader::selectionChanged(QItemSelection selected, QItemSelection deselec
 }
 
 
+void LogReader::markerChanged(double lat, double lng) {
+
+}
+
+void LogReader::markerChangedDist(double dist) {
+
+}
+
+void LogReader::markerChangedTime(double time) {
+
+}
+
+void LogReader::markerChangedTrackPoint(double tp_index) {
+
+}
+
+
 void LogReader::createTrackpoints() {
 	FILE* fd;
 	Track* track = 0;

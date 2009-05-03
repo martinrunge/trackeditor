@@ -101,6 +101,13 @@ public slots:
     void treeViewClicked(QModelIndex index);
     void selectionChanged(QItemSelection,QItemSelection);
 
+    void markerChanged(double lat, double lng);
+    void markerChangedDist(double dist);
+    void markerChangedTime(double time);
+    void markerChangedTrackPoint(double tp_index);
+
+
+
 //    void addData(QByteArray data);
     void sendData(QByteArray data);
 

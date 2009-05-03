@@ -19,9 +19,9 @@ TrackCollection::TrackCollection() {
 	connect(this, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)),
 	this, SLOT(editFinished(const QModelIndex&, const QModelIndex&)));
 
-	static char* params[] = { "proj=merc", "ellps=WGS84", "lat_ts=48" };
+	static const char* params[] = { "proj=merc", "ellps=WGS84", "lat_ts=48" };
 
-	m_pj = pj_init(3, params);
+	m_pj = pj_init(3, const_cast<char**>(params));
 
 }
 

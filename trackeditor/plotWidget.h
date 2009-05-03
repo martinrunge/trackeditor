@@ -13,9 +13,11 @@
 
 class QwtPlotGrid;
 class QwtPlotCurve;
+class QwtPlotPicker;
 class Track;
 
-class plotWidget : public QwtPlot {
+class plotWidget : public QwtPlot
+{
 	Q_OBJECT
 public:
 	plotWidget(enum plotTypeX x_type, enum plotTypeY y_type, QWidget * parent = 0);
@@ -24,9 +26,12 @@ public:
 	// void setTrack(Track* track);
 	void setTracks(QList<Track*> tracks);
 
+public slots:
+	void pickerMoved(const QwtDoublePoint &pos);
+
 private:
 	QwtPlotGrid *m_grid;
-	//QwtPlot * m_qwtPlot;
+	QwtPlotPicker *m_picker;
 
 	QList<QwtPlotCurve*> m_curve_list;
 	QList<Track*> m_track_list;
@@ -35,11 +40,6 @@ private:
 	enum plotTypeY m_y_type;
 
 
-	// QwtPlotCurve* m_alt_crv;
-	// QwtPlotCurve* m_speed_crv;
-
-	// PlotData* m_alt_data;
-	// PlotData* m_speed_data;
 };
 
 #endif /* PLOTWIDGET_H_ */
