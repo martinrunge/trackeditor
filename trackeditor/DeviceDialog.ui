@@ -1,80 +1,155 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>DeviceDialog</class>
- <widget class="QDialog" name="DeviceDialog" >
-  <property name="geometry" >
+ <widget class="QDialog" name="DeviceDialog">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>531</width>
+    <height>452</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QDialogButtonBox" name="buttonBox" >
-   <property name="geometry" >
-    <rect>
-     <x>30</x>
-     <y>240</y>
-     <width>341</width>
-     <height>32</height>
-    </rect>
-   </property>
-   <property name="orientation" >
-    <enum>Qt::Horizontal</enum>
-   </property>
-   <property name="standardButtons" >
-    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-   </property>
-  </widget>
-  <widget class="QComboBox" name="comboBox" >
-   <property name="geometry" >
-    <rect>
-     <x>20</x>
-     <y>110</y>
-     <width>311</width>
-     <height>23</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label" >
-   <property name="geometry" >
-    <rect>
-     <x>20</x>
-     <y>90</y>
-     <width>211</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text" >
-    <string>Interface</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_2" >
-   <property name="geometry" >
-    <rect>
-     <x>20</x>
-     <y>10</y>
-     <width>131</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text" >
-    <string>Device Model</string>
-   </property>
-  </widget>
-  <widget class="QComboBox" name="comboBox_2" >
-   <property name="geometry" >
-    <rect>
-     <x>20</x>
-     <y>30</y>
-     <width>311</width>
-     <height>23</height>
-    </rect>
-   </property>
-  </widget>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Device Model</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QComboBox" name="modelComboBox">
+     <item>
+      <property name="text">
+       <string>Wintec WBT-201 (G-Rays 2)</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>268</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Interface</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QComboBox" name="interfaceComboBox">
+     <item>
+      <property name="text">
+       <string>USB</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Bluetooth</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>generic serial device</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <spacer name="horizontalSpacer_2">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>268</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="4" column="0" colspan="2">
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
+      <number>2</number>
+     </property>
+     <widget class="CUsbDevice" name="usbTab">
+      <attribute name="title">
+       <string>USB</string>
+      </attribute>
+     </widget>
+     <widget class="CBluetoothDevice" name="bluetoothTab">
+      <attribute name="title">
+       <string>Bluetooth</string>
+      </attribute>
+     </widget>
+     <widget class="CGenericSerialDevice" name="genericSerialTab">
+      <attribute name="title">
+       <string>Generic Serial Device</string>
+      </attribute>
+      <zorder>buttonBox</zorder>
+     </widget>
+    </widget>
+   </item>
+   <item row="5" column="0">
+    <spacer name="horizontalSpacer_3">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="5" column="1">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>CGenericSerialDevice</class>
+   <extends>QWidget</extends>
+   <header>CGenericSerialDevice.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>CUsbDevice</class>
+   <extends>QWidget</extends>
+   <header>CUsbDevice.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>CBluetoothDevice</class>
+   <extends>QWidget</extends>
+   <header>CBluetoothDevice.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>
@@ -83,11 +158,11 @@
    <receiver>DeviceDialog</receiver>
    <slot>accept()</slot>
    <hints>
-    <hint type="sourcelabel" >
-     <x>248</x>
-     <y>254</y>
+    <hint type="sourcelabel">
+     <x>242</x>
+     <y>419</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>157</x>
      <y>274</y>
     </hint>
@@ -99,11 +174,11 @@
    <receiver>DeviceDialog</receiver>
    <slot>reject()</slot>
    <hints>
-    <hint type="sourcelabel" >
-     <x>316</x>
-     <y>260</y>
+    <hint type="sourcelabel">
+     <x>258</x>
+     <y>447</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>286</x>
      <y>274</y>
     </hint>

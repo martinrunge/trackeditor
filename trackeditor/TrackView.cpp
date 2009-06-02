@@ -22,20 +22,14 @@
 #include "TrackPoint.h"
 
 TrackView::TrackView(QWidget* parent) : QWidget(parent) {
-	// TODO Auto-generated constructor stub
-	//QVBoxLayout *layout = new QVBoxLayout;
+
 	m_scroll_area = reinterpret_cast<QScrollArea*>(parent);
 	m_zoom_value = 1;
-	//m_frame = new QFrame(this);
-	//m_frame->setFrameRect(QRect(0,0,40,40));
-	//layout->addWidget(m_frame);
-	//setLayout(layout);
-	//setMinimumSize(400,400);
 
 }
 
 TrackView::~TrackView() {
-	// TODO Auto-generated destructor stub
+
 }
 
 void TrackView::zoomValueChanged(int value) {

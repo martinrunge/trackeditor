@@ -39,12 +39,49 @@ CWintec::~CWintec() {
 }
 
 
-QStringList CWintec::getInterfaceList() {
+QList<enum interfaces_t> CWintec::getInterfaceList() {
 
-	QStringList stringlist;
-	stringlist.append("usb");
-	stringlist.append("bluetooth");
-	return stringlist;
+	QList<enum interfaces_t> iflist;
+	iflist.append(E_USB);
+	iflist.append(E_BLUETOOTH);
+	iflist.append(E_GENERIC_SERIAL);
+	return iflist;
+}
+
+CSerialPortSettings CWintec::getSerialPortSettings(enum interfaces_t interface) const {
+
+	CSerialPortSettings s;
+
+	switch(interface)
+	{
+	case E_USB:
+		s.BaudRate = BAUD57600;
+		s.DataBits = DATA_8;
+		s.FlowControl = FLOW_OFF;
+		s.Parity = PAR_NONE;
+		s.StopBits = STOP_1;
+		s.Timeout_Millisec = 500;
+		//s.Timeout_Sec = 0;
+		break;
+	case E_BLUETOOTH:
+		s.BaudRate = BAUD115200;
+		s.DataBits = DATA_8;
+		s.FlowControl = FLOW_OFF;
+		s.Parity = PAR_NONE;
+		s.StopBits = STOP_1;
+		s.Timeout_Millisec = 500;
+		//s.Timeout_Sec = 0;
+	case E_GENERIC_SERIAL:
+		s.BaudRate = BAUD115200;
+		s.DataBits = DATA_8;
+		s.FlowControl = FLOW_OFF;
+		s.Parity = PAR_NONE;
+		s.StopBits = STOP_1;
+		s.Timeout_Millisec = 500;
+	default:
+		throw std::exception();
+	}
+	return s;
 }
 
 

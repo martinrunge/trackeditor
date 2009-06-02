@@ -23,7 +23,9 @@ public:
 	CWintec(QString name);
 	virtual ~CWintec();
 
-	QStringList getInterfaceList();
+	QList<enum interfaces_t> getInterfaceList();
+	CSerialPortSettings getSerialPortSettings(enum interfaces_t) const;
+
 	bool readLog();
 	void cancelReadLog();
 

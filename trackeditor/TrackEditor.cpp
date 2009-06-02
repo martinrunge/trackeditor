@@ -52,14 +52,17 @@
 #include "plotWidget.h"
 #include "CDiagramsLayout.h"
 #include "CSettings.h"
+#include "CSerialPortSettings.h"
+#include "qextserialport/qextserialport.h"
 
-#include "ui_DeviceDialog.h"
+#include "CDeviceDialog.h"
 #include "csettingsdlg.h"
 
 LogReader::LogReader(QWidget *parent) :
         QMainWindow(parent),
-        m_device_io(0),
         // m_idev_factory(),
+        m_serial_port(0),
+        m_device_io(0),
         m_dev_data(0),
         m_command_mode_step(-1),
         m_command_response_step(-1),
@@ -79,7 +82,7 @@ LogReader::LogReader(QWidget *parent) :
         m_selection_model(0),
         m_track_filename("")
 {
-        ui.setupUi(this);
+    ui.setupUi(this);
 
         // set m_track_collection to 0 to prevent setTrackCollection() from trying to delete it.
 	m_track_collection = 0;
@@ -163,42 +166,50 @@ LogReader::LogReader(QWidget *parent) :
 
 LogReader::~LogReader() {
 
-        if(m_device_io != 0)
-        {
-                delete m_device_io;
-        }
-        ui.scrollArea->setWidget(0);
+	if(m_device_io != 0)
+	{
+		delete m_device_io;
+	}
+	ui.scrollArea->setWidget(0);
 
-		delete m_settings;
-        delete m_track_view;
-        delete m_track_collection;
+	delete m_settings;
+	delete m_track_view;
+	delete m_track_collection;
 	closeTTY();
 	delete m_progress_dlg;
 }
 
 void LogReader::connectDevice() {
-        QDialog *devdlg = new QDialog(this);
-        Ui::DeviceDialog dlg;
-        dlg.setupUi(devdlg);
-        devdlg->setModal(true);
-        int retval = devdlg->exec();
+	//        QDialog *devdlg = new QDialog(this);
+	//        Ui::DeviceDialog dlg;
+	//        dlg.setupUi(devdlg);
 
-        if(retval == QDialog::Accepted) {
-                qDebug("OK pressed.");
-                openTTY("/dev/rfcomm0", 115200);
-                m_device_io = new CWintec("WBT201");
-                connect(this, SIGNAL(emitData(QByteArray)), m_device_io, SLOT(addData(QByteArray)));
-                connect(m_device_io, SIGNAL(sendData(QByteArray)), this, SLOT(sendData(QByteArray)));
-                connect(m_device_io, SIGNAL(nemaString(QString)), ui.nemaText, SLOT(appendPlainText(QString)));
+	CDeviceDialog *devdlg = new CDeviceDialog(this);
+	devdlg->setModal(true);
+	int retval = devdlg->exec();
+
+	if(retval == QDialog::Accepted) {
+		qDebug("OK pressed.");
+		CSerialPortSettings settings = devdlg->getPortSettings();
+		m_serial_port = new QextSerialPort(settings.getName(), settings);
+		bool res = m_serial_port->open( QIODevice::ReadWrite );
+		connect(m_serial_port, SIGNAL(readyRead()), this, SLOT(readDevice()));
+
+		// openTTY("/dev/rfcomm0", 115200);
+		m_device_io = new CWintec("WBT201");
+		connect(this, SIGNAL(emitData(QByteArray)), m_device_io, SLOT(addData(QByteArray)));
+		connect(m_device_io, SIGNAL(sendData(QByteArray)), this, SLOT(sendData(QByteArray)));
+		connect(m_device_io, SIGNAL(nemaString(QString)), ui.nemaText, SLOT(appendPlainText(QString)));
 
 		connect(m_device_io, SIGNAL(progress(int)), this, SLOT(progress(int)));
 
 		connect(m_device_io, SIGNAL(readLogFinished()), this, SLOT(readLogFinished()));
-		connect(m_device_io, SIGNAL(cancelReadLog()), this, SLOT(cancelReadLog()));
 
 		connect(m_device_io, SIGNAL(newTrack(Track*)), this, SLOT(newTrack(Track*)));
 		connect(m_device_io, SIGNAL(newWayPoint(TrackPoint*)), this, SLOT(newWayPoint(TrackPoint*)));
 		connect(m_device_io, SIGNAL(newLogPoint(TrackPoint*)), this, SLOT(newLogPoint(TrackPoint*)));
+
+		// readDevice();
 
 		ui.action_Read_Log->setDisabled(false);
 	}
@@ -207,15 +218,18 @@ void LogReader::connectDevice() {
 void LogReader::openTTY(const char* name, int speed) {
 
 	m_device_fd = open(name, O_RDWR | O_NOCTTY | O_NDELAY | O_SYNC);
-        m_device_file = new QFile();
+	m_device_file = new QFile();
 
 	bool openres = m_device_file->open(m_device_fd, QIODevice::ReadWrite);
-        if (m_device_fd == -1 || openres == false) {
-                qDebug("failed to open device %s with speed %d.", name, speed);
-        } else {
+	if (m_device_fd == -1 || openres == false)
+	{
+		qDebug("failed to open device %s with speed %d.", name, speed);
+	}
+	else
+	{
 
-                // int fd,c, res;
-                struct termios newtio;
+		// int fd,c, res;
+		struct termios newtio;
 
 		tcgetattr(m_device_fd, &m_oldtio); /* save current port settings */
 
@@ -233,16 +247,17 @@ void LogReader::openTTY(const char* name, int speed) {
 		tcflush(m_device_fd, TCIFLUSH);
 		tcsetattr(m_device_fd, TCSANOW, &newtio);
 
-		m_socket_notifier
-				= new QSocketNotifier(m_device_fd, QSocketNotifier::Read);
+		m_socket_notifier = new QSocketNotifier(m_device_fd, QSocketNotifier::Read);
 		connect(m_socket_notifier, SIGNAL(activated(int)), this, SLOT(readDevice(int)));
 		readDevice(m_device_fd);
 	}
 }
 
-void LogReader::closeTTY() {
+void LogReader::closeTTY()
+{
 
-	if(m_device_file != 0) {
+	if(m_device_file != 0)
+	{
 		m_device_file->close();
 		delete m_device_file;
 		m_device_file = 0;
@@ -251,17 +266,29 @@ void LogReader::closeTTY() {
 	delete m_socket_notifier;
 	m_socket_notifier = 0;
 
-	if(m_device_fd != -1) {
+	if(m_device_fd != -1)
+	{
 		tcsetattr(m_device_fd, TCSANOW, &m_oldtio);
 		::close(m_device_fd);
 		m_device_fd = -1;
 	}
 }
 
-void LogReader::readDevice(int dev_fd) {
+void LogReader::readDevice()
+{
+//	qDebug() << QString("LogReader::readDevice()");
+	QByteArray data = m_serial_port->read(m_serial_port->bytesAvailable());
+//	qDebug() << data;
+	emit emitData(data);
+}
+
+
+void LogReader::readDevice(int dev_fd)
+{
 	static char buffer[4096 + 1];
 	int bytes_read;
-	if (dev_fd == m_device_fd) {
+	if (dev_fd == m_device_fd)
+	{
 		bytes_read = read(m_device_fd, buffer, 4096);
 		QByteArray data(buffer, bytes_read);
 		emit emitData(data);
@@ -269,14 +296,18 @@ void LogReader::readDevice(int dev_fd) {
 }
 
 
-void LogReader::sendData(QByteArray data) {
-        if(m_device_fd != -1) {
-                write(m_device_fd, data.data(), data.size());
-        }
+void LogReader::sendData(QByteArray data)
+{
+	if(m_device_fd != -1)
+	{
+		//write(m_device_fd, data.data(), data.size());
+		m_serial_port->write(data);
+	}
 }
 
 
-void LogReader::disconnectDevice() {
+void LogReader::disconnectDevice()
+{
 	if(m_device_io != 0) {
 		disconnect(m_device_io, SLOT(addData(QByteArray)));
 		disconnect(m_device_io, SIGNAL(sendData(QByteArray)), this, SLOT(sendData(QByteArray)));
@@ -285,21 +316,24 @@ void LogReader::disconnectDevice() {
 		disconnect(m_device_io, SIGNAL(progress(int)), this, SLOT(progress(int)));
 
 		disconnect(m_device_io, SIGNAL(readLogFinished()), this, SLOT(readLogFinished()));
-		disconnect(m_device_io, SIGNAL(cancelReadLog()), this, SLOT(cancelReadLog()));
 
 		disconnect(m_device_io, SIGNAL(newTrack(Track*)), this, SLOT(newTrack(Track*)));
 		disconnect(m_device_io, SIGNAL(newWayPoint(TrackPoint*)), this, SLOT(newWayPoint(TrackPoint*)));
 		disconnect(m_device_io, SIGNAL(newLogPoint(TrackPoint*)), this, SLOT(newLogPoint(TrackPoint*)));
 
-                ui.action_Read_Log->setDisabled(true);
+		ui.action_Read_Log->setDisabled(true);
 
-                delete m_device_io;
+		delete m_device_io;
+		m_device_io = 0;
 
-                m_device_io = 0;
+		disconnect(m_serial_port, SIGNAL(readyRead ()), this, SLOT(readDevice()));
+		m_serial_port->close();
+		delete m_serial_port;
+		m_serial_port = 0;
 
-                closeTTY();
+		//closeTTY();
 
-        }
+	}
 }
 
 void LogReader::readLog() {
@@ -314,7 +348,8 @@ void LogReader::readLog() {
 	progress(0);
 	m_progress_dlg->show();
 
-    m_device_io->readLog();
+	connect(m_progress_dlg, SIGNAL(cancelReadLog()), this, SLOT(cancelReadLog()));
+	m_device_io->readLog();
 }
 
 void LogReader::progress(int percent) {
@@ -327,6 +362,7 @@ void LogReader::cancelReadLog() {
 }
 
 void LogReader::readLogFinished() {
+	disconnect(m_progress_dlg, SIGNAL(cancelReadLog()), this, SLOT(cancelReadLog()));
 	m_progress_dlg->close();
 }
 
@@ -359,7 +395,8 @@ void LogReader::setTrackCollection(TrackCollection* track_collection) {
 
 }
 
-void LogReader::newTrack(Track* track) {
+void LogReader::newTrack(Track* track)
+{
 	track->setIndex(m_track_collection->size());
 	track->setDiagramQuantities(m_settings->getDistQuantities(), m_settings->getTimeQuantities(), m_settings->getTrackpointsQuantities() );
 	m_track_collection->appendTrack(track);
@@ -375,11 +412,13 @@ void LogReader::newTrack(Track* track) {
 	m_track_view->update();
 }
 
-void LogReader::newWayPoint(TrackPoint* tp) {
+void LogReader::newWayPoint(TrackPoint* tp)
+{
 
 }
 
-void LogReader::newLogPoint(TrackPoint* tp) {
+void LogReader::newLogPoint(TrackPoint* tp)
+{
 
 	prg_dlg.m_num_logpoints->setText(QString().number(m_track_collection->getNumWaypoints()));
 
@@ -394,10 +433,12 @@ void LogReader::stopRecording() {
 }
 
 
-void LogReader::showSettingsDlg() {
+void LogReader::showSettingsDlg()
+{
 	CSettingsDlg dlg(this);
 	dlg.exec();
 }
+
 //void LogReader::setDiagramQuantities(QStringList distVals, QStringList timeVals, QStringList trackPointVals) {
 void LogReader::setDiagramQuantities(QList<enum plotTypeY> distVals, QList<enum plotTypeY> timeVals, QList<enum plotTypeY> trackPointVals) {
 	//m_distVals = distVals;

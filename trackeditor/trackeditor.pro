@@ -1,8 +1,13 @@
-TEMPLATE = app
-TARGET = trackeditor
 QT += core \
-    gui
-HEADERS += CQuantitiesConfig.h \
+    gui \
+    dbus
+HEADERS += DeviceListWidgetItem.h \
+    CSerialPortSettings.h \
+    CGenericSerialDevice.h \
+    CBluetoothDevice.h \
+    CUsbDevice.h \
+    CDeviceDialog.h \
+    CQuantitiesConfig.h \
     CUnitConfig.h \
     CSettings.h \
     CDiagramsLayout.h \
@@ -14,8 +19,16 @@ HEADERS += CQuantitiesConfig.h \
     CWintec.h \
     TrackCollection.h \
     TrackEditor.h \
-    TrackView.h
-SOURCES += CQuantitiesConfig.cpp \
+    TrackView.h \
+    qextserialport/qextserialbase.h \
+    qextserialport/qextserialport.h
+SOURCES += DeviceListWidgetItem.cpp \
+    CSerialPortSettings.cpp \
+    CDeviceDialog.cpp \
+    CGenericSerialDevice.cpp \
+    CBluetoothDevice.cpp \
+    CUsbDevice.cpp \
+    CQuantitiesConfig.cpp \
     CUnitConfig.cpp \
     CSettings.cpp \
     CDiagramsLayout.cpp \
@@ -36,8 +49,13 @@ SOURCES += CQuantitiesConfig.cpp \
     TrackPoint.cpp \
     DeviceData.cpp \
     main.cpp \
-    TrackEditor.cpp
-FORMS += CQuantitiesConfig.ui \
+    TrackEditor.cpp \
+    qextserialport/qextserialbase.cpp \
+    qextserialport/qextserialport.cpp
+FORMS += serialwidget.ui \
+    bluetoothwidget.ui \
+    usbwidget.ui \
+    CQuantitiesConfig.ui \
     CUnitConfig.ui \
     diagramSettings.ui \
     csettingsdlg.ui \
@@ -47,5 +65,12 @@ FORMS += CQuantitiesConfig.ui \
     diagramSettings.ui
 RESOURCES += trackeditor.qrc \
     trackeditor.qrc
+unix:HEADERS += qextserialport/posix_qextserialport.h
+unix:SOURCES += qextserialport/posix_qextserialport.cpp
+unix:DEFINES += _TTY_POSIX_
+win32:HEADERS += qextserialport/win_qextserialport.h
+win32:SOURCES += qextserialport/win_qextserialport.cpp
+win32:DEFINES += _TTY_WIN_
 LIBS += -lproj \
     -lqwt-qt4
+TARGET = trackeditor

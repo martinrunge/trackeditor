@@ -13,17 +13,26 @@
 #include "TrackPoint.h"
 #include "Track.h"
 
+#include "CSerialPortSettings.h"
+
+enum interfaces_t {E_USB, E_BLUETOOTH, E_GENERIC_SERIAL, E_LAST};
+
 class IDeviceIO: public QObject {
 	Q_OBJECT
 
 public:
 	IDeviceIO(QString name);
 	virtual ~IDeviceIO();
-	virtual QStringList getInterfaceList();
+
+	static QStringList interfaceNames();
+	static QString interfaceName(enum interfaces_t index);
+
+	virtual QList<enum interfaces_t> getInterfaceList() = 0;
 
 	virtual bool readLog();
 	virtual void cancelReadLog();
 
+	virtual CSerialPortSettings getSerialPortSettings(enum interfaces_t interface) const = 0;
 signals:
 	void nemaString(QString);
 

@@ -57,6 +57,7 @@ class IDeviceIO;
 class plotWidget;
 class CDiagramsLayout;
 class CSettings;
+class QextSerialPort;
 
 class LogReader : public QMainWindow
 {
@@ -72,6 +73,7 @@ signals:
 
 public slots:
     void actionTriggered();
+    void readDevice();
     void readDevice(int dev_fd);
 
     void connectDevice();
@@ -147,6 +149,7 @@ private:
     void save();
     void load(QString filename);
 
+    QextSerialPort* m_serial_port;
     IDeviceIO *m_device_io;
 
     DeviceData* m_dev_data;
