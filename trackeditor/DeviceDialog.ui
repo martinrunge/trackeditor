@@ -85,7 +85,7 @@
    <item row="4" column="0" colspan="2">
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>2</number>
+      <number>1</number>
      </property>
      <widget class="CUsbDevice" name="usbTab">
       <attribute name="title">

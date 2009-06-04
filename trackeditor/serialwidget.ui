@@ -16,6 +16,12 @@
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0" colspan="2">
     <widget class="QLabel" name="label_2">
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
      <property name="text">
       <string>Manual interface settings:</string>
      </property>
@@ -26,48 +32,36 @@
      <property name="text">
       <string>Device File:</string>
      </property>
+     <property name="buddy">
+      <cstring>deviceFileLineEdit</cstring>
+     </property>
     </widget>
    </item>
    <item row="1" column="1">
-    <widget class="QLineEdit" name="lineEdit"/>
+    <widget class="QLineEdit" name="deviceFileLineEdit"/>
+   </item>
+   <item row="1" column="2">
+    <widget class="QPushButton" name="pushButton">
+     <property name="text">
+      <string>...</string>
+     </property>
+    </widget>
    </item>
    <item row="2" column="0">
     <widget class="QLabel" name="speedLabel">
      <property name="text">
       <string>Speed [bit/s]:</string>
      </property>
+     <property name="buddy">
+      <cstring>speedComboBox</cstring>
+     </property>
     </widget>
    </item>
-   <item row="2" column="1">
-    <widget class="QComboBox" name="comboBox">
+   <item row="2" column="1" colspan="2">
+    <widget class="QComboBox" name="speedComboBox">
      <property name="currentIndex">
-      <number>3</number>
+      <number>-1</number>
      </property>
-     <item>
-      <property name="text">
-       <string>9600</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>14400</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>28800</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>57600</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>115200</string>
-      </property>
-     </item>
     </widget>
    </item>
    <item row="3" column="0">
@@ -75,28 +69,16 @@
      <property name="text">
       <string>Databits:</string>
      </property>
+     <property name="buddy">
+      <cstring>dataBitsComboBox</cstring>
+     </property>
     </widget>
    </item>
-   <item row="3" column="1">
-    <widget class="QComboBox" name="comboBox_2">
+   <item row="3" column="1" colspan="2">
+    <widget class="QComboBox" name="dataBitsComboBox">
      <property name="currentIndex">
-      <number>2</number>
+      <number>-1</number>
      </property>
-     <item>
-      <property name="text">
-       <string>6</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>7</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>8</string>
-      </property>
-     </item>
     </widget>
    </item>
    <item row="4" column="0">
@@ -104,54 +86,41 @@
      <property name="text">
       <string>Parity:</string>
      </property>
+     <property name="buddy">
+      <cstring>parityComboBox</cstring>
+     </property>
     </widget>
    </item>
-   <item row="4" column="1">
-    <widget class="QComboBox" name="comboBox_3">
-     <item>
-      <property name="text">
-       <string>None</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Odd</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Even</string>
-      </property>
-     </item>
-    </widget>
+   <item row="4" column="1" colspan="2">
+    <widget class="QComboBox" name="parityComboBox"/>
    </item>
    <item row="5" column="0">
     <widget class="QLabel" name="stopbitsLabel">
      <property name="text">
       <string>Stopbits:</string>
      </property>
+     <property name="buddy">
+      <cstring>stopBitsComboBox</cstring>
+     </property>
     </widget>
    </item>
-   <item row="5" column="1">
-    <widget class="QComboBox" name="comboBox_4">
-     <item>
-      <property name="text">
-       <string>1</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>1.5</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>2</string>
-      </property>
-     </item>
+   <item row="5" column="1" colspan="2">
+    <widget class="QComboBox" name="stopBitsComboBox"/>
+   </item>
+   <item row="6" column="0">
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>Flow Control:</string>
+     </property>
+     <property name="buddy">
+      <cstring>flowControlComboBox</cstring>
+     </property>
     </widget>
    </item>
-   <item row="6" column="1">
+   <item row="6" column="1" colspan="2">
+    <widget class="QComboBox" name="flowControlComboBox"/>
+   </item>
+   <item row="7" column="1">
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>

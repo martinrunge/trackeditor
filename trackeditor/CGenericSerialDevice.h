@@ -13,12 +13,20 @@
 #include "CSerialPortSettings.h"
 
 class CGenericSerialDevice : public QTabWidget {
+	Q_OBJECT;
 public:
 	CGenericSerialDevice();
 	virtual ~CGenericSerialDevice();
 
 	QString getDeviceFileName();
-	CSerialPortSettings getSerialPortSettings() const;
+	const CSerialPortSettings getSerialPortSettings();
+
+public slots:
+	void chooseDeviceFile();
+
+private:
+	Ui::genericserialwidget *m_ui;
+	CSerialPortSettings m_settings;
 };
 
 #endif /* CGENERICSERIALDEVICE_H_ */

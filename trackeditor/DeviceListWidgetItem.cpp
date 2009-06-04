@@ -43,6 +43,9 @@ void DeviceListWidgetItem::setData ( int role, const QVariant & value )
 	case Qt::UserRole:
 		m_device_file_name = value.toString();
 		break;
+	case Qt::UserRole + 1:
+		m_address = value.toString();
+		break;
 	default:
 		QListWidgetItem::setData(role, value);
 	}
@@ -54,6 +57,9 @@ QVariant DeviceListWidgetItem::data ( int role ) const
 	{
 	case Qt::UserRole:
 		return QVariant(m_device_file_name);
+		break;
+	case Qt::UserRole + 1:
+		return QVariant(m_address);
 		break;
 	default:
 		return QListWidgetItem::data(role);

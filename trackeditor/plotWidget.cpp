@@ -37,7 +37,7 @@ plotWidget::plotWidget(enum plotTypeX x_type, enum plotTypeY y_type, QWidget * p
 				                 QwtPicker::AlwaysOn,
 				                 canvas());
 
-    connect(m_picker, SIGNAL(moved(QwtDoublePoint)), this, SLOT() );
+    connect(m_picker, SIGNAL(moved(QwtDoublePoint)), this, SLOT(pickerMoved(QwtDoublePoint)));
 
 
     m_curve_list.clear();

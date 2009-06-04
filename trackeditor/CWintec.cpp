@@ -71,6 +71,7 @@ CSerialPortSettings CWintec::getSerialPortSettings(enum interfaces_t interface) 
 		s.StopBits = STOP_1;
 		s.Timeout_Millisec = 500;
 		//s.Timeout_Sec = 0;
+		break;
 	case E_GENERIC_SERIAL:
 		s.BaudRate = BAUD115200;
 		s.DataBits = DATA_8;
@@ -78,6 +79,7 @@ CSerialPortSettings CWintec::getSerialPortSettings(enum interfaces_t interface) 
 		s.Parity = PAR_NONE;
 		s.StopBits = STOP_1;
 		s.Timeout_Millisec = 500;
+		break;
 	default:
 		throw std::exception();
 	}

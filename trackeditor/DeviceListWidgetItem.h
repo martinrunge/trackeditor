@@ -24,6 +24,7 @@ public:
 
 private:
 	QString m_device_file_name;
+	QString m_address;
 };
 
 #endif /* DEVICELISTWIDGETITEM_H_ */
