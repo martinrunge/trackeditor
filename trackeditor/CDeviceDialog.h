@@ -33,9 +33,13 @@ public slots:
 
 
 private:
+	void loadSettings();
+	void saveSettings();
+
 	Ui::DeviceDialog* m_dlg;
 
 	CSerialPortSettings m_port_settings;
+	QSettings m_settings;
 };
 
 #endif /* CDEVICEDIALOG_H_ */

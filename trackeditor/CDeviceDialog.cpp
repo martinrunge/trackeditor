@@ -17,6 +17,8 @@ CDeviceDialog::CDeviceDialog(LogReader *parent) : QDialog(parent) {
     connect(m_dlg->modelComboBox,SIGNAL(currentIndexChanged(int)) ,this, SLOT(modelChanged(int)));
     connect(m_dlg->interfaceComboBox,SIGNAL(currentIndexChanged(int)) ,this, SLOT(interfaceChanged(int)));
 
+    loadSettings();
+
 }
 
 CDeviceDialog::~CDeviceDialog() {
@@ -74,14 +76,9 @@ void CDeviceDialog::accept() {
 	default:
 		break;
 	}
-//	m_port_settings.setName("/dev/rfcomm0");
-//	m_port_settings.BaudRate = BAUD57600;
-//	m_port_settings.DataBits = DATA_8;
-//	m_port_settings.FlowControl = FLOW_HARDWARE;
-//	m_port_settings.Parity = PAR_NONE;
-//	m_port_settings.StopBits = STOP_1;
-//	m_port_settings.Timeout_Millisec = 500;
-	//m_port_settings.Timeout_Sec = 1;
+
+	// write settings
+	saveSettings();
 
 	QDialog::accept();
 }
@@ -89,4 +86,32 @@ void CDeviceDialog::accept() {
 void CDeviceDialog::reject() {
 
 	QDialog::reject();
+}
+
+
+void CDeviceDialog::loadSettings()
+{
+    // load settings
+    int model = m_settings.value("gps/model").toInt();
+    int interface = m_settings.value("gps/interface").toInt();
+
+    m_dlg->modelComboBox->setCurrentIndex(model);
+    m_dlg->interfaceComboBox->setCurrentIndex(idx);
+
+    QString usb_device = m_settings.value("gps/usb/device").toString();
+    QString bt_device = m_settings.value("gps/bluetooth/address").toString();
+
+
+}
+
+void CDeviceDialog::saveSettings()
+{
+	int model = m_dlg->modelComboBox->currentIndex();
+	int idx = m_dlg->interfaceComboBox->currentIndex();
+
+
+	m_settings.value("gps/interface", model );
+	m_settings.value("gps/model", idx);
+
+
 }
