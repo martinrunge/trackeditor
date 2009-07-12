@@ -13,6 +13,7 @@
 class TrackCollection;
 class QFrame;
 class QScrollArea;
+class QPixmap;
 
 class TrackView : public QWidget {
 	Q_OBJECT
@@ -33,6 +34,7 @@ public:
 
 protected:
 	void paintEvent( QPaintEvent * event );
+	void paintEventold( QPaintEvent * event );
 
 
 private:
@@ -40,6 +42,11 @@ private:
 	QScrollArea* m_scroll_area;
 	QFrame *m_frame;
 
+	void refreshPixmap();
+
+	QPixmap *m_pixmap;
+
+	QRect m_rect;
 	int m_zoom_value;
 };
 

@@ -33,7 +33,7 @@ plotWidget::plotWidget(enum plotTypeX x_type, enum plotTypeY y_type, QWidget * p
 
     m_picker = new QwtPlotPicker(QwtPlot::xBottom , QwtPlot::yLeft,
 				                 QwtPicker::PointSelection,
-				                 QwtPlotPicker::CrossRubberBand,
+				                 QwtPlotPicker::VLineRubberBand,
 				                 QwtPicker::AlwaysOn,
 				                 canvas());
 

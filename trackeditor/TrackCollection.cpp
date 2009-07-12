@@ -143,9 +143,8 @@ QRectF TrackCollection::getDimensionXY(QModelIndexList indices) {
 		if (max_y < at(tmp_i)->getMaxY())
 			max_y = at(tmp_i)->getMaxY();
 	}
-	qDebug() << QString("Dimension: xmin: %1 ymin: %2 xmax: %3 ymax: %4 ").arg(
-			min_x).arg(min_y).arg(max_x).arg(max_y);
-	qDebug() << QString("height: %1  width: %2" ).arg(max_y - min_y).arg(max_x - min_x);
+	// qDebug() << QString("Dimension: xmin: %1 ymin: %2 xmax: %3 ymax: %4 ").arg(min_x).arg(min_y).arg(max_x).arg(max_y);
+	// qDebug() << QString("height: %1  width: %2" ).arg(max_y - min_y).arg(max_x - min_x);
 	return QRectF(min_x, min_y, max_x - min_x, max_y - min_y);
 
 }

@@ -96,11 +96,27 @@ void CDeviceDialog::loadSettings()
     int interface = m_settings.value("gps/interface").toInt();
 
     m_dlg->modelComboBox->setCurrentIndex(model);
-    m_dlg->interfaceComboBox->setCurrentIndex(idx);
+    m_dlg->interfaceComboBox->setCurrentIndex(interface);
 
     QString usb_device = m_settings.value("gps/usb/device").toString();
-    QString bt_device = m_settings.value("gps/bluetooth/address").toString();
+    QString bt_address = m_settings.value("gps/bluetooth/address").toString();
 
+    m_dlg->bluetoothTab->setBtAddress(bt_address);
+
+    // generic serial
+    QString devicefile = m_settings.value("gps/genericserial/devicefile").toString();
+    int baudrate_idx = m_settings.value("gps/genericserial/baudrate").toInt();
+    int databits_idx = m_settings.value("gps/genericserial/databits").toInt();
+    int parity_idx = m_settings.value("gps/genericserial/parity").toInt();
+    int stopbits_idx = m_settings.value("gps/genericserial/stopbits").toInt();
+    int flowcontrol_idx = m_settings.value("gps/genericserial/flowcontrol").toInt();
+
+    m_dlg->genericSerialTab->m_ui->deviceFileLineEdit->setText(devicefile);
+    m_dlg->genericSerialTab->m_ui->speedComboBox->setCurrentIndex(baudrate_idx);
+    m_dlg->genericSerialTab->m_ui->dataBitsComboBox->setCurrentIndex(databits_idx);
+    m_dlg->genericSerialTab->m_ui->parityComboBox->setCurrentIndex(parity_idx);
+    m_dlg->genericSerialTab->m_ui->stopBitsComboBox->setCurrentIndex(stopbits_idx);
+    m_dlg->genericSerialTab->m_ui->flowControlComboBox->setCurrentIndex(flowcontrol_idx);
 
 }
 
@@ -109,9 +125,27 @@ void CDeviceDialog::saveSettings()
 	int model = m_dlg->modelComboBox->currentIndex();
 	int idx = m_dlg->interfaceComboBox->currentIndex();
 
+	m_settings.setValue("gps/interface", model );
+	m_settings.setValue("gps/model", idx);
 
-	m_settings.value("gps/interface", model );
-	m_settings.value("gps/model", idx);
+	QString bt_address = m_dlg->bluetoothTab->getBtAddress();
 
+    m_settings.value("gps/bluetooth/address", bt_address);
+
+
+    // generic serial
+    QString devicefile = m_dlg->genericSerialTab->m_ui->deviceFileLineEdit->text();
+    int baudrate_idx = m_dlg->genericSerialTab->m_ui->speedComboBox->currentIndex();
+    int databits_idx = m_dlg->genericSerialTab->m_ui->dataBitsComboBox->currentIndex();
+    int parity_idx = m_dlg->genericSerialTab->m_ui->parityComboBox->currentIndex();
+    int stopbits_idx = m_dlg->genericSerialTab->m_ui->stopBitsComboBox->currentIndex();
+    int flowcontrol_idx = m_dlg->genericSerialTab->m_ui->flowControlComboBox->currentIndex();
+
+    m_settings.setValue("gps/genericserial/devicefile", devicefile);
+    m_settings.setValue("gps/genericserial/baudrate", baudrate_idx);
+    m_settings.setValue("gps/genericserial/databits", databits_idx);
+    m_settings.setValue("gps/genericserial/parity", parity_idx);
+    m_settings.setValue("gps/genericserial/stopbits", stopbits_idx);
+    m_settings.setValue("gps/genericserial/flowcontrol", flowcontrol_idx);
 
 }

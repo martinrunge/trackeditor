@@ -21,11 +21,12 @@ public:
 	QString getDeviceFileName();
 	const CSerialPortSettings getSerialPortSettings();
 
+	Ui::genericserialwidget *m_ui;
+
 public slots:
 	void chooseDeviceFile();
 
 private:
-	Ui::genericserialwidget *m_ui;
 	CSerialPortSettings m_settings;
 };
 

@@ -406,7 +406,6 @@ void Track::setDiagramQuantities(QList<enum plotTypeY> distVals, QList<enum plot
 		if(!found) {
 			PlotData* pd = new PlotData(this, TYPE_X_TIME, timeVals[j], 1000);
 			m_time_data.insert(timeVals[j], pd);
-			break;
 		}
 	}
 
@@ -440,7 +439,6 @@ void Track::setDiagramQuantities(QList<enum plotTypeY> distVals, QList<enum plot
 		if(!found) {
 			PlotData* pd = new PlotData(this, TYPE_X_POINTS, trackPointVals[j], 1000);
 			m_trackpoints_data.insert(trackPointVals[j], pd);
-			break;
 		}
 	}
 
