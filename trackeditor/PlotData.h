@@ -45,6 +45,8 @@ public:
     virtual double x(size_t i) const;
     virtual double y(size_t i) const;
 
+    int index(size_t i) const;
+
     static QMap<enum plotTypeY, QString> YTypeName;
     static QMap<enum plotTypeX, QString> XTypeName;
     static QMap<QString, enum plotTypeY> YTypeNamesForSettings;
@@ -65,6 +67,8 @@ private:
 
     double *m_x_values;
     double *m_y_values;
+
+    int    *m_index_in_track;
 
 
     Track* m_track;

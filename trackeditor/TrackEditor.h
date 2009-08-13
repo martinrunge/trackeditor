@@ -44,6 +44,7 @@
 #include "TrackCollection.h"
 #include "PlotData.h"
 
+#include "CAnimation.h"
 
 class QGridLayout;
 class QSocketNotifier;
@@ -129,6 +130,7 @@ private:
 
     CSettings *m_settings;
 
+    CAnimation m_animation;
 
 
     void openTTY(const char* name, int speed);

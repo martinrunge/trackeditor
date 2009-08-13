@@ -124,7 +124,8 @@ void plotWidget::setTracks(QList<Track*> tracks) {
 }
 
 void plotWidget::pickerMoved(const QwtDoublePoint &pos) {
-
+	// QPoint pt = m_picker->transform(pos);
+	qDebug() << QString("pickermoved: %1 %2 ").arg(pos.x()).arg(pos.y());
 
 
 }

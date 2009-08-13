@@ -103,6 +103,17 @@ LogReader::LogReader(QWidget *parent) :
 	connect(ui.action_Start_Recording, SIGNAL(triggered()), this, SLOT(startRecording()));
 	connect(ui.action_Stop_Recording, SIGNAL(triggered()), this, SLOT(stopRecording()));
 
+	connect(ui.actionStart_Animation, SIGNAL(triggered()), &m_animation, SLOT(start()));
+	connect(ui.actionStop_Animation, SIGNAL(triggered()), &m_animation, SLOT(stop()));
+
+	connect(ui.actionX_1, SIGNAL(triggered()), &m_animation, SLOT(setTimeScale(1.0)));
+	connect(ui.actionX_2, SIGNAL(triggered()), &m_animation, SLOT(setTimeScale(2.0)));
+	connect(ui.actionX_4, SIGNAL(triggered()), &m_animation, SLOT(setTimeScale(4.0)));
+	connect(ui.actionX_8, SIGNAL(triggered()), &m_animation, SLOT(setTimeScale(8.0)));
+	connect(ui.actionX_16, SIGNAL(triggered()), &m_animation, SLOT(setTimeScale(16.0)));
+	connect(ui.actionX_32, SIGNAL(triggered()), &m_animation, SLOT(setTimeScale(32.0)));
+
+
 	connect(ui.actionSettings, SIGNAL(triggered()), this, SLOT(showSettingsDlg()));
 
 	connect(this, SIGNAL(setText(QString)), ui.nemaText, SLOT(appendPlainText(QString)));

@@ -42,6 +42,7 @@ void PlotData::initializeMaps() {
 PlotData::PlotData(Track* track, enum plotTypeX xtype, enum plotTypeY ytype, int numPoints) : QwtData(),
                                                                                               m_plot_type_x(xtype),
                                                                                               m_plot_type_y(ytype),
+                                                                                              m_tp_index(0),
                                                                                               m_copied(false)
 {
 	m_num_points = numPoints;
@@ -54,6 +55,9 @@ PlotData::PlotData(Track* track, enum plotTypeX xtype, enum plotTypeY ytype, int
 
 	m_x_values = new double[ m_size ];
 	m_y_values = new double[ m_size ];
+
+	m_index_in_track = new int[ m_size ];
+
 	unsigned arrayindex = 0;
 
 	Track::iterator it;
@@ -117,6 +121,9 @@ PlotData::PlotData(Track* track, enum plotTypeX xtype, enum plotTypeY ytype, int
 
 		m_x_values[arrayindex] = d + 0.5 * distraster;
 		m_y_values[arrayindex] = part;
+
+		m_index_in_track[arrayindex] = m_tp_index;
+
 		arrayindex++;
 
 
@@ -233,5 +240,10 @@ double PlotData::x(size_t i) const
 double PlotData::y(size_t i) const
 {
     return m_y_values[i];
+}
+
+int PlotData::index(size_t i) const
+{
+	return m_index_in_track[i];
 }
 
