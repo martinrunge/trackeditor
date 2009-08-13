@@ -21,7 +21,8 @@ HEADERS += DeviceListWidgetItem.h \
     TrackEditor.h \
     TrackView.h \
     qextserialport/qextserialbase.h \
-    qextserialport/qextserialport.h
+    qextserialport/qextserialport.h \
+    CAnimation.h
 SOURCES += DeviceListWidgetItem.cpp \
     CSerialPortSettings.cpp \
     CDeviceDialog.cpp \
@@ -51,7 +52,8 @@ SOURCES += DeviceListWidgetItem.cpp \
     main.cpp \
     TrackEditor.cpp \
     qextserialport/qextserialbase.cpp \
-    qextserialport/qextserialport.cpp
+    qextserialport/qextserialport.cpp \
+    CAnimation.cpp
 FORMS += serialwidget.ui \
     bluetoothwidget.ui \
     usbwidget.ui \

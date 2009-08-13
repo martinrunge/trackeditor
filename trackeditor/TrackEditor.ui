@@ -1,7 +1,8 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>TrackEditor2Class</class>
- <widget class="QMainWindow" name="TrackEditor2Class" >
-  <property name="geometry" >
+ <widget class="QMainWindow" name="TrackEditor2Class">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
@@ -9,94 +10,94 @@
     <height>722</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="QWidget" name="centralwidget" >
-   <property name="sizePolicy" >
-    <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+  <widget class="QWidget" name="centralwidget">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
      <horstretch>0</horstretch>
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
-   <layout class="QGridLayout" name="gridLayout" >
-    <item row="0" column="0" >
-     <widget class="QSplitter" name="splitter_2" >
-      <property name="orientation" >
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QSplitter" name="splitter_2">
+      <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
-      <widget class="QSplitter" name="splitter" >
-       <property name="sizePolicy" >
-        <sizepolicy vsizetype="Preferred" hsizetype="Expanding" >
+      <widget class="QSplitter" name="splitter">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
-       <property name="orientation" >
+       <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
-       <widget class="QFrame" name="frame" >
-        <property name="minimumSize" >
+       <widget class="QFrame" name="frame">
+        <property name="minimumSize">
          <size>
           <width>81</width>
           <height>100</height>
          </size>
         </property>
-        <property name="maximumSize" >
+        <property name="maximumSize">
          <size>
           <width>81</width>
           <height>16777215</height>
          </size>
         </property>
-        <property name="frameShape" >
+        <property name="frameShape">
          <enum>QFrame::StyledPanel</enum>
         </property>
-        <property name="frameShadow" >
+        <property name="frameShadow">
          <enum>QFrame::Raised</enum>
         </property>
-        <layout class="QGridLayout" name="gridLayout_2" >
-         <item row="0" column="0" colspan="2" >
-          <widget class="QLabel" name="label" >
-           <property name="text" >
+        <layout class="QGridLayout" name="gridLayout_2">
+         <item row="0" column="0" colspan="2">
+          <widget class="QLabel" name="label">
+           <property name="text">
             <string>Zoom</string>
            </property>
           </widget>
          </item>
-         <item rowspan="3" row="1" column="0" >
-          <widget class="QSlider" name="zoomSlider" >
-           <property name="minimum" >
+         <item row="1" column="0" rowspan="3">
+          <widget class="QSlider" name="zoomSlider">
+           <property name="minimum">
             <number>1</number>
            </property>
-           <property name="maximum" >
+           <property name="maximum">
             <number>10</number>
            </property>
-           <property name="singleStep" >
+           <property name="singleStep">
             <number>1</number>
            </property>
-           <property name="orientation" >
+           <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
-           <property name="tickPosition" >
+           <property name="tickPosition">
             <enum>QSlider::TicksBelow</enum>
            </property>
-           <property name="tickInterval" >
+           <property name="tickInterval">
             <number>1</number>
            </property>
           </widget>
          </item>
-         <item row="1" column="1" >
-          <widget class="QLabel" name="label_2" >
-           <property name="text" >
+         <item row="1" column="1">
+          <widget class="QLabel" name="label_2">
+           <property name="text">
             <string>100</string>
            </property>
           </widget>
          </item>
-         <item row="2" column="1" >
-          <spacer name="verticalSpacer" >
-           <property name="orientation" >
+         <item row="2" column="1">
+          <spacer name="verticalSpacer">
+           <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
-           <property name="sizeHint" stdset="0" >
+           <property name="sizeHint" stdset="0">
             <size>
              <width>20</width>
              <height>40</height>
@@ -104,82 +105,82 @@
            </property>
           </spacer>
          </item>
-         <item row="3" column="1" >
-          <widget class="QLabel" name="label_3" >
-           <property name="text" >
+         <item row="3" column="1">
+          <widget class="QLabel" name="label_3">
+           <property name="text">
             <string>1</string>
            </property>
           </widget>
          </item>
         </layout>
        </widget>
-       <widget class="QScrollArea" name="scrollArea" >
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+       <widget class="QScrollArea" name="scrollArea">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="minimumSize" >
+        <property name="minimumSize">
          <size>
           <width>0</width>
           <height>100</height>
          </size>
         </property>
-        <property name="widgetResizable" >
+        <property name="widgetResizable">
          <bool>true</bool>
         </property>
-        <widget class="QWidget" name="scrollAreaWidgetContents" >
-         <property name="geometry" >
+        <widget class="QWidget" name="scrollAreaWidgetContents">
+         <property name="geometry">
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>1054</width>
+           <width>1063</width>
            <height>254</height>
           </rect>
          </property>
         </widget>
        </widget>
       </widget>
-      <widget class="QWidget" native="1" name="diagramWidget" >
-       <property name="minimumSize" >
+      <widget class="QWidget" name="diagramWidget" native="true">
+       <property name="minimumSize">
         <size>
          <width>0</width>
          <height>0</height>
         </size>
        </property>
       </widget>
-      <widget class="QTreeView" name="treeView" >
-       <property name="minimumSize" >
+      <widget class="QTreeView" name="treeView">
+       <property name="minimumSize">
         <size>
          <width>0</width>
          <height>120</height>
         </size>
        </property>
-       <property name="maximumSize" >
+       <property name="maximumSize">
         <size>
          <width>16777215</width>
          <height>231</height>
         </size>
        </property>
       </widget>
-      <widget class="QPlainTextEdit" name="nemaText" >
-       <property name="enabled" >
+      <widget class="QPlainTextEdit" name="nemaText">
+       <property name="enabled">
         <bool>true</bool>
        </property>
-       <property name="sizePolicy" >
-        <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
-       <property name="minimumSize" >
+       <property name="minimumSize">
         <size>
          <width>0</width>
          <height>100</height>
         </size>
        </property>
-       <property name="maximumSize" >
+       <property name="maximumSize">
         <size>
          <width>16777215</width>
          <height>100</height>
@@ -190,131 +191,239 @@
     </item>
    </layout>
   </widget>
-  <widget class="QMenuBar" name="menubar" >
-   <property name="geometry" >
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
      <width>1161</width>
-     <height>22</height>
+     <height>26</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuFile" >
-    <property name="title" >
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
      <string>File</string>
     </property>
-    <addaction name="action_Connect" />
-    <addaction name="action_Load_Track" />
-    <addaction name="action_Save_Track" />
-    <addaction name="action_Save_Track_As" />
-    <addaction name="separator" />
-    <addaction name="action_Disconnect" />
-    <addaction name="actionExit" />
+    <addaction name="action_Connect"/>
+    <addaction name="action_Load_Track"/>
+    <addaction name="action_Save_Track"/>
+    <addaction name="action_Save_Track_As"/>
+    <addaction name="separator"/>
+    <addaction name="action_Disconnect"/>
+    <addaction name="actionExit"/>
    </widget>
-   <widget class="QMenu" name="menuTrack" >
-    <property name="title" >
+   <widget class="QMenu" name="menuTrack">
+    <property name="title">
      <string>Track</string>
     </property>
-    <addaction name="action_Read_Log" />
-    <addaction name="action_Start_Recording" />
-    <addaction name="action_Stop_Recording" />
+    <addaction name="action_Read_Log"/>
+    <addaction name="action_Start_Recording"/>
+    <addaction name="action_Stop_Recording"/>
    </widget>
-   <widget class="QMenu" name="menuView" >
-    <property name="title" >
+   <widget class="QMenu" name="menuView">
+    <property name="title">
      <string>View</string>
     </property>
-    <widget class="QMenu" name="menuMap_Projection" >
-     <property name="title" >
+    <widget class="QMenu" name="menuMap_Projection">
+     <property name="title">
       <string>Map Projection</string>
      </property>
-     <addaction name="actionMerkator" />
+     <addaction name="actionMerkator"/>
     </widget>
-    <addaction name="menuMap_Projection" />
+    <addaction name="menuMap_Projection"/>
    </widget>
-   <widget class="QMenu" name="menuEdit" >
-    <property name="title" >
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
      <string>Edit</string>
     </property>
-    <addaction name="actionSettings" />
+    <addaction name="actionSettings"/>
    </widget>
-   <addaction name="menuFile" />
-   <addaction name="menuTrack" />
-   <addaction name="menuEdit" />
-   <addaction name="menuView" />
+   <widget class="QMenu" name="menuAnimate">
+    <property name="title">
+     <string>Animate</string>
+    </property>
+    <widget class="QMenu" name="menuSpeed">
+     <property name="title">
+      <string>Speed</string>
+     </property>
+     <addaction name="actionX_0_125"/>
+     <addaction name="actionX_0_25"/>
+     <addaction name="actionX_0_5"/>
+     <addaction name="actionX_1"/>
+     <addaction name="actionX_2"/>
+     <addaction name="actionX_4"/>
+     <addaction name="actionX_8"/>
+     <addaction name="actionX_16"/>
+     <addaction name="actionX_32"/>
+    </widget>
+    <addaction name="actionStart_Animation"/>
+    <addaction name="actionStop_Animation"/>
+    <addaction name="menuSpeed"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuTrack"/>
+   <addaction name="menuEdit"/>
+   <addaction name="menuView"/>
+   <addaction name="menuAnimate"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar" />
-  <action name="action_Connect" >
-   <property name="text" >
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="action_Connect">
+   <property name="text">
     <string>&amp;Connect to GPS Device ...</string>
    </property>
   </action>
-  <action name="actionExit" >
-   <property name="text" >
+  <action name="actionExit">
+   <property name="text">
     <string>E&amp;xit</string>
    </property>
   </action>
-  <action name="action_Read_Log" >
-   <property name="text" >
+  <action name="action_Read_Log">
+   <property name="text">
     <string>Read &amp;Log</string>
    </property>
   </action>
-  <action name="action_Save_Track" >
-   <property name="text" >
+  <action name="action_Save_Track">
+   <property name="text">
     <string>&amp;Save Track</string>
    </property>
   </action>
-  <action name="action_Save_Track_As" >
-   <property name="text" >
+  <action name="action_Save_Track_As">
+   <property name="text">
     <string>Save Track &amp;As ...</string>
    </property>
   </action>
-  <action name="action_Load_Track" >
-   <property name="text" >
+  <action name="action_Load_Track">
+   <property name="text">
     <string>&amp;Load Track ...</string>
    </property>
   </action>
-  <action name="action_Disconnect" >
-   <property name="text" >
+  <action name="action_Disconnect">
+   <property name="text">
     <string>&amp;Disconnect</string>
    </property>
   </action>
-  <action name="action_Start_Recording" >
-   <property name="text" >
+  <action name="action_Start_Recording">
+   <property name="text">
     <string>Start &amp;Recording</string>
    </property>
   </action>
-  <action name="action_Stop_Recording" >
-   <property name="text" >
+  <action name="action_Stop_Recording">
+   <property name="text">
     <string>&amp;Stop Recording</string>
    </property>
   </action>
-  <action name="actionElevation" >
-   <property name="text" >
+  <action name="actionElevation">
+   <property name="text">
     <string>Elevation</string>
    </property>
   </action>
-  <action name="actionSpeed" >
-   <property name="text" >
+  <action name="actionSpeed">
+   <property name="text">
     <string>Speed</string>
    </property>
   </action>
-  <action name="actionMerkator" >
-   <property name="checkable" >
+  <action name="actionMerkator">
+   <property name="checkable">
     <bool>true</bool>
    </property>
-   <property name="checked" >
+   <property name="checked">
     <bool>true</bool>
    </property>
-   <property name="enabled" >
+   <property name="enabled">
     <bool>false</bool>
    </property>
-   <property name="text" >
+   <property name="text">
     <string>Merkator</string>
    </property>
   </action>
-  <action name="actionSettings" >
-   <property name="text" >
+  <action name="actionSettings">
+   <property name="text">
     <string>Settings ...</string>
+   </property>
+  </action>
+  <action name="actionStart_Animation">
+   <property name="text">
+    <string>Start Animation</string>
+   </property>
+  </action>
+  <action name="actionStop_Animation">
+   <property name="text">
+    <string>Stop Animation</string>
+   </property>
+  </action>
+  <action name="actionX_1">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>x 1</string>
+   </property>
+  </action>
+  <action name="actionX_2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>x 2</string>
+   </property>
+  </action>
+  <action name="actionX_4">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>x 4</string>
+   </property>
+  </action>
+  <action name="actionX_8">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>x 8</string>
+   </property>
+  </action>
+  <action name="actionX_16">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>x 16</string>
+   </property>
+  </action>
+  <action name="actionX_32">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>x 32</string>
+   </property>
+  </action>
+  <action name="actionX_0_5">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>x 0.5</string>
+   </property>
+  </action>
+  <action name="actionX_0_25">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>x 0.25</string>
+   </property>
+  </action>
+  <action name="actionX_0_125">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>x 0.125</string>
    </property>
   </action>
  </widget>
