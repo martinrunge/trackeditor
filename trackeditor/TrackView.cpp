@@ -29,6 +29,8 @@ TrackView::TrackView(QWidget* parent) : QWidget(parent), m_track_collection(0), 
 	setAttribute(Qt::WA_PaintOnScreen);
 
 	m_zoom_value = 1;
+
+	recalculateOffset();
 	refreshPixmap();
 
 }
@@ -40,27 +42,74 @@ TrackView::~TrackView() {
 void TrackView::zoomValueChanged(int value) {
 	m_zoom_value = value;
 
-    QRectF dimension = m_track_collection->getDimensionXY();
+	recalculateOffset();
+	QRectF dimension = m_track_collection->getDimensionXY();
 
     double dh = dimension.height();
     double dw = dimension.width();
+//
+//    QSize viewportSize = m_scroll_area->viewport()->size();
+//
+//	double w = (double)viewportSize.width();
+//	double h = (double)viewportSize.height();
+//
+//
+//    double x_scale = (w / dw) * m_zoom_value;
+//    double y_scale = (h / dh) * m_zoom_value;
+//
+//    double scale = (x_scale < y_scale) ? x_scale : y_scale;
 
-    QSize viewportSize = m_scroll_area->viewport()->size();
-
-	double w = (double)viewportSize.width();
-	double h = (double)viewportSize.height();
-
-
-    double x_scale = (w / dw) * m_zoom_value;
-    double y_scale = (h / dh) * m_zoom_value;
-
-    double scale = (x_scale < y_scale) ? x_scale : y_scale;
-
-	setMinimumSize(dw * scale, dh * scale);
+	setMinimumSize(dw * m_scale, dh * m_scale);
 
 	refreshPixmap();
-	repaint();
+	update();
 }
+
+void TrackView::setMarkers(QList<CMarker> markers)
+{
+	m_markers = markers;
+	update();
+}
+
+QPointF TrackView::toScreenCoord(QPointF point)
+{
+//	QSize viewportSize = m_scroll_area->viewport()->size();
+//
+//	int width = viewportSize.width();
+//	int height = viewportSize.height();
+//
+//
+//	double w = (double)width * m_zoom_value;
+//    double h = (double)height * m_zoom_value;
+//
+//    QRectF dimension = m_track_collection->getDimensionXY();
+//
+//    double dh = dimension.height();
+//    double dw = dimension.width();
+//
+//    double ratio = dw / dh;
+//
+//    double x_off = dimension.left();
+//    double y_off = dimension.bottom();
+//
+//
+//    double x_scale = (w / dw);
+//    double y_scale = (h / dh);
+//
+//    double scale = (x_scale < y_scale) ? x_scale : y_scale;
+
+
+   	double xval = (point.x() - m_x_offset) * m_scale;  // + x();
+   	double yval = (point.y() - m_y_offset) * m_scale;  // - y();
+
+    return QPointF(xval,yval);
+}
+
+QPointF TrackView::fromScreenCoord(QPointF point)
+{
+
+}
+
 
 
 QSize TrackView::sizeHint() {
@@ -109,14 +158,14 @@ void TrackView::refreshPixmap() {
 
     double ratio = dw / dh;
 
-    double x_off = dimension.left();
-    double y_off = dimension.bottom();
+//    double x_off = dimension.left();
+//    double y_off = dimension.bottom();
 
 
-    double x_scale = (w / dw);
-    double y_scale = (h / dh);
+//    double x_scale = (w / dw);
+//    double y_scale = (h / dh);
 
-    double scale = (x_scale < y_scale) ? x_scale : y_scale;
+//    double scale = (x_scale < y_scale) ? x_scale : y_scale;
 
 
     QPainter painter(m_pixmap);
@@ -145,8 +194,8 @@ void TrackView::refreshPixmap() {
         for(int tp_idx = 0; tp_idx < m_track_collection->at(tr_idx)->size(); tp_idx++) {
 //        	double x = (tr_ptr->at(tp_idx)->getLong() - x_off) * x_scale;
 //        	double y = (tr_ptr->at(tp_idx)->getLat() - y_off) * y_scale;
-           	double xval = (tr_ptr->at(tp_idx)->getX() - x_off) * scale - x();
-         	double yval = (tr_ptr->at(tp_idx)->getY() - y_off) * scale - y();
+           	double xval = (tr_ptr->at(tp_idx)->getX() - m_x_offset) * m_scale + x();
+         	double yval = (tr_ptr->at(tp_idx)->getY() - m_y_offset) * m_scale - y();
 
         	painter.drawPoint(QPointF(xval,yval));
 
@@ -172,7 +221,7 @@ void TrackView::paintEvent( QPaintEvent * event ) {
 	int height = viewportSize.height();
 
 	QRect r = QRect(-x(), -y(), width, height); //event->rect();
-	qDebug() << QString("paintEvent : %1 %2 %3 %4   pos in parent: (%5, %6)  zoom value: %7").arg(r.x()).arg(r.y()).arg(r.width()).arg(r.height()).arg(x()).arg(y()).arg(m_zoom_value);
+	// qDebug() << QString("paintEvent : %1 %2 %3 %4   pos in parent: (%5, %6)  zoom value: %7").arg(r.x()).arg(r.y()).arg(r.width()).arg(r.height()).arg(x()).arg(y()).arg(m_zoom_value);
 
 	if(m_rect != r)
 	{
@@ -181,14 +230,94 @@ void TrackView::paintEvent( QPaintEvent * event ) {
 	}
 	//refreshPixmap();
 
+	QPainter painter(this);
+
 	if(m_pixmap)
 	{
-		QPainter painter(this);
 		painter.setClipRegion(QRegion(-x(), -y(), width, height) );
 
 		painter.drawPixmap(-x(), -y(), *m_pixmap);
 	}
+    painter.scale(1, -1);          // , 15 * 1.0 / width(), 50 * 1.0 / height());
+    painter.translate(0, 0); //-height());  // -11.5, -48.05);
+
+	drawMarkers(&painter);
 }
+
+TrackCollection* TrackView::getTrackCollection() {
+	return m_track_collection;
+}
+
+void TrackView::setTrackColletcion(TrackCollection* tc) {
+	m_track_collection = tc;
+	recalculateOffset();
+	refreshPixmap();
+	update();
+}
+
+void TrackView::drawMarkers(QPainter *painter)
+{
+	for(int i = 0; i < m_markers.size(); i++)
+	{
+		CMarker mark = m_markers.at(i);
+		painter->setPen(mark.color());
+		QPointF screenCoord = toScreenCoord(QPointF(mark.x(), mark.y()));
+		painter->drawEllipse(screenCoord, 10, 10 );
+	}
+}
+
+void TrackView::resizeEvent( QResizeEvent * event )
+{
+	recalculateOffset();
+	QWidget::resizeEvent(event);
+}
+
+void TrackView::moveEvent( QMoveEvent * event )
+{
+	recalculateOffset();
+	QWidget::moveEvent(event);
+}
+
+void TrackView::recalculateOffset()
+{
+	if(!m_track_collection)
+	{
+		return;
+	}
+
+    QRectF dimension = m_track_collection->getDimensionXY();
+
+    double dh = dimension.height();
+    double dw = dimension.width();
+
+    double ratio = dw / dh;
+
+    QSize viewportSize = m_scroll_area->viewport()->size();
+
+	int width = viewportSize.width();
+	int height = viewportSize.height();
+
+	double w = (double)width * m_zoom_value;
+    double h = (double)height * m_zoom_value;
+
+    m_x_offset = dimension.left();
+    m_y_offset = dimension.bottom();
+
+    double x_scale = (w / dw);
+    double y_scale = (h / dh);
+
+    m_scale = (x_scale < y_scale) ? x_scale : y_scale;
+
+}
+
+
+
+
+
+
+
+// to be removed: old PaintEvent implementation
+
 
 void TrackView::paintEventold( QPaintEvent * event ) {
 	qDebug("paintEvent");
@@ -257,12 +386,3 @@ void TrackView::paintEventold( QPaintEvent * event ) {
     }
 
 }
-
-TrackCollection* TrackView::getTrackCollection() {
-	return m_track_collection;
-}
-
-void TrackView::setTrackColletcion(TrackCollection* tc) {
-	m_track_collection = tc;
-}
-

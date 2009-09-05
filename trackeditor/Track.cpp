@@ -447,3 +447,10 @@ void Track::setDiagramQuantities(QList<enum plotTypeY> distVals, QList<enum plot
 	dumpTrackPointData();
 
 }
+
+double Track::duration()
+{
+	double duration = at(size() - 1 )->getTimeDiff();
+	return duration;
+
+}

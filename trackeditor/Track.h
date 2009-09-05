@@ -54,6 +54,8 @@ public:
 	PlotData* getTimeData(enum plotTypeY key);
 	PlotData* getTrackpointsData(enum plotTypeY key);
 
+	double duration();
+
 	void dumpDistData();
 	void dumpTimeData();
 	void dumpTrackPointData();

@@ -52,6 +52,8 @@ plotWidget::plotWidget(enum plotTypeX x_type, enum plotTypeY y_type, QWidget * p
     setAxisTitle(QwtPlot::yLeft, y_label);
     // setAxisTitle(QwtPlot::yRight, "Speed [m/s]");
 
+	setAutoReplot(true);
+
 }
 
 plotWidget::~plotWidget() {
@@ -118,7 +120,6 @@ void plotWidget::setTracks(QList<Track*> tracks) {
     }
 
 	m_track_list = tracks;
-	setAutoReplot(true);
 
 	//m_curve_list;
 }

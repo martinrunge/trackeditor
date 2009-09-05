@@ -1,7 +1,8 @@
 QT += core \
     gui \
     dbus
-HEADERS += DeviceListWidgetItem.h \
+HEADERS += CMarker.h \
+    DeviceListWidgetItem.h \
     CSerialPortSettings.h \
     CGenericSerialDevice.h \
     CBluetoothDevice.h \
@@ -23,7 +24,8 @@ HEADERS += DeviceListWidgetItem.h \
     qextserialport/qextserialbase.h \
     qextserialport/qextserialport.h \
     CAnimation.h
-SOURCES += DeviceListWidgetItem.cpp \
+SOURCES += CMarker.cpp \
+    DeviceListWidgetItem.cpp \
     CSerialPortSettings.cpp \
     CDeviceDialog.cpp \
     CGenericSerialDevice.cpp \

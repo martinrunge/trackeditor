@@ -42,6 +42,7 @@
 #include <QFileDialog>
 #include <QColorDialog>
 #include <QMessageBox>
+#include <QList>
 
 #include "TrackEditor.h"
 #include "DeviceData.h"
@@ -54,6 +55,7 @@
 #include "CSettings.h"
 #include "CSerialPortSettings.h"
 #include "qextserialport/qextserialport.h"
+#include "CMarker.h"
 
 #include "CDeviceDialog.h"
 #include "csettingsdlg.h"
@@ -114,12 +116,15 @@ LogReader::LogReader(QWidget *parent) :
 	connect(ui.actionX_32, SIGNAL(triggered()), &m_animation, SLOT(setTimeScale(32.0)));
 
 
+
 	connect(ui.actionSettings, SIGNAL(triggered()), this, SLOT(showSettingsDlg()));
 
 	connect(this, SIGNAL(setText(QString)), ui.nemaText, SLOT(appendPlainText(QString)));
 
 	m_track_view = new TrackView(ui.scrollArea);
 	ui.scrollArea->setWidget(m_track_view);
+
+	connect(&m_animation, SIGNAL(setMarkers(QList<CMarker>)), m_track_view, SLOT(setMarkers(QList<CMarker>)));
 
 	connect(ui.zoomSlider, SIGNAL(valueChanged(int)), m_track_view, SLOT(zoomValueChanged(int)));
 
@@ -402,6 +407,7 @@ void LogReader::setTrackCollection(TrackCollection* track_collection) {
     m_selection_model = ui.treeView->selectionModel();
     connect(m_selection_model, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(selectionChanged(QItemSelection,QItemSelection)));
 
+    m_animation.setTrackCollection(m_track_collection);
 	m_track_view->update();
 
 }
@@ -489,7 +495,7 @@ void LogReader::selectionChanged(QItemSelection selected, QItemSelection deselec
 
     m_diagrams_layout->setTracks(m_track_collection->getSelectedTracks());
 
-    m_track_view->update();
+    m_track_view->setTrackColletcion(m_track_collection);
 }
 
 
