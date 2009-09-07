@@ -15,7 +15,7 @@
 
 CAnimation::CAnimation(QObject *parent) : QObject(parent),
 										  m_time_scale(1.0),
-										  m_updates_per_second(30),
+										  m_updates_per_second(10),
 										  m_tc(0)
 {
 	// TODO Auto-generated constructor stub
@@ -46,11 +46,6 @@ void CAnimation::setTimeScale(double ts)
 
 }
 
-void CAnimation::setUpdatePerSecond(int update_per_sec)
-{
-	m_updates_per_second = update_per_sec;
-}
-
 
 
 void CAnimation::start()
@@ -72,6 +67,7 @@ void CAnimation::start()
 	}
 
 	m_update_nr = 0;
+	m_anim_time = 0.0;
 	m_timer.start( 1000 / m_updates_per_second );
 
 
@@ -89,7 +85,8 @@ void CAnimation::update()
 	QList<CMarker> markers;
 	bool animationFinished = true;
 
-	double anim_time = m_updates_per_second * m_update_nr * m_time_scale;
+	double anim_time = m_update_nr * m_time_scale / m_updates_per_second;
+	m_anim_time += m_time_scale / m_updates_per_second;
 	for(int i = 0; i < m_trackList.size(); i++)
 	{
 		Track* track = m_trackList.at(i);
@@ -104,7 +101,7 @@ void CAnimation::update()
 				int size = track->size();
 				qDebug() << QString("track->size(): %1").arg(size);
 			}
-			if(tp->getTimeDiff() >= anim_time )
+			if(tp->getTimeDiff() >= m_anim_time )
 			{
 				break;
 			}
@@ -118,6 +115,7 @@ void CAnimation::update()
 
 	}
 	emit setMarkers(markers);
+
 
 	if(animationFinished)
 	{

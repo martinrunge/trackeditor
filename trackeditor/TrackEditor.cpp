@@ -108,12 +108,15 @@ LogReader::LogReader(QWidget *parent) :
 	connect(ui.actionStart_Animation, SIGNAL(triggered()), &m_animation, SLOT(start()));
 	connect(ui.actionStop_Animation, SIGNAL(triggered()), &m_animation, SLOT(stop()));
 
-	connect(ui.actionX_1, SIGNAL(triggered()), &m_animation, SLOT(setTimeScale(1.0)));
-	connect(ui.actionX_2, SIGNAL(triggered()), &m_animation, SLOT(setTimeScale(2.0)));
-	connect(ui.actionX_4, SIGNAL(triggered()), &m_animation, SLOT(setTimeScale(4.0)));
-	connect(ui.actionX_8, SIGNAL(triggered()), &m_animation, SLOT(setTimeScale(8.0)));
-	connect(ui.actionX_16, SIGNAL(triggered()), &m_animation, SLOT(setTimeScale(16.0)));
-	connect(ui.actionX_32, SIGNAL(triggered()), &m_animation, SLOT(setTimeScale(32.0)));
+	connect(ui.actionX_1, SIGNAL(triggered()), &m_animation, SLOT(setTimeScaleX0125()));
+	connect(ui.actionX_1, SIGNAL(triggered()), &m_animation, SLOT(setTimeScaleX025()));
+	connect(ui.actionX_1, SIGNAL(triggered()), &m_animation, SLOT(setTimeScaleX05()));
+	connect(ui.actionX_1, SIGNAL(triggered()), &m_animation, SLOT(setTimeScaleX1()));
+	connect(ui.actionX_2, SIGNAL(triggered()), &m_animation, SLOT(setTimeScaleX2()));
+	connect(ui.actionX_4, SIGNAL(triggered()), &m_animation, SLOT(setTimeScaleX4()));
+	connect(ui.actionX_8, SIGNAL(triggered()), &m_animation, SLOT(setTimeScaleX8()));
+	connect(ui.actionX_16, SIGNAL(triggered()), &m_animation, SLOT(setTimeScaleX16()));
+	connect(ui.actionX_32, SIGNAL(triggered()), &m_animation, SLOT(setTimeScaleX32()));
 
 
 
