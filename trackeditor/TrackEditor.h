@@ -94,6 +94,7 @@ public slots:
     void stopRecording();
 
     void loadTrack();
+    void appendTrack();
     void saveTrack();
     void saveTrackAs();
 
@@ -135,18 +136,18 @@ private:
 
     void openTTY(const char* name, int speed);
     void closeTTY();
-    void enterCommandMode(int step = 0);
-    void readLogMode();
-    void leaveCommandMode();
+    //void enterCommandMode(int step = 0);
+    //void readLogMode();
+    //void leaveCommandMode();
 
-    QString readLine();
-    void parseLine(QString line);
+    //QString readLine();
+    //void parseLine(QString line);
     void parseNEMA(QString line);
-    void parseAL(QString line);
+    //void parseAL(QString line);
 
-    void readLogData();
+    //void readLogData();
 
-    void createTrackpoints();
+    // void createTrackpoints();
 
     void save();
     void load(QString filename);

@@ -17,7 +17,8 @@ Track::Track() : m_pj(0), m_color(Qt::black){
 	m_name_item = 0;
 	m_num_points_item = 0;
 
-	m_color_item = new QStandardItem();
+
+
 	// new QPushButton("change");
 
 //	m_itemlist = new QList<QStandardItem*>;
@@ -81,28 +82,50 @@ void Track::commit() {
 
 	}
 
+	m_itemlist.clear();
+
+	m_index_item = new QStandardItem();
+	m_index_item->setEditable(false);
+	//m_itemlist.append(m_index_item);
+
+	m_color_item = new QStandardItem();
+	m_color_item->setEditable(false);
+	//m_itemlist.append(m_color_item);
+
+	m_start_time_item = new QStandardItem();
+	m_start_time_item->setEditable(false);
+	//m_itemlist.append(m_start_time_item);
+
+	m_end_time_item = new QStandardItem();
+	m_end_time_item->setEditable(false);
+	//m_itemlist.append(m_end_time_item);
+
+	m_name_item = new QStandardItem();
+	//m_itemlist.append(m_name_item);
+
+	m_length_item = new QStandardItem();
+	m_length_item->setEditable(false);
+	//m_itemlist.append(m_length_item);
+
+	m_num_points_item = new QStandardItem();
+	m_num_points_item->setEditable(false);
+	//m_itemlist.append(m_num_points_item);
+
+
 	QString tracknr;
 	tracknr.setNum(m_track_index);
-	m_index_item = new QStandardItem(tracknr);
-	m_index_item->setEditable(false);
-	m_itemlist.append(m_index_item);
+	//m_itemlist.at(0)->setText(tracknr);
+	m_index_item->setText(tracknr);
 
-	m_color_item->setEditable(false);
 	setColor(m_color);
-	m_itemlist.append(m_color_item);
 
 	QString starttime = m_min_time.toString("yy-MM-dd  hh:mm:ss");
-	m_start_time_item = new QStandardItem(starttime);
-	m_start_time_item->setEditable(false);
-	m_itemlist.append(m_start_time_item);
+	m_start_time_item->setText(starttime);
 
 	QString endtime = m_max_time.toString("yy-MM-dd  hh:mm:ss");
-	m_end_time_item = new QStandardItem(endtime);
-	m_end_time_item->setEditable(false);
-	m_itemlist.append(m_end_time_item);
+	m_end_time_item->setText(endtime);
 
-	m_name_item = new QStandardItem(getName());
-	m_itemlist.append(m_name_item);
+	m_name_item->setText(getName());
 
 	QString length;
 	if(!isEmpty()) {
@@ -114,14 +137,18 @@ void Track::commit() {
 			length = QString("%1 km").arg(dist / 1000);
 		}
 	}
-	m_length_item = new QStandardItem(length);
-	m_length_item->setEditable(false);
-	m_itemlist.append(m_length_item);
+	m_length_item->setText(length);
 
 	QString nrpoints;
 	nrpoints.setNum(size());
-	m_num_points_item = new QStandardItem(nrpoints);
-	m_num_points_item->setEditable(false);
+	m_num_points_item->setText(nrpoints);
+
+	m_itemlist.append(m_index_item);
+	m_itemlist.append(m_color_item);
+	m_itemlist.append(m_start_time_item);
+	m_itemlist.append(m_end_time_item);
+	m_itemlist.append(m_name_item);
+	m_itemlist.append(m_length_item);
 	m_itemlist.append(m_num_points_item);
 
 }
@@ -135,10 +162,13 @@ void Track::dataChanged(int column) {
 void Track::setColor(QColor col) {
 	m_color = col;
 
-	QBrush bg = m_color_item->background();
-	bg.setColor(m_color);
-	bg.setStyle(Qt::SolidPattern);
-	m_color_item->setBackground(bg);
+	if(m_color_item)
+	{
+		QBrush bg = m_color_item->background();
+		bg.setColor(m_color);
+		bg.setStyle(Qt::SolidPattern);
+		m_color_item->setBackground(bg);
+	}
 }
 
 

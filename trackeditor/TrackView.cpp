@@ -6,6 +6,7 @@
  */
 
 #include "TrackView.h"
+#include "CScrolledTrackView.h"
 
 #include <QPainter>
 #include <QRegion>
@@ -16,7 +17,9 @@
 #include <QFrame>
 #include <QLayout>
 #include <QScrollArea>
+#include <QScrollBar>
 #include <QPoint>
+#include <QLabel>
 
 #include "TrackCollection.h"
 #include "Track.h"
@@ -24,11 +27,14 @@
 
 TrackView::TrackView(QWidget* parent) : QWidget(parent), m_track_collection(0), m_pixmap(0) {
 
-	m_scroll_area = reinterpret_cast<QScrollArea*>(parent);
+	m_scroll_area = reinterpret_cast<CScrolledTrackView*>(parent);
 
 	setAttribute(Qt::WA_PaintOnScreen);
 
 	m_zoom_value = 1;
+
+	m_status_bar_widget = new QLabel();
+	setStatusBarText();
 
 	recalculateOffset();
 	refreshPixmap();
@@ -38,6 +44,16 @@ TrackView::TrackView(QWidget* parent) : QWidget(parent), m_track_collection(0), 
 TrackView::~TrackView() {
 
 }
+
+void TrackView::increaseZoomValue(int delta)
+{
+
+	int zoom_val = m_zoom_value + delta;
+	if(zoom_val < 1) zoom_val = 1;
+
+	zoomValueChanged( zoom_val );
+}
+
 
 void TrackView::zoomValueChanged(int value) {
 	m_zoom_value = value;
@@ -61,8 +77,14 @@ void TrackView::zoomValueChanged(int value) {
 
 	setMinimumSize(dw * m_scale, dh * m_scale);
 
+
 	refreshPixmap();
+
+	m_zoom_text = QString("zoom %1").arg(m_zoom_value);
+	setStatusBarText();
+
 	update();
+
 }
 
 void TrackView::setMarkers(QList<CMarker> markers)
@@ -71,43 +93,41 @@ void TrackView::setMarkers(QList<CMarker> markers)
 	update();
 }
 
-QPointF TrackView::toScreenCoord(QPointF point)
+QPointF TrackView::widgetToViweport(QPointF point)
 {
-//	QSize viewportSize = m_scroll_area->viewport()->size();
-//
-//	int width = viewportSize.width();
-//	int height = viewportSize.height();
-//
-//
-//	double w = (double)width * m_zoom_value;
-//    double h = (double)height * m_zoom_value;
-//
-//    QRectF dimension = m_track_collection->getDimensionXY();
-//
-//    double dh = dimension.height();
-//    double dw = dimension.width();
-//
-//    double ratio = dw / dh;
-//
-//    double x_off = dimension.left();
-//    double y_off = dimension.bottom();
-//
-//
-//    double x_scale = (w / dw);
-//    double y_scale = (h / dh);
-//
-//    double scale = (x_scale < y_scale) ? x_scale : y_scale;
-
-
    	double xval = (point.x() - m_x_offset) * m_scale;  // + x();
    	double yval = (point.y() - m_y_offset) * m_scale;  // - y();
 
     return QPointF(xval,yval);
 }
 
-QPointF TrackView::fromScreenCoord(QPointF point)
+QPoint TrackView::widgetToViweport(QPoint point)
 {
+   	int xval = (point.x() - m_x_offset) * m_scale;  // + x();
+   	int yval = (point.y() - m_y_offset) * m_scale;  // - y();
 
+    return QPoint(xval,yval);
+}
+
+QPointF TrackView::viewportToWidget(QPointF point)
+{
+   	double xval = (point.x() / m_scale ) + m_x_offset;
+   	double yval = (point.y() / m_scale ) + m_y_offset;
+
+    return QPointF(xval,yval);
+}
+
+
+
+
+QPoint TrackView::viewportToWidget(QPoint point)
+{
+	double one_over_scale = 1 / m_scale;
+
+   	int xval = ( one_over_scale * point.x() ) + m_x_offset;
+   	int yval = ( one_over_scale * point.y() ) + m_y_offset;
+
+    return QPoint(xval,yval);
 }
 
 
@@ -261,7 +281,7 @@ void TrackView::drawMarkers(QPainter *painter)
 	{
 		CMarker mark = m_markers.at(i);
 		painter->setPen(mark.color());
-		QPointF screenCoord = toScreenCoord(QPointF(mark.x(), mark.y()));
+		QPointF screenCoord = widgetToViweport(QPointF(mark.x(), mark.y()));
 		painter->drawEllipse(screenCoord, 10, 10 );
 	}
 }
@@ -277,6 +297,61 @@ void TrackView::moveEvent( QMoveEvent * event )
 	recalculateOffset();
 	QWidget::moveEvent(event);
 }
+
+//void TrackView::mousePressEvent(QMouseEvent *event)
+//{
+//	if (event->button() == Qt::LeftButton)
+//    {
+//		m_start_move = event->pos();
+//
+//		m_start_horizontal_slider = m_scroll_area->horizontalScrollBar()->value();
+//		m_start_vertical_slider = m_scroll_area->verticalScrollBar()->value();
+//    }
+//}
+//
+//void TrackView::mouseMoveEvent(QMouseEvent *event)
+//{
+//	QPoint pos = event->pos() - m_start_move;
+//
+//	qDebug() << QString("mouseMoveEvent pos(%1,%2)").arg(event->pos().x()).arg(event->pos().y());
+//
+//	m_scroll_area->horizontalScrollBar()->setValue(m_start_horizontal_slider - pos.x());
+//	m_scroll_area->verticalScrollBar()->setValue( m_start_vertical_slider - pos.y());
+//
+//}
+
+
+void TrackView::wheelEvent(QWheelEvent *event)
+{
+    int numDegrees = event->delta() / 8;
+    int numSteps = numDegrees / 15;
+
+    if (event->orientation() == Qt::Vertical) {
+
+
+    	QPoint globalPos = event->globalPos();
+    	QPoint oldWidgetPos = mapFromGlobal(globalPos);
+
+    	QPoint mapPos = viewportToWidget(oldWidgetPos);
+
+    	// resize widget
+        increaseZoomValue(numSteps);
+
+    	QPoint newWidgetPos = widgetToViweport(mapPos);
+
+
+    	m_scroll_area->scrollTo(newWidgetPos, globalPos);
+
+        qDebug() << QString("ScrollEvent at (%1,%2)").arg(event->x()).arg(event->y());
+        event->accept();
+    }
+    else
+    {
+        event->ignore();
+    }
+
+}
+
 
 void TrackView::recalculateOffset()
 {
@@ -312,7 +387,15 @@ void TrackView::recalculateOffset()
 
 
 
+QWidget* TrackView::statusBarWidget()
+{
+	return m_status_bar_widget;
+}
 
+void TrackView::setStatusBarText()
+{
+	m_status_bar_widget->setText(m_zoom_text);
+}
 
 
 
@@ -386,3 +469,4 @@ void TrackView::paintEventold( QPaintEvent * event ) {
     }
 
 }
+

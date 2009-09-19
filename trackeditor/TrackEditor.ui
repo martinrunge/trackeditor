@@ -114,7 +114,7 @@
          </item>
         </layout>
        </widget>
-       <widget class="QScrollArea" name="scrollArea">
+       <widget class="CScrolledTrackView" name="scrollArea">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
           <horstretch>0</horstretch>
@@ -136,7 +136,7 @@
            <x>0</x>
            <y>0</y>
            <width>1063</width>
-           <height>254</height>
+           <height>256</height>
           </rect>
          </property>
         </widget>
@@ -197,15 +197,16 @@
      <x>0</x>
      <y>0</y>
      <width>1161</width>
-     <height>26</height>
+     <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
-     <string>File</string>
+     <string>&amp;File</string>
     </property>
     <addaction name="action_Connect"/>
     <addaction name="action_Load_Track"/>
+    <addaction name="actionAppend_Track"/>
     <addaction name="action_Save_Track"/>
     <addaction name="action_Save_Track_As"/>
     <addaction name="separator"/>
@@ -214,7 +215,7 @@
    </widget>
    <widget class="QMenu" name="menuTrack">
     <property name="title">
-     <string>Track</string>
+     <string>&amp;Track</string>
     </property>
     <addaction name="action_Read_Log"/>
     <addaction name="action_Start_Recording"/>
@@ -222,7 +223,7 @@
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
-     <string>View</string>
+     <string>&amp;View</string>
     </property>
     <widget class="QMenu" name="menuMap_Projection">
      <property name="title">
@@ -234,13 +235,13 @@
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
-     <string>Edit</string>
+     <string>&amp;Edit</string>
     </property>
     <addaction name="actionSettings"/>
    </widget>
    <widget class="QMenu" name="menuAnimate">
     <property name="title">
-     <string>Animate</string>
+     <string>&amp;Animate</string>
     </property>
     <widget class="QMenu" name="menuSpeed">
      <property name="title">
@@ -276,6 +277,9 @@
    <property name="text">
     <string>E&amp;xit</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+X</string>
+   </property>
   </action>
   <action name="action_Read_Log">
    <property name="text">
@@ -286,6 +290,9 @@
    <property name="text">
     <string>&amp;Save Track</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
   </action>
   <action name="action_Save_Track_As">
    <property name="text">
@@ -294,7 +301,10 @@
   </action>
   <action name="action_Load_Track">
    <property name="text">
-    <string>&amp;Load Track ...</string>
+    <string>&amp;Open Track ...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
    </property>
   </action>
   <action name="action_Disconnect">
@@ -426,7 +436,25 @@
     <string>x 0.125</string>
    </property>
   </action>
+  <action name="actionA_ppend_Track">
+   <property name="text">
+    <string>A&amp;ppend Track ...</string>
+   </property>
+  </action>
+  <action name="actionAppend_Track">
+   <property name="text">
+    <string>A&amp;ppend Track ...</string>
+   </property>
+  </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>CScrolledTrackView</class>
+   <extends>QScrollArea</extends>
+   <header>CScrolledTrackView.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

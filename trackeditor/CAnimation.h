@@ -11,6 +11,7 @@
 #include <QObject>
 #include <QTimer>
 #include <QList>
+#include <QLabel>
 
 #include "CMarker.h"
 
@@ -29,20 +30,22 @@ public:
 
 	double getTimeScale();
 
+	QWidget* statusBarWidget();
+
 public slots:
 
 	void start();
 	void stop();
 	void setTimeScale(double ts);
-	inline void setTimeScaleX0125() {m_time_scale = 0.125; };
-	inline void setTimeScaleX025() {m_time_scale = 0.25; };
-	inline void setTimeScaleX05() {m_time_scale = 0.5; };
-	inline void setTimeScaleX1() {m_time_scale = 1; };
-	inline void setTimeScaleX2() {m_time_scale = 2; };
-	inline void setTimeScaleX4() {m_time_scale = 4; };
-	inline void setTimeScaleX8() {m_time_scale = 8; };
-	inline void setTimeScaleX16() {m_time_scale = 16; };
-	inline void setTimeScaleX32() {m_time_scale = 32; };
+	inline void setTimeScaleX0125() { setTimeScale(0.125); };
+	inline void setTimeScaleX025() { setTimeScale(0.25); };
+	inline void setTimeScaleX05() { setTimeScale(0.5); };
+	inline void setTimeScaleX1() { setTimeScale(1); };
+	inline void setTimeScaleX2() { setTimeScale(2); };
+	inline void setTimeScaleX4() { setTimeScale(4); };
+	inline void setTimeScaleX8() { setTimeScale(8); };
+	inline void setTimeScaleX16() { setTimeScale(16); };
+	inline void setTimeScaleX32() { setTimeScale(32); };
 	inline void setUpdatePerSecond(int update_per_sec) { m_updates_per_second = update_per_sec; };
 
 	void update();
@@ -67,6 +70,13 @@ private:
 
 	QTimer m_timer;
 
+	QLabel *m_status_bar_widget;
+	QString m_time_scale_text;
+	QString m_state_text;
+	QString m_progess_text;
+
+	void setStatusBarText();
 };
 
 #endif /* CANIMATION_H_ */
+

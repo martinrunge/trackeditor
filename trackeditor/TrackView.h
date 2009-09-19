@@ -10,20 +10,27 @@
 
 #include <QWidget>
 #include <QList>
+
 #include "CMarker.h"
+
+class CScrolledTrackView;
 
 class TrackCollection;
 class QFrame;
-class QScrollArea;
 class QPixmap;
+class QLabel;
 
 class TrackView : public QWidget {
 	Q_OBJECT
 
 public slots:
 	void zoomValueChanged(int value);
+
+	void increaseZoomValue(int delta);
+
 	void setMarkers(QList<CMarker> markers);
 
+	QWidget* statusBarWidget();
 
 public:
 	TrackView(QWidget* parent = 0);
@@ -41,15 +48,28 @@ protected:
 	void resizeEvent ( QResizeEvent * event );
 	void moveEvent ( QMoveEvent * event );
 
+//	void mousePressEvent(QMouseEvent *event);
+//	void mouseMoveEvent(QMouseEvent *event);
+
+	void wheelEvent(QWheelEvent *event);
+
 
 private:
 	TrackCollection* m_track_collection;
-	QScrollArea* m_scroll_area;
+	CScrolledTrackView* m_scroll_area;
 	QFrame *m_frame;
 
 	void recalculateOffset();
-	QPointF toScreenCoord(QPointF point);
-	QPointF fromScreenCoord(QPointF point);
+	QPointF widgetToViweport(QPointF point);
+	QPoint  widgetToViweport(QPoint point);
+
+	QPointF viewportToWidget(QPointF point);
+	QPoint viewportToWidget(QPoint point);
+
+	QPoint m_start_move;
+
+	int m_start_horizontal_slider;
+	int m_start_vertical_slider;
 
 	void refreshPixmap();
 	void drawMarkers(QPainter *painter);
@@ -65,6 +85,12 @@ private:
 	double m_scale;
 
 	QList<CMarker> m_markers;
+
+	QLabel *m_status_bar_widget;
+	QString m_zoom_text;
+
+	void setStatusBarText();
+
 };
 
 #endif /* TRACKVIEW_H_ */

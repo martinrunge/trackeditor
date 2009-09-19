@@ -27,8 +27,10 @@ public:
 	TrackCollection();
 	virtual ~TrackCollection();
 
-
+	void appendTrackCollection(TrackCollection* tc);
 	void appendTrack(Track* track);
+
+
 
 	void commit();
 	void clear();

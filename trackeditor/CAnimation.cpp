@@ -21,11 +21,14 @@ CAnimation::CAnimation(QObject *parent) : QObject(parent),
 	// TODO Auto-generated constructor stub
 
 	connect(&m_timer, SIGNAL(timeout()), this, SLOT(update()));
+
+	m_status_bar_widget = new QLabel("Animation");
 }
 
 CAnimation::~CAnimation()
 {
 	// TODO Auto-generated destructor stub
+	delete m_status_bar_widget;
 }
 
 void CAnimation::setTrackCollection(TrackCollection* tc)
@@ -44,6 +47,8 @@ void CAnimation::setTimeScale(double ts)
 	m_time_scale = ts;
 	qDebug() << QString("stetting time scale to %1").arg(ts);
 
+	m_time_scale_text = QString("%1 x").arg(m_time_scale);
+	setStatusBarText();
 }
 
 
@@ -70,13 +75,17 @@ void CAnimation::start()
 	m_anim_time = 0.0;
 	m_timer.start( 1000 / m_updates_per_second );
 
-
+	m_state_text = "Animation running ";
+	setStatusBarText();
 }
 
 void CAnimation::stop()
 {
 	qDebug() << QString("stoping animation");
 	m_timer.stop();
+
+	m_state_text = "";
+	setStatusBarText();
 }
 
 
@@ -124,4 +133,17 @@ void CAnimation::update()
 
 	m_update_nr++;
 }
+
+
+QWidget* CAnimation::statusBarWidget()
+{
+	return m_status_bar_widget;
+}
+
+void CAnimation::setStatusBarText()
+{
+	QString text = QString("%1 %2 %3").arg(m_state_text).arg(m_time_scale_text).arg(m_progess_text);
+	m_status_bar_widget->setText(text);
+}
+
 

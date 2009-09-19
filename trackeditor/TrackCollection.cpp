@@ -213,6 +213,18 @@ void TrackCollection::commit() {
 	//}
 }
 
+void TrackCollection::appendTrackCollection(TrackCollection* tc)
+{
+	for(int i=0;i < tc->size(); i++)
+	{
+		tc->at(i)->setIndex(size());
+		tc->removeRow(i);
+		appendTrack(tc->at(i));
+	}
+	commit();
+}
+
+
 void TrackCollection::appendTrack(Track* track) {
 	track->setPJ(m_pj);
 	track->commit();

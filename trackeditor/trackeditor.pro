@@ -1,7 +1,8 @@
 QT += core \
     gui \
     dbus
-HEADERS += CMarker.h \
+HEADERS += CScrolledTrackView.h \
+    CMarker.h \
     DeviceListWidgetItem.h \
     CSerialPortSettings.h \
     CGenericSerialDevice.h \
@@ -24,7 +25,8 @@ HEADERS += CMarker.h \
     qextserialport/qextserialbase.h \
     qextserialport/qextserialport.h \
     CAnimation.h
-SOURCES += CMarker.cpp \
+SOURCES += CScrolledTrackView.cpp \
+    CMarker.cpp \
     DeviceListWidgetItem.cpp \
     CSerialPortSettings.cpp \
     CDeviceDialog.cpp \

@@ -97,6 +97,7 @@ LogReader::LogReader(QWidget *parent) :
 	connect(ui.action_Disconnect, SIGNAL(triggered()), this, SLOT(disconnectDevice()));
 
 	connect(ui.action_Load_Track, SIGNAL(triggered()), this, SLOT(loadTrack()));
+	connect(ui.actionAppend_Track, SIGNAL(triggered()), this, SLOT(appendTrack()));
 	connect(ui.action_Save_Track, SIGNAL(triggered()), this, SLOT(saveTrack()));
 	connect(ui.action_Save_Track_As, SIGNAL(triggered()), this, SLOT(saveTrackAs()));
 
@@ -123,6 +124,7 @@ LogReader::LogReader(QWidget *parent) :
 	connect(ui.actionSettings, SIGNAL(triggered()), this, SLOT(showSettingsDlg()));
 
 	connect(this, SIGNAL(setText(QString)), ui.nemaText, SLOT(appendPlainText(QString)));
+
 
 	m_track_view = new TrackView(ui.scrollArea);
 	ui.scrollArea->setWidget(m_track_view);
@@ -153,10 +155,6 @@ LogReader::LogReader(QWidget *parent) :
 
 	m_diagrams_layout->setQuantities(distList, timeList, trackPointsList );
 
-//	m_plotLayout = new QGridLayout;
-//	m_plotWidget = new plotWidget(ui.diagramWidget);
-//	m_plotLayout->addWidget(m_plotWidget);
-//	ui.diagramWidget->setLayout(m_plotLayout);
 
 	setTrackCollection(new TrackCollection);
 
@@ -180,6 +178,10 @@ LogReader::LogReader(QWidget *parent) :
     prg_dlg.setupUi(m_progress_dlg);
     m_progress_dlg->setModal(false);
     connect(prg_dlg.cancelButton, SIGNAL(clicked()), this, SLOT(readLogFinished()));
+
+	statusBar()->addWidget(m_animation.statusBarWidget());
+	statusBar()->addPermanentWidget(m_track_view->statusBarWidget());
+
 
 }
 
@@ -485,9 +487,12 @@ void LogReader::treeViewClicked(QModelIndex index) {
 	// m_plotWidget->setTrack(m_track_collection->at(index.row()));
 	qDebug() << QString("treeViewClicked trackNr: %1 Column %2").arg(index.row()).arg(index.column());
 	if(index.column() == 1) {
-		// clocked on the color field
-		QColor color = QColorDialog::getColor();
-		m_track_collection->at(index.row())->setColor(color);
+		// clicked on the color field
+		QColor color = QColorDialog::getColor(m_track_collection->at(index.row())->getColor());
+		if(color.isValid())
+		{
+			m_track_collection->at(index.row())->setColor(color);
+		}
 	}
 }
 
@@ -519,52 +524,6 @@ void LogReader::markerChangedTrackPoint(double tp_index) {
 }
 
 
-void LogReader::createTrackpoints() {
-	FILE* fd;
-	Track* track = 0;
-	fd = fopen("outfile2.tkraw", "wb");
-    qDebug() << QString("createTrackpoints()");
-    int trackindex = 0;
-
-    m_track_collection->clear();
-
-	for(int pos = 0; pos < m_log_buf.size(); pos += TrackPoint::size()) {
-		fwrite(m_log_buf.mid(pos, TrackPoint::size()).data(), m_log_buf.mid(pos, TrackPoint::size()).size(), 1, fd);
-		TrackPoint* tp = new TrackPoint(m_log_buf.mid(pos, TrackPoint::size()));
-
-
-		if(tp->isLogPoint()) {
-			m_track_collection->getWaypoints()->append(tp);
-
-		}
-		else {
-			if(tp->isBeginOfTrack()) {
-				if(track != 0) {
-					track->commit();
-					track->setIndex(trackindex);
-					qDebug() << QString("End of Track (%1 - %2 , %3 - %4)").arg(track->getMinLong()).arg(track->getMaxLong()).arg(track->getMinLat()).arg(track->getMaxLat());
-				}
-				track = new Track();
-				trackindex++;
-				m_track_collection->append(track);
-			}
-			track->append(tp);
-		}
-
-	}
-	track->commit();
-	m_track_view->setTrackColletcion(m_track_collection);
-	m_track_collection->commit();
-
-	ui.treeView->resizeColumnToContents(0);
-	ui.treeView->resizeColumnToContents(1);
-	ui.treeView->resizeColumnToContents(2);
-	ui.treeView->resizeColumnToContents(3);
-	ui.treeView->resizeColumnToContents(4);
-	fclose(fd);
-
-	m_track_view->update();
-}
 
 void LogReader::parseNEMA(QString line) {
 	qDebug() << line;
@@ -611,15 +570,64 @@ void LogReader::loadTrack() {
 	}
 
 	m_log_buf.clear();
-	fd = fopen(filename.toLatin1(), "rb");
-	do {
-		bytes_read = fread(buffer, TrackPoint::size(), 1, fd);
-		m_log_buf.append(QByteArray(buffer,TrackPoint::size()));
-	} while( bytes_read != 0);
-	fclose(fd);
+//	fd = fopen(filename.toLatin1(), "rb");
+//	do {
+//		bytes_read = fread(buffer, TrackPoint::size(), 1, fd);
+//		m_log_buf.append(QByteArray(buffer,TrackPoint::size()));
+//	} while( bytes_read != 0);
+//	fclose(fd);
 
-	createTrackpoints();
+	//createTrackpoints();
 }
+
+
+void LogReader::appendTrack()
+{
+    QString filename( QFileDialog::getOpenFileName( this,  tr("Append Track"),QString::null,  tr("GPX Tracks (*.gpx);;Google Earth Tracks (*.kml *.kmz);;Wintec TK1 Tracks (*.tk1);;Raw Wintec Tracklogs (*.tkraw)")) );
+    if ( filename.isEmpty() )
+        return;
+
+
+	if(filename.endsWith(".gpx", Qt::CaseInsensitive)) {
+		// load from GPX file
+		gpxFile gpx_file;
+		TrackCollection* tc = gpx_file.read(filename);
+		tc->setDiagramQuantities(m_settings->getDistQuantities(), m_settings->getTimeQuantities(), m_settings->getTrackpointsQuantities() );
+		m_track_collection->appendTrackCollection(tc);
+		return;
+	}
+	else if(m_track_filename.endsWith(".kml", Qt::CaseInsensitive)) {
+		//kmlFile kml_file;
+		//kml_file.read(m_track_collection, filename);
+		// load from kml file
+
+	}
+	else if(m_track_filename.endsWith(".kmz", Qt::CaseInsensitive)) {
+		// load from kmz file
+
+	}
+	else if(m_track_filename.endsWith(".tk1", Qt::CaseInsensitive)) {
+		tk1File tk1_file;
+		m_track_collection = tk1_file.read(filename);
+		// load from as tk1 file
+
+	}
+	else {
+		 // QMessageBox::warning(this, tr("Track Editor"),
+		 //                          tr("Unknown file type. TrackEditor is only\n"
+		 //                            "able to load raw tk1 files."),
+		 //                           QMessageBox::Discard);
+	}
+
+
+	ui.treeView->resizeColumnToContents(0);
+	ui.treeView->resizeColumnToContents(1);
+	ui.treeView->resizeColumnToContents(2);
+	ui.treeView->resizeColumnToContents(3);
+	ui.treeView->resizeColumnToContents(4);
+
+}
+
 
 
 void LogReader::saveTrack() {
@@ -676,3 +684,53 @@ void LogReader::load(QString filename) {
 
 
 }
+
+// obsolete functions
+
+
+//void LogReader::createTrackpoints() {
+//	FILE* fd;
+//	Track* track = 0;
+//	fd = fopen("outfile2.tkraw", "wb");
+//    qDebug() << QString("createTrackpoints()");
+//    int trackindex = 0;
+//
+//    m_track_collection->clear();
+//
+//	for(int pos = 0; pos < m_log_buf.size(); pos += TrackPoint::size()) {
+//		fwrite(m_log_buf.mid(pos, TrackPoint::size()).data(), m_log_buf.mid(pos, TrackPoint::size()).size(), 1, fd);
+//		TrackPoint* tp = new TrackPoint(m_log_buf.mid(pos, TrackPoint::size()));
+//
+//
+//		if(tp->isLogPoint()) {
+//			m_track_collection->getWaypoints()->append(tp);
+//
+//		}
+//		else {
+//			if(tp->isBeginOfTrack()) {
+//				if(track != 0) {
+//					track->commit();
+//					track->setIndex(trackindex);
+//					qDebug() << QString("End of Track (%1 - %2 , %3 - %4)").arg(track->getMinLong()).arg(track->getMaxLong()).arg(track->getMinLat()).arg(track->getMaxLat());
+//				}
+//				track = new Track();
+//				trackindex++;
+//				m_track_collection->append(track);
+//			}
+//			track->append(tp);
+//		}
+//
+//	}
+//	track->commit();
+//	m_track_view->setTrackColletcion(m_track_collection);
+//	m_track_collection->commit();
+//
+//	ui.treeView->resizeColumnToContents(0);
+//	ui.treeView->resizeColumnToContents(1);
+//	ui.treeView->resizeColumnToContents(2);
+//	ui.treeView->resizeColumnToContents(3);
+//	ui.treeView->resizeColumnToContents(4);
+//	fclose(fd);
+//
+//	m_track_view->update();
+//}
