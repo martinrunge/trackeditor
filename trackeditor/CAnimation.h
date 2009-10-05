@@ -46,7 +46,12 @@ public slots:
 	inline void setTimeScaleX8() { setTimeScale(8); };
 	inline void setTimeScaleX16() { setTimeScale(16); };
 	inline void setTimeScaleX32() { setTimeScale(32); };
+	inline void setTimeScaleX64() { setTimeScale(64); };
+	inline void setTimeScaleX128() { setTimeScale(128); };
 	inline void setUpdatePerSecond(int update_per_sec) { m_updates_per_second = update_per_sec; };
+
+	inline void incSpeed() { setTimeScale(m_time_scale * 2); };
+	inline void decSpeed() { setTimeScale(m_time_scale * 0.5); };
 
 	void update();
 

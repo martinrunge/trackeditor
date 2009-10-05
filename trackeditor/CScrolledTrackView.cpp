@@ -71,3 +71,45 @@ void CScrolledTrackView::mouseMoveEvent(QMouseEvent *event)
 	verticalScrollBar()->setValue( m_start_vertical_slider - pos.y());
 
 }
+
+void CScrolledTrackView::keyPressEvent(QKeyEvent *event)
+{
+    switch (event->key()) {
+		case Qt::Key_Left:
+			scrollRelativeHorizontal(-5);
+			break;
+		case Qt::Key_Right:
+			scrollRelativeHorizontal(5);
+			break;
+		case Qt::Key_Down:
+			scrollRelativeVertical(5);
+			break;
+		case Qt::Key_Up:
+			scrollRelativeVertical(-5);
+			break;
+		default:
+			QScrollArea::keyPressEvent(event);
+    }
+}
+
+void CScrolledTrackView::scrollRelativeHorizontal(int percent)
+{
+	int pos = horizontalScrollBar()->value();
+	int range = horizontalScrollBar()->maximum() - horizontalScrollBar()->minimum();
+	int diff = range * percent;
+	diff /= 100;
+
+	horizontalScrollBar()->setValue(pos + diff);
+}
+
+void CScrolledTrackView::scrollRelativeVertical(int percent)
+{
+	int pos = verticalScrollBar()->value();
+	int range = verticalScrollBar()->maximum() - verticalScrollBar()->minimum();
+	int diff = range * percent;
+	diff /= 100;
+
+	verticalScrollBar()->setValue(pos + diff);
+}
+
+

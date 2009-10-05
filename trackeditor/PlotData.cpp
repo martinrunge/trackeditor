@@ -221,6 +221,29 @@ double PlotData::getYVal(TrackPoint* tp) {
 }
 
 
+int PlotData::findIndex(double val)
+{
+	int min = 0;
+	int max = m_size;
+
+	// do a binary search for val or the nearest value in m_x_values
+	while(max - min > 1)
+	{
+		int half = max - min / 2;
+
+		if(m_x_values[half] <= val )
+		{
+			min = half;
+		}
+		else
+		{
+			max = half;
+		}
+	}
+	return min;
+}
+
+
 QwtData *PlotData::copy() const
 {
     // return new PlotData( m_track, m_plot_type , m_num_points);

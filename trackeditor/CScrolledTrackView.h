@@ -27,8 +27,12 @@ public:
 protected:
 	void mousePressEvent(QMouseEvent *event);
 	void mouseMoveEvent(QMouseEvent *event);
+	void keyPressEvent(QKeyEvent *event);
 
 private:
+	void scrollRelativeHorizontal(int percent);
+	void scrollRelativeVertical(int percent);
+
 	QPoint m_start_move;
 
 	int m_start_horizontal_slider;

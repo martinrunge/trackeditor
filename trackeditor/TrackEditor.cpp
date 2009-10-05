@@ -56,6 +56,7 @@
 #include "CSerialPortSettings.h"
 #include "qextserialport/qextserialport.h"
 #include "CMarker.h"
+#include "CAboutDialog.h"
 
 #include "CDeviceDialog.h"
 #include "csettingsdlg.h"
@@ -109,19 +110,25 @@ LogReader::LogReader(QWidget *parent) :
 	connect(ui.actionStart_Animation, SIGNAL(triggered()), &m_animation, SLOT(start()));
 	connect(ui.actionStop_Animation, SIGNAL(triggered()), &m_animation, SLOT(stop()));
 
-	connect(ui.actionX_1, SIGNAL(triggered()), &m_animation, SLOT(setTimeScaleX0125()));
-	connect(ui.actionX_1, SIGNAL(triggered()), &m_animation, SLOT(setTimeScaleX025()));
-	connect(ui.actionX_1, SIGNAL(triggered()), &m_animation, SLOT(setTimeScaleX05()));
+	connect(ui.actionFaster, SIGNAL(triggered()), &m_animation, SLOT(incSpeed()));
+	connect(ui.actionSlower, SIGNAL(triggered()), &m_animation, SLOT(decSpeed()));
+
+	connect(ui.actionX_0_125, SIGNAL(triggered()), &m_animation, SLOT(setTimeScaleX0125()));
+	connect(ui.actionX_0_25, SIGNAL(triggered()), &m_animation, SLOT(setTimeScaleX025()));
+	connect(ui.actionX_0_5, SIGNAL(triggered()), &m_animation, SLOT(setTimeScaleX05()));
 	connect(ui.actionX_1, SIGNAL(triggered()), &m_animation, SLOT(setTimeScaleX1()));
 	connect(ui.actionX_2, SIGNAL(triggered()), &m_animation, SLOT(setTimeScaleX2()));
 	connect(ui.actionX_4, SIGNAL(triggered()), &m_animation, SLOT(setTimeScaleX4()));
 	connect(ui.actionX_8, SIGNAL(triggered()), &m_animation, SLOT(setTimeScaleX8()));
 	connect(ui.actionX_16, SIGNAL(triggered()), &m_animation, SLOT(setTimeScaleX16()));
 	connect(ui.actionX_32, SIGNAL(triggered()), &m_animation, SLOT(setTimeScaleX32()));
-
+	connect(ui.actionX_64, SIGNAL(triggered()), &m_animation, SLOT(setTimeScaleX64()));
+	connect(ui.actionX_128, SIGNAL(triggered()), &m_animation, SLOT(setTimeScaleX128()));
 
 
 	connect(ui.actionSettings, SIGNAL(triggered()), this, SLOT(showSettingsDlg()));
+
+	connect(ui.action_About, SIGNAL(triggered()), this, SLOT(showAboutDialog()));
 
 	connect(this, SIGNAL(setText(QString)), ui.nemaText, SLOT(appendPlainText(QString)));
 
@@ -131,7 +138,8 @@ LogReader::LogReader(QWidget *parent) :
 
 	connect(&m_animation, SIGNAL(setMarkers(QList<CMarker>)), m_track_view, SLOT(setMarkers(QList<CMarker>)));
 
-	connect(ui.zoomSlider, SIGNAL(valueChanged(int)), m_track_view, SLOT(zoomValueChanged(int)));
+	connect(ui.actionZoom_in, SIGNAL(triggered()), m_track_view, SLOT(zoomIn()));
+	connect(ui.actionZoom_out, SIGNAL(triggered()), m_track_view, SLOT(zoomOut()));
 
 	ui.treeView->setSelectionMode(QAbstractItemView::ExtendedSelection);
     m_selection_model = ui.treeView->selectionModel();
@@ -140,6 +148,8 @@ LogReader::LogReader(QWidget *parent) :
 
 	m_diagrams_layout = new CDiagramsLayout(ui.diagramWidget);
 	ui.diagramWidget->setLayout(m_diagrams_layout);
+
+	connect(m_diagrams_layout, SIGNAL(drawMarkers(QList<CMarker>)), m_track_view, SLOT(drawMarkers(QList<CMarker>)));
 
 	m_settings = new CSettings();
 	m_settings->load();
@@ -683,6 +693,12 @@ void LogReader::save() {
 void LogReader::load(QString filename) {
 
 
+}
+
+void LogReader::showAboutDialog()
+{
+		CAboutDialog aboutDlg(this);
+		aboutDlg.exec();
 }
 
 // obsolete functions

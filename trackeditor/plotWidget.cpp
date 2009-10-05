@@ -128,6 +128,21 @@ void plotWidget::pickerMoved(const QwtDoublePoint &pos) {
 	// QPoint pt = m_picker->transform(pos);
 	qDebug() << QString("pickermoved: %1 %2 ").arg(pos.x()).arg(pos.y());
 
+	QList<CMarker> markers;
+	for(int i = 0; i < m_track_list.size(); i++)
+	{
+		// get transformed coordinates from each track
+		// in e.g. time and elevation
+		// out -> geo coordinates in selected projection
+		int index = m_track_list.at(i)->getIndexFromXVal(pos.x(), m_x_type);
+		TrackPoint* tp = m_track_list.at(i)->at(index);
+
+
+		CMarker marker(tp->getX(),tp->getX(),m_track_list.at(i)->getColor());
+		markers.append(marker);
+
+	}
+	emit drawMarkers(markers);
 
 }
 

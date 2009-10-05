@@ -52,6 +52,8 @@ public:
     static QMap<QString, enum plotTypeY> YTypeNamesForSettings;
     static void initializeMaps();
 
+    int findIndex(double val);
+
 private:
 
 	double getXVal(TrackPoint* tp);

@@ -36,84 +36,6 @@
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
-       <widget class="QFrame" name="frame">
-        <property name="minimumSize">
-         <size>
-          <width>81</width>
-          <height>100</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>81</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
-        </property>
-        <layout class="QGridLayout" name="gridLayout_2">
-         <item row="0" column="0" colspan="2">
-          <widget class="QLabel" name="label">
-           <property name="text">
-            <string>Zoom</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0" rowspan="3">
-          <widget class="QSlider" name="zoomSlider">
-           <property name="minimum">
-            <number>1</number>
-           </property>
-           <property name="maximum">
-            <number>10</number>
-           </property>
-           <property name="singleStep">
-            <number>1</number>
-           </property>
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="tickPosition">
-            <enum>QSlider::TicksBelow</enum>
-           </property>
-           <property name="tickInterval">
-            <number>1</number>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QLabel" name="label_2">
-           <property name="text">
-            <string>100</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <spacer name="verticalSpacer">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="3" column="1">
-          <widget class="QLabel" name="label_3">
-           <property name="text">
-            <string>1</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
        <widget class="CScrolledTrackView" name="scrollArea">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -135,8 +57,8 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>1063</width>
-           <height>256</height>
+           <width>1147</width>
+           <height>258</height>
           </rect>
          </property>
         </widget>
@@ -197,7 +119,7 @@
      <x>0</x>
      <y>0</y>
      <width>1161</width>
-     <height>24</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -231,7 +153,12 @@
      </property>
      <addaction name="actionMerkator"/>
     </widget>
+    <addaction name="actionZoom_in"/>
+    <addaction name="actionZoom_out"/>
+    <addaction name="actionFit_to_Screen"/>
+    <addaction name="separator"/>
     <addaction name="menuMap_Projection"/>
+    <addaction name="actionShow_GPS_output"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
@@ -245,7 +172,7 @@
     </property>
     <widget class="QMenu" name="menuSpeed">
      <property name="title">
-      <string>Speed</string>
+      <string>S&amp;peed</string>
      </property>
      <addaction name="actionX_0_125"/>
      <addaction name="actionX_0_25"/>
@@ -256,16 +183,27 @@
      <addaction name="actionX_8"/>
      <addaction name="actionX_16"/>
      <addaction name="actionX_32"/>
+     <addaction name="actionX_64"/>
+     <addaction name="actionX_128"/>
     </widget>
     <addaction name="actionStart_Animation"/>
     <addaction name="actionStop_Animation"/>
+    <addaction name="actionFaster"/>
+    <addaction name="actionSlower"/>
     <addaction name="menuSpeed"/>
+   </widget>
+   <widget class="QMenu" name="menu_Help">
+    <property name="title">
+     <string>&amp;Help</string>
+    </property>
+    <addaction name="action_About"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuTrack"/>
    <addaction name="menuEdit"/>
    <addaction name="menuView"/>
    <addaction name="menuAnimate"/>
+   <addaction name="menu_Help"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="action_Connect">
@@ -353,12 +291,12 @@
   </action>
   <action name="actionStart_Animation">
    <property name="text">
-    <string>Start Animation</string>
+    <string>St&amp;art Animation</string>
    </property>
   </action>
   <action name="actionStop_Animation">
    <property name="text">
-    <string>Stop Animation</string>
+    <string>S&amp;top Animation</string>
    </property>
   </action>
   <action name="actionX_1">
@@ -369,7 +307,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>x 1</string>
+    <string>x &amp;1</string>
    </property>
   </action>
   <action name="actionX_2">
@@ -377,7 +315,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>x 2</string>
+    <string>x &amp;2</string>
    </property>
   </action>
   <action name="actionX_4">
@@ -385,7 +323,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>x 4</string>
+    <string>x &amp;4</string>
    </property>
   </action>
   <action name="actionX_8">
@@ -393,7 +331,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>x 8</string>
+    <string>x &amp;8</string>
    </property>
   </action>
   <action name="actionX_16">
@@ -401,7 +339,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>x 16</string>
+    <string>x 1&amp;6</string>
    </property>
   </action>
   <action name="actionX_32">
@@ -409,7 +347,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>x 32</string>
+    <string>x &amp;32</string>
    </property>
   </action>
   <action name="actionX_0_5">
@@ -444,6 +382,66 @@
   <action name="actionAppend_Track">
    <property name="text">
     <string>A&amp;ppend Track ...</string>
+   </property>
+  </action>
+  <action name="actionZoom_in">
+   <property name="text">
+    <string>Zoom in</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl++</string>
+   </property>
+  </action>
+  <action name="actionZoom_out">
+   <property name="text">
+    <string>Zoom out</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+-</string>
+   </property>
+  </action>
+  <action name="actionFit_to_Screen">
+   <property name="text">
+    <string>Fit to Screen</string>
+   </property>
+  </action>
+  <action name="actionFaster">
+   <property name="text">
+    <string>&amp;Faster</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt++</string>
+   </property>
+  </action>
+  <action name="actionSlower">
+   <property name="text">
+    <string>&amp;Slower</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+-</string>
+   </property>
+  </action>
+  <action name="actionX_64">
+   <property name="text">
+    <string>x 64</string>
+   </property>
+  </action>
+  <action name="actionX_128">
+   <property name="text">
+    <string>x 128</string>
+   </property>
+  </action>
+  <action name="action_About">
+   <property name="text">
+    <string>&amp;About ...</string>
+   </property>
+  </action>
+  <action name="actionShow_GPS_output">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Show &amp;GPS output</string>
    </property>
   </action>
  </widget>

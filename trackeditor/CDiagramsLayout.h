@@ -14,6 +14,7 @@
 #include <QString>
 
 #include "PlotData.h"
+#include "CMarker.h"
 
 class plotWidget;
 class Track;
@@ -29,6 +30,13 @@ public:
 
 	void setQuantities(QStringList distVals, QStringList timeVals, QStringList trackPointVals );
 	void setQuantities(QList<enum plotTypeY> distVals, QList<enum plotTypeY> timeVals, QList<enum plotTypeY> trackPointVals );
+
+public slots:
+	void drawMarkers(QList<CMarker> markers);
+
+signals:
+	void drawMarkers(QList<CMarker> markers);
+
 
 
 private:

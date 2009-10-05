@@ -1,7 +1,8 @@
 QT += core \
     gui \
     dbus
-HEADERS += CScrolledTrackView.h \
+HEADERS += CAboutDialog.h \
+    CScrolledTrackView.h \
     CMarker.h \
     DeviceListWidgetItem.h \
     CSerialPortSettings.h \
@@ -25,7 +26,8 @@ HEADERS += CScrolledTrackView.h \
     qextserialport/qextserialbase.h \
     qextserialport/qextserialport.h \
     CAnimation.h
-SOURCES += CScrolledTrackView.cpp \
+SOURCES += CAboutDialog.cpp \
+    CScrolledTrackView.cpp \
     CMarker.cpp \
     DeviceListWidgetItem.cpp \
     CSerialPortSettings.cpp \
@@ -58,7 +60,8 @@ SOURCES += CScrolledTrackView.cpp \
     qextserialport/qextserialbase.cpp \
     qextserialport/qextserialport.cpp \
     CAnimation.cpp
-FORMS += serialwidget.ui \
+FORMS += AboutDialog.ui \
+    serialwidget.ui \
     bluetoothwidget.ui \
     usbwidget.ui \
     CQuantitiesConfig.ui \
@@ -68,7 +71,8 @@ FORMS += serialwidget.ui \
     ProgressDialog.ui \
     DeviceDialog.ui \
     TrackEditor.ui \
-    diagramSettings.ui
+    diagramSettings.ui \
+    AboutDialog.ui
 RESOURCES += trackeditor.qrc \
     trackeditor.qrc
 unix:HEADERS += qextserialport/posix_qextserialport.h

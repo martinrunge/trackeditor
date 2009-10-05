@@ -246,6 +246,84 @@ bool Track::validIndex(void) {
 	}
 }
 
+
+int Track::getIndexFromTime(double time)
+{
+	return getIndexFromXVal(time, TYPE_X_TIME);
+}
+
+int Track::getIndexFromDist(double dist)
+{
+	return getIndexFromXVal(dist, TYPE_X_DIST);
+}
+
+int Track::getIndexFromTrackPoint(int tp)
+{
+	return getIndexFromXVal(tp, TYPE_X_POINTS);
+
+}
+
+int Track::getIndexFromXVal(double val, enum plotTypeX x_type)
+{
+	int retval;
+	QList<enum plotTypeY> keys;
+
+	switch(x_type)
+	{
+		case TYPE_X_TIME:
+			keys = m_time_data.keys();
+
+			if(keys.isEmpty())
+			{
+				retval = -1;
+			}
+			else
+			{
+				retval = m_time_data[keys.at(0)]->findIndex(val);
+			}
+			break;
+
+		case TYPE_X_DIST:
+			keys = m_dist_data.keys();
+
+			if(keys.isEmpty())
+			{
+				retval = -1;
+			}
+			else
+			{
+				retval = m_dist_data[keys.at(0)]->findIndex(val);
+			}
+			break;
+
+		case TYPE_X_POINTS:
+			retval = val;
+			break;
+
+		default:
+			retval = -1;
+	}
+	return retval;
+
+}
+
+int Track::getIndexFromXVal(int val, enum plotTypeX x_type)
+{
+	int retval;
+
+	if( x_type == TYPE_X_POINTS)
+	{
+		retval = val;
+	}
+	else
+	{
+		retval = getIndexFromXVal(double(val), x_type);
+	}
+	return retval;
+}
+
+
+
 QList<QStandardItem*> Track::getItemList() {
 	return m_itemlist;
 }

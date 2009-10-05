@@ -10,6 +10,7 @@
 
 #include <qwt-qt4/qwt_plot.h>
 #include "PlotData.h"
+#include "CMarker.h"
 
 class QwtPlotGrid;
 class QwtPlotCurve;
@@ -28,6 +29,9 @@ public:
 
 public slots:
 	void pickerMoved(const QwtDoublePoint &pos);
+
+signals:
+	void drawMarkers(QList<CMarker> markers);
 
 private:
 	QwtPlotGrid *m_grid;

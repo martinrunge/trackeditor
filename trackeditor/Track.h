@@ -40,6 +40,13 @@ public:
 	int getIndex();
 	bool validIndex(void);
 
+	int getIndexFromTime(double time);
+	int getIndexFromDist(double dist);
+	int getIndexFromTrackPoint(int tp);
+	int getIndexFromXVal(double val, enum plotTypeX x_type);
+	int getIndexFromXVal(int val, enum plotTypeX x_type);
+
+
 	void dataChanged(int column);
 	QList<QStandardItem*> getItemList();
 

@@ -27,6 +27,9 @@ public slots:
 	void zoomValueChanged(int value);
 
 	void increaseZoomValue(int delta);
+	inline void zoomIn() { increaseZoomValue(1); };
+	inline void zoomOut() { increaseZoomValue(-1); };
+
 
 	void setMarkers(QList<CMarker> markers);
 

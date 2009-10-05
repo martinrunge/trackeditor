@@ -99,6 +99,8 @@ public slots:
     void saveTrackAs();
 
     void showSettingsDlg();
+    void showAboutDialog();
+
     //void setDiagramQuantities(QStringList distVals, QStringList timeVals, QStringList trackPointVals);
     void setDiagramQuantities(QList<enum plotTypeY> distVals, QList<enum plotTypeY> timeVals, QList<enum plotTypeY> trackPointVals);
 
