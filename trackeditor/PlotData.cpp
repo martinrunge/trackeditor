@@ -226,21 +226,22 @@ int PlotData::findIndex(double val)
 	int min = 0;
 	int max = m_size;
 
+	int half;
 	// do a binary search for val or the nearest value in m_x_values
 	while(max - min > 1)
 	{
-		int half = max - min / 2;
+		half = (max - min) / 2;
 
 		if(m_x_values[half] <= val )
 		{
-			min = half;
+			min += half;
 		}
 		else
 		{
-			max = half;
+			max -= half;
 		}
 	}
-	return min;
+	return m_index_in_track[min];
 }
 
 

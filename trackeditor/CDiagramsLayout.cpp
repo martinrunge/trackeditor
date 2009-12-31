@@ -139,8 +139,8 @@ void CDiagramsLayout::setQuantities(QList<enum plotTypeY> distVals, QList<enum p
 
 }
 
-void CDiagramsLayout::drawMakers(QList<CMarker> markers)
+void CDiagramsLayout::drawMarkers(QList<CMarker> markers)
 {
-	emit drawMakers(markers);
+	emit setMarkers(markers);
 }
 

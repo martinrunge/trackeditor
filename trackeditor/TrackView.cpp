@@ -283,6 +283,7 @@ void TrackView::drawMarkers(QPainter *painter)
 		painter->setPen(mark.color());
 		QPointF screenCoord = widgetToViweport(QPointF(mark.x(), mark.y()));
 		painter->drawEllipse(screenCoord, 10, 10 );
+		//qDebug() << QString("TrackView::drawMarkers: (%1,%2)").arg(mark.x()).arg(mark.y());
 	}
 }
 

@@ -126,7 +126,7 @@ void plotWidget::setTracks(QList<Track*> tracks) {
 
 void plotWidget::pickerMoved(const QwtDoublePoint &pos) {
 	// QPoint pt = m_picker->transform(pos);
-	qDebug() << QString("pickermoved: %1 %2 ").arg(pos.x()).arg(pos.y());
+	//qDebug() << QString("pickermoved: %1 %2 ").arg(pos.x()).arg(pos.y());
 
 	QList<CMarker> markers;
 	for(int i = 0; i < m_track_list.size(); i++)
@@ -137,12 +137,13 @@ void plotWidget::pickerMoved(const QwtDoublePoint &pos) {
 		int index = m_track_list.at(i)->getIndexFromXVal(pos.x(), m_x_type);
 		TrackPoint* tp = m_track_list.at(i)->at(index);
 
+		qDebug() << QString("found %1 at index %2").arg(pos.x()).arg(index);
 
-		CMarker marker(tp->getX(),tp->getX(),m_track_list.at(i)->getColor());
+		CMarker marker(tp->getX(),tp->getY(), m_track_list.at(i)->getColor());
 		markers.append(marker);
 
 	}
 	emit drawMarkers(markers);
-
+	//qDebug() << QString("drawMarkers: %1 %2 size: %3").arg(markers[0].x()).arg(markers[0].y()).arg(markers.size());
 }
 

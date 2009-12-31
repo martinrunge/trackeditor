@@ -35,7 +35,7 @@ public slots:
 	void drawMarkers(QList<CMarker> markers);
 
 signals:
-	void drawMarkers(QList<CMarker> markers);
+	void setMarkers(QList<CMarker> markers);
 
 
 

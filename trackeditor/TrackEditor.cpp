@@ -149,7 +149,7 @@ LogReader::LogReader(QWidget *parent) :
 	m_diagrams_layout = new CDiagramsLayout(ui.diagramWidget);
 	ui.diagramWidget->setLayout(m_diagrams_layout);
 
-	connect(m_diagrams_layout, SIGNAL(drawMarkers(QList<CMarker>)), m_track_view, SLOT(drawMarkers(QList<CMarker>)));
+	connect(m_diagrams_layout, SIGNAL(setMarkers(QList<CMarker>)), m_track_view, SLOT(setMarkers(QList<CMarker>)));
 
 	m_settings = new CSettings();
 	m_settings->load();
