@@ -227,12 +227,14 @@ int PlotData::findIndex(double val)
 	int max = m_size;
 
 	int half;
-	// do a binary search for val or the nearest value in m_x_values
+	double xhalf = 0;
+	// do a binary search for val for the nearest value in m_x_values
 	while(max - min > 1)
 	{
 		half = (max - min) / 2;
 
-		if(m_x_values[half] <= val )
+		xhalf = m_x_values[half + min];
+		if(xhalf <= val )
 		{
 			min += half;
 		}

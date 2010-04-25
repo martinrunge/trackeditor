@@ -84,3 +84,4 @@ win32:DEFINES += _TTY_WIN_
 LIBS += -lproj \
     -lqwt-qt4
 TARGET = trackeditor
+DEFINES += 
