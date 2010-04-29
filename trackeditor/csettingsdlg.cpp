@@ -3,7 +3,7 @@
 
 #include <QDebug>
 
-CSettingsDlg::CSettingsDlg(LogReader *parent)
+CSettingsDlg::CSettingsDlg(TrackEditor *parent)
     : QDialog(parent), m_parent(parent)
 {
 	ui.setupUi(this);

@@ -8,7 +8,7 @@
 #include "CUnitConfig.h"
 #include "CDiagramSettings.h"
 
-class LogReader;
+class TrackEditor;
 
 
 class CSettingsDlg : public QDialog
@@ -16,7 +16,7 @@ class CSettingsDlg : public QDialog
     Q_OBJECT
 
 public:
-    CSettingsDlg(LogReader *parent = 0);
+    CSettingsDlg(TrackEditor *parent = 0);
     ~CSettingsDlg();
 
 public slots:
@@ -35,7 +35,7 @@ private:
 
     Ui::CSettingsDlgClass ui;
 
-    LogReader* m_parent;
+    TrackEditor* m_parent;
 
     CQuantitiesConfig *m_quantities_config;
     CUnitConfig *m_unit_config;

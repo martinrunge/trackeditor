@@ -60,13 +60,13 @@ class CDiagramsLayout;
 class CSettings;
 class QextSerialPort;
 
-class LogReader : public QMainWindow
+class TrackEditor : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    LogReader(QWidget *parent = 0);
-    ~LogReader();
+    TrackEditor(QWidget *parent = 0);
+    ~TrackEditor();
 
 signals:
     void setText(QString);
@@ -117,6 +117,10 @@ public slots:
 //    void addData(QByteArray data);
     void sendData(QByteArray data);
 
+protected slots:
+	void closeEvent(QCloseEvent *event);
+
+
 private:
     Ui::TrackEditor2Class ui;
     TrackView *m_track_view;
@@ -135,6 +139,7 @@ private:
 
     CAnimation m_animation;
 
+    void restoreLayout();
 
     void openTTY(const char* name, int speed);
     void closeTTY();

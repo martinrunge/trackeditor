@@ -61,7 +61,7 @@
 #include "CDeviceDialog.h"
 #include "csettingsdlg.h"
 
-LogReader::LogReader(QWidget *parent) :
+TrackEditor::TrackEditor(QWidget *parent) :
         QMainWindow(parent),
         // m_idev_factory(),
         m_serial_port(0),
@@ -192,10 +192,10 @@ LogReader::LogReader(QWidget *parent) :
 	statusBar()->addWidget(m_animation.statusBarWidget());
 	statusBar()->addPermanentWidget(m_track_view->statusBarWidget());
 
-
+	restoreLayout();
 }
 
-LogReader::~LogReader() {
+TrackEditor::~TrackEditor() {
 
 	if(m_device_io != 0)
 	{
@@ -210,7 +210,7 @@ LogReader::~LogReader() {
 	delete m_progress_dlg;
 }
 
-void LogReader::connectDevice() {
+void TrackEditor::connectDevice() {
 	//        QDialog *devdlg = new QDialog(this);
 	//        Ui::DeviceDialog dlg;
 	//        dlg.setupUi(devdlg);
@@ -246,7 +246,7 @@ void LogReader::connectDevice() {
 	}
 }
 
-void LogReader::openTTY(const char* name, int speed) {
+void TrackEditor::openTTY(const char* name, int speed) {
 
 	m_device_fd = open(name, O_RDWR | O_NOCTTY | O_NDELAY | O_SYNC);
 	m_device_file = new QFile();
@@ -284,7 +284,7 @@ void LogReader::openTTY(const char* name, int speed) {
 	}
 }
 
-void LogReader::closeTTY()
+void TrackEditor::closeTTY()
 {
 
 	if(m_device_file != 0)
@@ -305,16 +305,16 @@ void LogReader::closeTTY()
 	}
 }
 
-void LogReader::readDevice()
+void TrackEditor::readDevice()
 {
-//	qDebug() << QString("LogReader::readDevice()");
+//	qDebug() << QString("TrackEditor::readDevice()");
 	QByteArray data = m_serial_port->read(m_serial_port->bytesAvailable());
 //	qDebug() << data;
 	emit emitData(data);
 }
 
 
-void LogReader::readDevice(int dev_fd)
+void TrackEditor::readDevice(int dev_fd)
 {
 	static char buffer[4096 + 1];
 	int bytes_read;
@@ -327,7 +327,7 @@ void LogReader::readDevice(int dev_fd)
 }
 
 
-void LogReader::sendData(QByteArray data)
+void TrackEditor::sendData(QByteArray data)
 {
 	if(m_device_fd != -1)
 	{
@@ -337,7 +337,7 @@ void LogReader::sendData(QByteArray data)
 }
 
 
-void LogReader::disconnectDevice()
+void TrackEditor::disconnectDevice()
 {
 	if(m_device_io != 0) {
 		disconnect(m_device_io, SLOT(addData(QByteArray)));
@@ -367,7 +367,7 @@ void LogReader::disconnectDevice()
 	}
 }
 
-void LogReader::readLog() {
+void TrackEditor::readLog() {
 
 	if(m_device_io == 0) {
 		connectDevice();
@@ -383,22 +383,22 @@ void LogReader::readLog() {
 	m_device_io->readLog();
 }
 
-void LogReader::progress(int percent) {
+void TrackEditor::progress(int percent) {
 	prg_dlg.progressBar->setValue(percent);
 }
 
-void LogReader::cancelReadLog() {
+void TrackEditor::cancelReadLog() {
 	m_device_io->cancelReadLog();
 	readLogFinished();
 }
 
-void LogReader::readLogFinished() {
+void TrackEditor::readLogFinished() {
 	disconnect(m_progress_dlg, SIGNAL(cancelReadLog()), this, SLOT(cancelReadLog()));
 	m_progress_dlg->close();
 }
 
 
-void LogReader::setTrackCollection(TrackCollection* track_collection) {
+void TrackEditor::setTrackCollection(TrackCollection* track_collection) {
 //	m_track_collection.clear();
 
 	TrackCollection* tmp_tc = m_track_collection;
@@ -427,7 +427,7 @@ void LogReader::setTrackCollection(TrackCollection* track_collection) {
 
 }
 
-void LogReader::newTrack(Track* track)
+void TrackEditor::newTrack(Track* track)
 {
 	track->setIndex(m_track_collection->size());
 	track->setDiagramQuantities(m_settings->getDistQuantities(), m_settings->getTimeQuantities(), m_settings->getTrackpointsQuantities() );
@@ -444,35 +444,35 @@ void LogReader::newTrack(Track* track)
 	m_track_view->update();
 }
 
-void LogReader::newWayPoint(TrackPoint* tp)
+void TrackEditor::newWayPoint(TrackPoint* tp)
 {
 
 }
 
-void LogReader::newLogPoint(TrackPoint* tp)
+void TrackEditor::newLogPoint(TrackPoint* tp)
 {
 
 	prg_dlg.m_num_logpoints->setText(QString().number(m_track_collection->getNumWaypoints()));
 
 }
 
-void LogReader::startRecording() {
+void TrackEditor::startRecording() {
 
 }
 
-void LogReader::stopRecording() {
+void TrackEditor::stopRecording() {
 
 }
 
 
-void LogReader::showSettingsDlg()
+void TrackEditor::showSettingsDlg()
 {
 	CSettingsDlg dlg(this);
 	dlg.exec();
 }
 
-//void LogReader::setDiagramQuantities(QStringList distVals, QStringList timeVals, QStringList trackPointVals) {
-void LogReader::setDiagramQuantities(QList<enum plotTypeY> distVals, QList<enum plotTypeY> timeVals, QList<enum plotTypeY> trackPointVals) {
+//void TrackEditor::setDiagramQuantities(QStringList distVals, QStringList timeVals, QStringList trackPointVals) {
+void TrackEditor::setDiagramQuantities(QList<enum plotTypeY> distVals, QList<enum plotTypeY> timeVals, QList<enum plotTypeY> trackPointVals) {
 	//m_distVals = distVals;
 	//m_timeVals = timeVals;
 	//m_trackPointVals = trackPointVals;
@@ -486,13 +486,13 @@ void LogReader::setDiagramQuantities(QList<enum plotTypeY> distVals, QList<enum 
 }
 
 
-void LogReader::actionTriggered() {
+void TrackEditor::actionTriggered() {
 	openTTY("/dev/rfcomm0", 115200);
 	emit setText(QString("Hallo"));
 	qDebug("action triggered");
 }
 
-void LogReader::treeViewClicked(QModelIndex index) {
+void TrackEditor::treeViewClicked(QModelIndex index) {
 	// m_diagrams_layout->setTrack(m_track_collection->at(index.row()));
 	// m_plotWidget->setTrack(m_track_collection->at(index.row()));
 	qDebug() << QString("treeViewClicked trackNr: %1 Column %2").arg(index.row()).arg(index.column());
@@ -506,7 +506,7 @@ void LogReader::treeViewClicked(QModelIndex index) {
 	}
 }
 
-void LogReader::selectionChanged(QItemSelection selected, QItemSelection deselected) {
+void TrackEditor::selectionChanged(QItemSelection selected, QItemSelection deselected) {
 	qDebug() << QString("selction changed");
 	QModelIndexList selected_indices = m_selection_model->selectedIndexes();
     m_track_collection->setModelIndexList(selected_indices);
@@ -517,29 +517,29 @@ void LogReader::selectionChanged(QItemSelection selected, QItemSelection deselec
 }
 
 
-void LogReader::markerChanged(double lat, double lng) {
+void TrackEditor::markerChanged(double lat, double lng) {
 
 }
 
-void LogReader::markerChangedDist(double dist) {
+void TrackEditor::markerChangedDist(double dist) {
 
 }
 
-void LogReader::markerChangedTime(double time) {
+void TrackEditor::markerChangedTime(double time) {
 
 }
 
-void LogReader::markerChangedTrackPoint(double tp_index) {
+void TrackEditor::markerChangedTrackPoint(double tp_index) {
 
 }
 
 
 
-void LogReader::parseNEMA(QString line) {
+void TrackEditor::parseNEMA(QString line) {
 	qDebug() << line;
 }
 
-void LogReader::loadTrack() {
+void TrackEditor::loadTrack() {
 	FILE* fd;
 	char buffer[32];
     int bytes_read = 0;
@@ -591,7 +591,7 @@ void LogReader::loadTrack() {
 }
 
 
-void LogReader::appendTrack()
+void TrackEditor::appendTrack()
 {
     QString filename( QFileDialog::getOpenFileName( this,  tr("Append Track"),QString::null,  tr("GPX Tracks (*.gpx);;Google Earth Tracks (*.kml *.kmz);;Wintec TK1 Tracks (*.tk1);;Raw Wintec Tracklogs (*.tkraw)")) );
     if ( filename.isEmpty() )
@@ -640,7 +640,7 @@ void LogReader::appendTrack()
 
 
 
-void LogReader::saveTrack() {
+void TrackEditor::saveTrack() {
 	if(m_track_filename.isEmpty()) {
 		saveTrackAs();
 	}
@@ -649,7 +649,7 @@ void LogReader::saveTrack() {
 	}
 }
 
-void LogReader::saveTrackAs() {
+void TrackEditor::saveTrackAs() {
     m_track_filename = QFileDialog::getSaveFileName( this,  tr("Save Track As"),QString::null,  tr("GPX Tracks (*.gpx);;Google Earth Tracks (*.kml *.kmz);;Wintec TK1 Tracks (*.tk1)"));
     if ( m_track_filename.isEmpty() )
         return;
@@ -657,7 +657,7 @@ void LogReader::saveTrackAs() {
     save();
 }
 
-void LogReader::save() {
+void TrackEditor::save() {
 	if(m_track_filename.endsWith(".gpx", Qt::CaseInsensitive)) {
 		// save as GPX file
 		gpxFile gpx_file;
@@ -690,63 +690,36 @@ void LogReader::save() {
 }
 
 
-void LogReader::load(QString filename) {
+void TrackEditor::load(QString filename) {
 
 
 }
 
-void LogReader::showAboutDialog()
+void TrackEditor::showAboutDialog()
 {
 		CAboutDialog aboutDlg(this);
 		aboutDlg.exec();
 }
 
-// obsolete functions
 
+void TrackEditor::closeEvent(QCloseEvent *event)
+{
+    QSettings settings;
+    settings.setValue("splitter1", ui.splitter->saveState());
+    settings.setValue("splitter2", ui.splitter_2->saveState());
 
-//void LogReader::createTrackpoints() {
-//	FILE* fd;
-//	Track* track = 0;
-//	fd = fopen("outfile2.tkraw", "wb");
-//    qDebug() << QString("createTrackpoints()");
-//    int trackindex = 0;
-//
-//    m_track_collection->clear();
-//
-//	for(int pos = 0; pos < m_log_buf.size(); pos += TrackPoint::size()) {
-//		fwrite(m_log_buf.mid(pos, TrackPoint::size()).data(), m_log_buf.mid(pos, TrackPoint::size()).size(), 1, fd);
-//		TrackPoint* tp = new TrackPoint(m_log_buf.mid(pos, TrackPoint::size()));
-//
-//
-//		if(tp->isLogPoint()) {
-//			m_track_collection->getWaypoints()->append(tp);
-//
-//		}
-//		else {
-//			if(tp->isBeginOfTrack()) {
-//				if(track != 0) {
-//					track->commit();
-//					track->setIndex(trackindex);
-//					qDebug() << QString("End of Track (%1 - %2 , %3 - %4)").arg(track->getMinLong()).arg(track->getMaxLong()).arg(track->getMinLat()).arg(track->getMaxLat());
-//				}
-//				track = new Track();
-//				trackindex++;
-//				m_track_collection->append(track);
-//			}
-//			track->append(tp);
-//		}
-//
-//	}
-//	track->commit();
-//	m_track_view->setTrackColletcion(m_track_collection);
-//	m_track_collection->commit();
-//
-//	ui.treeView->resizeColumnToContents(0);
-//	ui.treeView->resizeColumnToContents(1);
-//	ui.treeView->resizeColumnToContents(2);
-//	ui.treeView->resizeColumnToContents(3);
-//	ui.treeView->resizeColumnToContents(4);
-//	fclose(fd);
-//
-//	m_track_view->update();
-//}
+    settings.setValue("geometry", saveGeometry());
+    settings.setValue("windowState", saveState());
+
+    QMainWindow::closeEvent(event);
+}
+
+void TrackEditor::restoreLayout()
+{
+    QSettings settings;
+    restoreGeometry(settings.value("geometry").toByteArray());
+    restoreState(settings.value("windowState").toByteArray());
+
+    ui.splitter->restoreState(settings.value("splitter1").toByteArray());
+    ui.splitter_2->restoreState(settings.value("splitter2").toByteArray());
+}

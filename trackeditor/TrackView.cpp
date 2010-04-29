@@ -20,6 +20,7 @@
 #include <QScrollBar>
 #include <QPoint>
 #include <QLabel>
+#include <QSettings>
 
 #include "TrackCollection.h"
 #include "Track.h"
@@ -39,6 +40,7 @@ TrackView::TrackView(QWidget* parent) : QWidget(parent), m_track_collection(0), 
 	recalculateOffset();
 	refreshPixmap();
 
+	restoreLayout();
 }
 
 TrackView::~TrackView() {
@@ -469,5 +471,19 @@ void TrackView::paintEventold( QPaintEvent * event ) {
         }
     }
 
+}
+
+void TrackView::closeEvent(QCloseEvent *event)
+{
+	qDebug() << QString("TrackView::closeEvent");
+    QSettings settings;
+    settings.setValue("TrackView/geometry", saveGeometry());
+    QWidget::closeEvent(event);
+}
+
+void TrackView::restoreLayout()
+{
+    QSettings settings;
+    restoreGeometry(settings.value("TrackView/geometry").toByteArray());
 }
 

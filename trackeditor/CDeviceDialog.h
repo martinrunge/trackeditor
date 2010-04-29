@@ -12,13 +12,13 @@
 #include "ui_DeviceDialog.h"
 #include "CSerialPortSettings.h"
 
-class LogReader;
+class TrackEditor;
 
 class CDeviceDialog : public QDialog
 {
     Q_OBJECT
 public:
-	CDeviceDialog(LogReader *parent = 0);
+	CDeviceDialog(TrackEditor *parent = 0);
 	virtual ~CDeviceDialog();
 
 	void setPortSettings(CSerialPortSettings settings);

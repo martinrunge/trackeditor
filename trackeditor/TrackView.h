@@ -56,6 +56,9 @@ protected:
 
 	void wheelEvent(QWheelEvent *event);
 
+protected slots:
+	void closeEvent(QCloseEvent *event);
+
 
 private:
 	TrackCollection* m_track_collection;
@@ -93,7 +96,7 @@ private:
 	QString m_zoom_text;
 
 	void setStatusBarText();
-
+	void restoreLayout();
 };
 
 #endif /* TRACKVIEW_H_ */

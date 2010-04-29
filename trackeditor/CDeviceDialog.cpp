@@ -9,7 +9,7 @@
 #include "TrackEditor.h"
 #include "CWintec.h"
 
-CDeviceDialog::CDeviceDialog(LogReader *parent) : QDialog(parent) {
+CDeviceDialog::CDeviceDialog(TrackEditor *parent) : QDialog(parent) {
 
 	m_dlg = new Ui::DeviceDialog;
     m_dlg->setupUi(this);
