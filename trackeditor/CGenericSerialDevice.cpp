@@ -8,10 +8,13 @@
 #include <QFileDialog>
 #include "CGenericSerialDevice.h"
 
-CGenericSerialDevice::CGenericSerialDevice() {
+CGenericSerialDevice::CGenericSerialDevice() : m_valid(false) {
 
 	m_ui = new Ui::genericserialwidget;
 	m_ui->setupUi(this);
+
+	m_validator = new CDeviceFileValidator;
+	m_ui->deviceFileLineEdit->setValidator( m_validator );
 
 	m_ui->speedComboBox->addItems(m_settings.getSpeedLabels());
 	m_ui->dataBitsComboBox->addItems(m_settings.getDataBitsLabels());
@@ -21,11 +24,15 @@ CGenericSerialDevice::CGenericSerialDevice() {
 
 
 	connect(m_ui->pushButton, SIGNAL(clicked()), this, SLOT(chooseDeviceFile()));
+	connect(m_ui->deviceFileLineEdit,SIGNAL(textChanged(QString)), this, SLOT(textChanged(QString)));
+
+	textChanged(m_ui->deviceFileLineEdit->text());
 
 }
 
 CGenericSerialDevice::~CGenericSerialDevice() {
 	delete m_ui;
+	delete m_validator;
 }
 
 
@@ -59,5 +66,21 @@ void CGenericSerialDevice::chooseDeviceFile()
 	if(!fileName.isEmpty())
 	{
 		m_ui->deviceFileLineEdit->setText(fileName);
+	}
+}
+
+
+void CGenericSerialDevice::textChanged(QString text)
+{
+	QFileInfo fi(text);
+	if(fi.exists() && m_valid == false)
+	{
+		m_valid = true;
+		emit setValid(m_valid);
+	}
+	else if( ! fi.exists() && m_valid == true )
+	{
+		m_valid = false;
+		emit setValid(m_valid);
 	}
 }

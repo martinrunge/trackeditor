@@ -1,8 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ui version="4.0">
+<ui version="4.0" >
  <class>TrackEditor2Class</class>
- <widget class="QMainWindow" name="TrackEditor2Class">
-  <property name="geometry">
+ <widget class="QMainWindow" name="TrackEditor2Class" >
+  <property name="geometry" >
    <rect>
     <x>0</x>
     <y>0</y>
@@ -10,99 +9,99 @@
     <height>722</height>
    </rect>
   </property>
-  <property name="windowTitle">
-   <string>MainWindow</string>
+  <property name="windowTitle" >
+   <string>TrackEditor</string>
   </property>
-  <widget class="QWidget" name="centralwidget">
-   <property name="sizePolicy">
-    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+  <widget class="QWidget" name="centralwidget" >
+   <property name="sizePolicy" >
+    <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
      <horstretch>0</horstretch>
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
-   <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
-     <widget class="QSplitter" name="splitter_2">
-      <property name="orientation">
+   <layout class="QGridLayout" name="gridLayout" >
+    <item row="0" column="0" >
+     <widget class="QSplitter" name="splitter_2" >
+      <property name="orientation" >
        <enum>Qt::Vertical</enum>
       </property>
-      <widget class="QSplitter" name="splitter">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+      <widget class="QSplitter" name="splitter" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Preferred" hsizetype="Expanding" >
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
-       <property name="orientation">
+       <property name="orientation" >
         <enum>Qt::Horizontal</enum>
        </property>
-       <widget class="CScrolledTrackView" name="scrollArea">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <widget class="CScrolledTrackView" name="scrollArea" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="minimumSize">
+        <property name="minimumSize" >
          <size>
           <width>0</width>
           <height>100</height>
          </size>
         </property>
-        <property name="widgetResizable">
+        <property name="widgetResizable" >
          <bool>true</bool>
         </property>
-        <widget class="QWidget" name="scrollAreaWidgetContents">
-         <property name="geometry">
+        <widget class="QWidget" name="scrollAreaWidgetContents" >
+         <property name="geometry" >
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>1147</width>
-           <height>258</height>
+           <width>1139</width>
+           <height>96</height>
           </rect>
          </property>
         </widget>
        </widget>
       </widget>
-      <widget class="QWidget" name="diagramWidget" native="true">
-       <property name="minimumSize">
+      <widget class="QWidget" native="1" name="diagramWidget" >
+       <property name="minimumSize" >
         <size>
          <width>0</width>
          <height>0</height>
         </size>
        </property>
       </widget>
-      <widget class="QTreeView" name="treeView">
-       <property name="minimumSize">
+      <widget class="QTreeView" name="treeView" >
+       <property name="minimumSize" >
         <size>
          <width>0</width>
          <height>120</height>
         </size>
        </property>
-       <property name="maximumSize">
+       <property name="maximumSize" >
         <size>
          <width>16777215</width>
          <height>231</height>
         </size>
        </property>
       </widget>
-      <widget class="QPlainTextEdit" name="nemaText">
-       <property name="enabled">
+      <widget class="QPlainTextEdit" name="nemaText" >
+       <property name="enabled" >
         <bool>true</bool>
        </property>
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
-       <property name="minimumSize">
+       <property name="minimumSize" >
         <size>
          <width>0</width>
          <height>100</height>
         </size>
        </property>
-       <property name="maximumSize">
+       <property name="maximumSize" >
         <size>
          <width>16777215</width>
          <height>100</height>
@@ -113,8 +112,8 @@
     </item>
    </layout>
   </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
+  <widget class="QMenuBar" name="menubar" >
+   <property name="geometry" >
     <rect>
      <x>0</x>
      <y>0</y>
@@ -122,325 +121,325 @@
      <height>22</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuFile">
-    <property name="title">
+   <widget class="QMenu" name="menuFile" >
+    <property name="title" >
      <string>&amp;File</string>
     </property>
-    <addaction name="action_Connect"/>
-    <addaction name="action_Load_Track"/>
-    <addaction name="actionAppend_Track"/>
-    <addaction name="action_Save_Track"/>
-    <addaction name="action_Save_Track_As"/>
-    <addaction name="separator"/>
-    <addaction name="action_Disconnect"/>
-    <addaction name="actionExit"/>
+    <addaction name="action_Connect" />
+    <addaction name="action_Load_Track" />
+    <addaction name="actionAppend_Track" />
+    <addaction name="action_Save_Track" />
+    <addaction name="action_Save_Track_As" />
+    <addaction name="separator" />
+    <addaction name="action_Disconnect" />
+    <addaction name="actionExit" />
    </widget>
-   <widget class="QMenu" name="menuTrack">
-    <property name="title">
+   <widget class="QMenu" name="menuTrack" >
+    <property name="title" >
      <string>&amp;Track</string>
     </property>
-    <addaction name="action_Read_Log"/>
-    <addaction name="action_Start_Recording"/>
-    <addaction name="action_Stop_Recording"/>
+    <addaction name="action_Read_Log" />
+    <addaction name="action_Start_Recording" />
+    <addaction name="action_Stop_Recording" />
    </widget>
-   <widget class="QMenu" name="menuView">
-    <property name="title">
+   <widget class="QMenu" name="menuView" >
+    <property name="title" >
      <string>&amp;View</string>
     </property>
-    <widget class="QMenu" name="menuMap_Projection">
-     <property name="title">
+    <widget class="QMenu" name="menuMap_Projection" >
+     <property name="title" >
       <string>Map Projection</string>
      </property>
-     <addaction name="actionMerkator"/>
+     <addaction name="actionMerkator" />
     </widget>
-    <addaction name="actionZoom_in"/>
-    <addaction name="actionZoom_out"/>
-    <addaction name="actionFit_to_Screen"/>
-    <addaction name="separator"/>
-    <addaction name="menuMap_Projection"/>
-    <addaction name="actionShow_GPS_output"/>
+    <addaction name="actionZoom_in" />
+    <addaction name="actionZoom_out" />
+    <addaction name="actionFit_to_Screen" />
+    <addaction name="separator" />
+    <addaction name="menuMap_Projection" />
+    <addaction name="actionShow_GPS_output" />
    </widget>
-   <widget class="QMenu" name="menuEdit">
-    <property name="title">
+   <widget class="QMenu" name="menuEdit" >
+    <property name="title" >
      <string>&amp;Edit</string>
     </property>
-    <addaction name="actionSettings"/>
+    <addaction name="actionSettings" />
    </widget>
-   <widget class="QMenu" name="menuAnimate">
-    <property name="title">
+   <widget class="QMenu" name="menuAnimate" >
+    <property name="title" >
      <string>&amp;Animate</string>
     </property>
-    <widget class="QMenu" name="menuSpeed">
-     <property name="title">
+    <widget class="QMenu" name="menuSpeed" >
+     <property name="title" >
       <string>S&amp;peed</string>
      </property>
-     <addaction name="actionX_0_125"/>
-     <addaction name="actionX_0_25"/>
-     <addaction name="actionX_0_5"/>
-     <addaction name="actionX_1"/>
-     <addaction name="actionX_2"/>
-     <addaction name="actionX_4"/>
-     <addaction name="actionX_8"/>
-     <addaction name="actionX_16"/>
-     <addaction name="actionX_32"/>
-     <addaction name="actionX_64"/>
-     <addaction name="actionX_128"/>
+     <addaction name="actionX_0_125" />
+     <addaction name="actionX_0_25" />
+     <addaction name="actionX_0_5" />
+     <addaction name="actionX_1" />
+     <addaction name="actionX_2" />
+     <addaction name="actionX_4" />
+     <addaction name="actionX_8" />
+     <addaction name="actionX_16" />
+     <addaction name="actionX_32" />
+     <addaction name="actionX_64" />
+     <addaction name="actionX_128" />
     </widget>
-    <addaction name="actionStart_Animation"/>
-    <addaction name="actionStop_Animation"/>
-    <addaction name="actionFaster"/>
-    <addaction name="actionSlower"/>
-    <addaction name="menuSpeed"/>
+    <addaction name="actionStart_Animation" />
+    <addaction name="actionStop_Animation" />
+    <addaction name="actionFaster" />
+    <addaction name="actionSlower" />
+    <addaction name="menuSpeed" />
    </widget>
-   <widget class="QMenu" name="menu_Help">
-    <property name="title">
+   <widget class="QMenu" name="menu_Help" >
+    <property name="title" >
      <string>&amp;Help</string>
     </property>
-    <addaction name="action_About"/>
+    <addaction name="action_About" />
    </widget>
-   <addaction name="menuFile"/>
-   <addaction name="menuTrack"/>
-   <addaction name="menuEdit"/>
-   <addaction name="menuView"/>
-   <addaction name="menuAnimate"/>
-   <addaction name="menu_Help"/>
+   <addaction name="menuFile" />
+   <addaction name="menuTrack" />
+   <addaction name="menuEdit" />
+   <addaction name="menuView" />
+   <addaction name="menuAnimate" />
+   <addaction name="menu_Help" />
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
-  <action name="action_Connect">
-   <property name="text">
+  <widget class="QStatusBar" name="statusbar" />
+  <action name="action_Connect" >
+   <property name="text" >
     <string>&amp;Connect to GPS Device ...</string>
    </property>
   </action>
-  <action name="actionExit">
-   <property name="text">
+  <action name="actionExit" >
+   <property name="text" >
     <string>E&amp;xit</string>
    </property>
-   <property name="shortcut">
+   <property name="shortcut" >
     <string>Ctrl+X</string>
    </property>
   </action>
-  <action name="action_Read_Log">
-   <property name="text">
+  <action name="action_Read_Log" >
+   <property name="text" >
     <string>Read &amp;Log</string>
    </property>
   </action>
-  <action name="action_Save_Track">
-   <property name="text">
+  <action name="action_Save_Track" >
+   <property name="text" >
     <string>&amp;Save Track</string>
    </property>
-   <property name="shortcut">
+   <property name="shortcut" >
     <string>Ctrl+S</string>
    </property>
   </action>
-  <action name="action_Save_Track_As">
-   <property name="text">
+  <action name="action_Save_Track_As" >
+   <property name="text" >
     <string>Save Track &amp;As ...</string>
    </property>
   </action>
-  <action name="action_Load_Track">
-   <property name="text">
+  <action name="action_Load_Track" >
+   <property name="text" >
     <string>&amp;Open Track ...</string>
    </property>
-   <property name="shortcut">
+   <property name="shortcut" >
     <string>Ctrl+O</string>
    </property>
   </action>
-  <action name="action_Disconnect">
-   <property name="text">
+  <action name="action_Disconnect" >
+   <property name="text" >
     <string>&amp;Disconnect</string>
    </property>
   </action>
-  <action name="action_Start_Recording">
-   <property name="text">
+  <action name="action_Start_Recording" >
+   <property name="text" >
     <string>Start &amp;Recording</string>
    </property>
   </action>
-  <action name="action_Stop_Recording">
-   <property name="text">
+  <action name="action_Stop_Recording" >
+   <property name="text" >
     <string>&amp;Stop Recording</string>
    </property>
   </action>
-  <action name="actionElevation">
-   <property name="text">
+  <action name="actionElevation" >
+   <property name="text" >
     <string>Elevation</string>
    </property>
   </action>
-  <action name="actionSpeed">
-   <property name="text">
+  <action name="actionSpeed" >
+   <property name="text" >
     <string>Speed</string>
    </property>
   </action>
-  <action name="actionMerkator">
-   <property name="checkable">
+  <action name="actionMerkator" >
+   <property name="checkable" >
     <bool>true</bool>
    </property>
-   <property name="checked">
+   <property name="checked" >
     <bool>true</bool>
    </property>
-   <property name="enabled">
+   <property name="enabled" >
     <bool>false</bool>
    </property>
-   <property name="text">
+   <property name="text" >
     <string>Merkator</string>
    </property>
   </action>
-  <action name="actionSettings">
-   <property name="text">
+  <action name="actionSettings" >
+   <property name="text" >
     <string>Settings ...</string>
    </property>
   </action>
-  <action name="actionStart_Animation">
-   <property name="text">
+  <action name="actionStart_Animation" >
+   <property name="text" >
     <string>St&amp;art Animation</string>
    </property>
   </action>
-  <action name="actionStop_Animation">
-   <property name="text">
+  <action name="actionStop_Animation" >
+   <property name="text" >
     <string>S&amp;top Animation</string>
    </property>
   </action>
-  <action name="actionX_1">
-   <property name="checkable">
+  <action name="actionX_1" >
+   <property name="checkable" >
     <bool>true</bool>
    </property>
-   <property name="checked">
+   <property name="checked" >
     <bool>true</bool>
    </property>
-   <property name="text">
+   <property name="text" >
     <string>x &amp;1</string>
    </property>
   </action>
-  <action name="actionX_2">
-   <property name="checkable">
+  <action name="actionX_2" >
+   <property name="checkable" >
     <bool>true</bool>
    </property>
-   <property name="text">
+   <property name="text" >
     <string>x &amp;2</string>
    </property>
   </action>
-  <action name="actionX_4">
-   <property name="checkable">
+  <action name="actionX_4" >
+   <property name="checkable" >
     <bool>true</bool>
    </property>
-   <property name="text">
+   <property name="text" >
     <string>x &amp;4</string>
    </property>
   </action>
-  <action name="actionX_8">
-   <property name="checkable">
+  <action name="actionX_8" >
+   <property name="checkable" >
     <bool>true</bool>
    </property>
-   <property name="text">
+   <property name="text" >
     <string>x &amp;8</string>
    </property>
   </action>
-  <action name="actionX_16">
-   <property name="checkable">
+  <action name="actionX_16" >
+   <property name="checkable" >
     <bool>true</bool>
    </property>
-   <property name="text">
+   <property name="text" >
     <string>x 1&amp;6</string>
    </property>
   </action>
-  <action name="actionX_32">
-   <property name="checkable">
+  <action name="actionX_32" >
+   <property name="checkable" >
     <bool>true</bool>
    </property>
-   <property name="text">
+   <property name="text" >
     <string>x &amp;32</string>
    </property>
   </action>
-  <action name="actionX_0_5">
-   <property name="checkable">
+  <action name="actionX_0_5" >
+   <property name="checkable" >
     <bool>true</bool>
    </property>
-   <property name="text">
+   <property name="text" >
     <string>x 0.5</string>
    </property>
   </action>
-  <action name="actionX_0_25">
-   <property name="checkable">
+  <action name="actionX_0_25" >
+   <property name="checkable" >
     <bool>true</bool>
    </property>
-   <property name="text">
+   <property name="text" >
     <string>x 0.25</string>
    </property>
   </action>
-  <action name="actionX_0_125">
-   <property name="checkable">
+  <action name="actionX_0_125" >
+   <property name="checkable" >
     <bool>true</bool>
    </property>
-   <property name="text">
+   <property name="text" >
     <string>x 0.125</string>
    </property>
   </action>
-  <action name="actionA_ppend_Track">
-   <property name="text">
+  <action name="actionA_ppend_Track" >
+   <property name="text" >
     <string>A&amp;ppend Track ...</string>
    </property>
   </action>
-  <action name="actionAppend_Track">
-   <property name="text">
+  <action name="actionAppend_Track" >
+   <property name="text" >
     <string>A&amp;ppend Track ...</string>
    </property>
   </action>
-  <action name="actionZoom_in">
-   <property name="text">
+  <action name="actionZoom_in" >
+   <property name="text" >
     <string>Zoom in</string>
    </property>
-   <property name="shortcut">
+   <property name="shortcut" >
     <string>Ctrl++</string>
    </property>
   </action>
-  <action name="actionZoom_out">
-   <property name="text">
+  <action name="actionZoom_out" >
+   <property name="text" >
     <string>Zoom out</string>
    </property>
-   <property name="shortcut">
+   <property name="shortcut" >
     <string>Ctrl+-</string>
    </property>
   </action>
-  <action name="actionFit_to_Screen">
-   <property name="text">
+  <action name="actionFit_to_Screen" >
+   <property name="text" >
     <string>Fit to Screen</string>
    </property>
   </action>
-  <action name="actionFaster">
-   <property name="text">
+  <action name="actionFaster" >
+   <property name="text" >
     <string>&amp;Faster</string>
    </property>
-   <property name="shortcut">
+   <property name="shortcut" >
     <string>Alt++</string>
    </property>
   </action>
-  <action name="actionSlower">
-   <property name="text">
+  <action name="actionSlower" >
+   <property name="text" >
     <string>&amp;Slower</string>
    </property>
-   <property name="shortcut">
+   <property name="shortcut" >
     <string>Alt+-</string>
    </property>
   </action>
-  <action name="actionX_64">
-   <property name="text">
+  <action name="actionX_64" >
+   <property name="text" >
     <string>x 64</string>
    </property>
   </action>
-  <action name="actionX_128">
-   <property name="text">
+  <action name="actionX_128" >
+   <property name="text" >
     <string>x 128</string>
    </property>
   </action>
-  <action name="action_About">
-   <property name="text">
+  <action name="action_About" >
+   <property name="text" >
     <string>&amp;About ...</string>
    </property>
   </action>
-  <action name="actionShow_GPS_output">
-   <property name="checkable">
+  <action name="actionShow_GPS_output" >
+   <property name="checkable" >
     <bool>true</bool>
    </property>
-   <property name="text">
+   <property name="text" >
     <string>Show &amp;GPS output</string>
    </property>
   </action>

@@ -22,12 +22,20 @@ public:
 	const CSerialPortSettings getSerialPortSettings();
 
 	Ui::genericserialwidget *m_ui;
+	bool isValid() { return m_valid; };
 
 public slots:
 	void chooseDeviceFile();
+	void textChanged(QString);
+
+signals:
+	void setValid(bool);
 
 private:
 	CSerialPortSettings m_settings;
+	CDeviceFileValidator* m_validator;
+
+	bool m_valid;
 };
 
 #endif /* CGENERICSERIALDEVICE_H_ */

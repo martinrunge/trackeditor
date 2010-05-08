@@ -31,10 +31,14 @@ public slots:
 	void accept();
 	void reject();
 
+	void setValid(bool valid);
 
 private:
 	void loadSettings();
 	void saveSettings();
+
+	bool isValid();
+
 
 	Ui::DeviceDialog* m_dlg;
 

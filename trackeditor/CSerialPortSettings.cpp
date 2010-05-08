@@ -7,6 +7,8 @@
 
 #include "CSerialPortSettings.h"
 
+#include <QFileInfo>
+
 CSerialPortSettings::CSerialPortSettings() {
 	// TODO Auto-generated constructor stub
 
@@ -30,3 +32,15 @@ CSerialPortSettings::CSerialPortSettings() {
 CSerialPortSettings::~CSerialPortSettings() {
 	// TODO Auto-generated destructor stub
 }
+
+
+
+enum QValidator::State CDeviceFileValidator::validate( QString & input, int & pos ) const
+{
+	QFileInfo fi(input);
+	if(fi.exists())
+		return QValidator::Acceptable;
+	else
+		return QValidator::Intermediate;
+}
+

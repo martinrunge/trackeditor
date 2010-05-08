@@ -9,6 +9,7 @@
 #define CSERIALPORTSETTINGS_H_
 
 #include <QStringList>
+#include <QValidator>
 #include "qextserialport/qextserialbase.h"
 
 class CSerialPortSettings : public PortSettings {
@@ -85,6 +86,16 @@ private:
 	QStringList m_flow_type_labels;
 	QList<enum FlowType> m_flow_type_vals;
 
+};
+
+
+
+class CDeviceFileValidator : public QValidator
+{
+public:
+	CDeviceFileValidator( QObject * parent = 0): QValidator(parent) {};
+	~CDeviceFileValidator() {};
+	enum QValidator::State validate ( QString & input, int & pos ) const;
 };
 
 #endif /* CSERIALPORTSETTINGS_H_ */

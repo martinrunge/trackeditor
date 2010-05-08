@@ -23,6 +23,7 @@ public:
 
 	inline QString getBtAddress() { return m_bt_address; };
 	inline void setBtAddress(QString address) { m_bt_address = address; };
+	bool isValid() { return m_valid; };
 
 public slots:
 	void startDiscovery();
@@ -30,6 +31,10 @@ public slots:
 	void deviceFound(const QString& address, const QMap<QString,QVariant>& properties);
 
 	void deviceSelected(QListWidgetItem *current, QListWidgetItem *previous);
+
+signals:
+	void setValid(bool);
+
 
 private:
 	Ui::bluetoothwidget *m_ui;
@@ -42,6 +47,8 @@ private:
 
 	QString m_device_file_name;
 	bool m_discovery_active;
+
+	bool m_valid;
 };
 
 #endif /* CBLUETOOTHDEVICE_H_ */

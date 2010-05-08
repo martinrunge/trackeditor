@@ -13,7 +13,7 @@
 #include "CUsbDevice.h"
 #include "DeviceListWidgetItem.h"
 
-CUsbDevice::CUsbDevice() : m_conn(QDBusConnection::systemBus()) {
+CUsbDevice::CUsbDevice() : m_conn(QDBusConnection::systemBus()), m_valid(false){
 
 	m_ui = new Ui::usbwidget();
 	m_ui->setupUi(this);
@@ -25,6 +25,10 @@ CUsbDevice::CUsbDevice() : m_conn(QDBusConnection::systemBus()) {
 
 	getDeviceList();
 
+	connect(m_ui->listWidget, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)),
+			this, SLOT(currentItemChanged(QListWidgetItem*, QListWidgetItem*)));
+
+	currentItemChanged(0,0);
 }
 
 CUsbDevice::~CUsbDevice() {
@@ -36,6 +40,22 @@ QString CUsbDevice::getDeviceFileName() {
 	DeviceListWidgetItem* item = reinterpret_cast<DeviceListWidgetItem*>(m_ui->listWidget->currentItem());
 	m_device_file_name = item->data(Qt::UserRole).toString();
 	return m_device_file_name;
+}
+
+void CUsbDevice::currentItemChanged( QListWidgetItem * current, QListWidgetItem * previous)
+{
+	QListWidgetItem* item = m_ui->listWidget->currentItem();
+
+	if(item != 0 && m_valid == false)
+	{
+		m_valid = true;
+		emit setValid(m_valid);
+	}
+	else if( item == 0 && m_valid == true )
+	{
+		m_valid = false;
+		emit setValid(m_valid);
+	}
 }
 
 

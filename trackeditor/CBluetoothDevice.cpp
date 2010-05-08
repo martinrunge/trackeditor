@@ -14,6 +14,7 @@
 CBluetoothDevice::CBluetoothDevice()
 	:m_conn(QDBusConnection::systemBus())
 	,m_discovery_active(false)
+	,m_valid(false)
 {
 
 	m_ui = new Ui::bluetoothwidget();
@@ -120,8 +121,14 @@ void CBluetoothDevice::deviceSelected(QListWidgetItem *current, QListWidgetItem 
 		m_device_file_name = reply2.value();
 		m_ui->deviceFileLabel->setText(m_device_file_name);
 		qDebug() << QString("Device File: %1").arg(m_device_file_name);
-	}
 
+		m_valid = true;
+		emit setValid(m_valid);
+	}
+	else
+	{
+		m_valid = false;
+	}
 
 //		serial = dbus.Interface(session_bus.get_object('org.bluez',path),
 //	                                "org.bluez.Serial")

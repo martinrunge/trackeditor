@@ -22,12 +22,19 @@ public:
 	virtual ~CUsbDevice();
 
 	QString getDeviceFileName();
+	bool isValid() { return m_valid; };
+
 
 public slots:
 	void deviceAdded(QString objpath);
 	void deviceRemoved(QString objpath);
 
 	void deviceListReceived(QDBusPendingCallWatcher* result);
+
+	void currentItemChanged( QListWidgetItem * current, QListWidgetItem * previous );
+
+signals:
+	void setValid(bool);
 
 
 private:
@@ -41,6 +48,7 @@ private:
 
 	QString m_device_file_name;
 
+	bool m_valid;
 
 };
 
