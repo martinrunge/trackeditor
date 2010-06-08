@@ -544,10 +544,15 @@ void TrackEditor::loadTrack() {
 	char buffer[32];
     int bytes_read = 0;
 
-    QString filename( QFileDialog::getOpenFileName( this,  tr("Open Track"),QString::null,  tr("GPX Tracks (*.gpx);;Google Earth Tracks (*.kml *.kmz);;Wintec TK1 Tracks (*.tk1);;Raw Wintec Tracklogs (*.tkraw)")) );
+    QSettings settings;
+    QString startDir = settings.value("trackdir").toString();
+
+    QString filename( QFileDialog::getOpenFileName( this,  tr("Open Track"), startDir,  tr("GPX Tracks (*.gpx);;Google Earth Tracks (*.kml *.kmz);;Wintec TK1 Tracks (*.tk1);;Raw Wintec Tracklogs (*.tkraw)")) );
     if ( filename.isEmpty() )
         return;
 
+    QFileInfo fi(filename);
+    settings.setValue("trackdir", fi.path());
 
 	if(filename.endsWith(".gpx", Qt::CaseInsensitive)) {
 		// load from GPX file
@@ -593,10 +598,16 @@ void TrackEditor::loadTrack() {
 
 void TrackEditor::appendTrack()
 {
-    QString filename( QFileDialog::getOpenFileName( this,  tr("Append Track"),QString::null,  tr("GPX Tracks (*.gpx);;Google Earth Tracks (*.kml *.kmz);;Wintec TK1 Tracks (*.tk1);;Raw Wintec Tracklogs (*.tkraw)")) );
+
+    QSettings settings;
+    QString startDir = settings.value("trackdir").toString();
+
+	QString filename( QFileDialog::getOpenFileName( this,  tr("Append Track"), startDir,  tr("GPX Tracks (*.gpx);;Google Earth Tracks (*.kml *.kmz);;Wintec TK1 Tracks (*.tk1);;Raw Wintec Tracklogs (*.tkraw)")) );
     if ( filename.isEmpty() )
         return;
 
+    QFileInfo fi(filename);
+    settings.setValue("trackdir", fi.path());
 
 	if(filename.endsWith(".gpx", Qt::CaseInsensitive)) {
 		// load from GPX file
@@ -650,9 +661,16 @@ void TrackEditor::saveTrack() {
 }
 
 void TrackEditor::saveTrackAs() {
+
+    QSettings settings;
+    QString startDir = settings.value("trackdir").toString();
+
     m_track_filename = QFileDialog::getSaveFileName( this,  tr("Save Track As"),QString::null,  tr("GPX Tracks (*.gpx);;Google Earth Tracks (*.kml *.kmz);;Wintec TK1 Tracks (*.tk1)"));
     if ( m_track_filename.isEmpty() )
         return;
+
+	QFileInfo fi(m_track_filename);
+    settings.setValue("trackdir", fi.path());
 
     save();
 }
