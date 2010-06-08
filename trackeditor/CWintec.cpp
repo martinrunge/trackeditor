@@ -460,7 +460,7 @@ void CWintec::parseAL(QString line) {
         qDebug() << QString("checksum string = %1.").arg(checksum_str);
 		m_timer->stop();
         if(!checksumCorrect(m_tmp_buf, checksum_str)) {
-        	qDebug("Checksum error!");
+        	qDebug() << QString("Checksum error! Retrying %1").arg(m_retry_count);
         	m_retry_count--;
         	readLogData();
         	return;
@@ -518,8 +518,8 @@ void CWintec::readLogData() {
 	int logareastart = m_dev_data->getLogAreaStart();
 	int logareaend = m_dev_data->getLogAreaEnd();
 
-    qDebug() << QString("Logarea: %1 - %2").arg(logareastart).arg(logareaend);
-    qDebug() << QString("Log: %1 - %2").arg(logstart).arg(logend);
+    // qDebug() << QString("Logarea: %1 - %2").arg(logareastart).arg(logareaend);
+    // qDebug() << QString("Log: %1 - %2").arg(logstart).arg(logend);
 
     int trackpointlen = 16;
     int log_capacy = (m_dev_data->getLogAreaEnd() - m_dev_data->getLogAreaStart())
